@@ -1,0 +1,106 @@
+/* Define CSS variables for default and light theme */
+:root,
+[data-theme="light"] {
+    --background-color: #ffffff;
+    --button-active-background: #0056b3;
+    --button-background: #007bff;
+    --button-disabled-background: #ccc;
+    --button-hover-background: #0056b3;
+    --button-text-color: #ffffff;
+    --checkbox-color: #007bff;
+    --control-background: #ffffff;
+    --control-border: #ccc;
+    --dialog-background: #ffffff;
+    --dialog-border: #ccc;
+    --icon-error-color: #dc3545;
+    --icon-info-color: #007bff;
+    --icon-warning-color: #ffc107;
+    --list-background: #f8f9fa;
+    --list-border: #e9ecef;
+    --navbar-background: #f8f9fa;
+    --navbar-border: #e9ecef;
+    --navbar-link-active-background: #007bff;
+    --navbar-link-active-color: #ffffff;
+    --navbar-link-color: #007bff;
+    --navbar-link-hover-background: #e9ecef;
+    --tab-active-background: #ffffff;
+    --tab-background: #f1f1f1;
+    --tab-border: #ccc;
+    --text-color: #000000;
+}
+
+/* Define CSS variables for dark theme */
+[data-theme="dark"] {
+    --background-color: #121212;
+    --button-active-background: #4a90e2;
+    --button-background: #64b5f6;
+    --button-disabled-background: #333;
+    --button-hover-background: #4a90e2;
+    --button-text-color: #ffffff;
+    --checkbox-color: #64b5f6;
+    --control-background: #2c2c2c;
+    --control-border: #555;
+    --dialog-background: #1e1e1e;
+    --dialog-border: #333;
+    --icon-error-color: #ef5350;
+    --icon-info-color: #64b5f6;
+    --icon-warning-color: #ffca28;
+    --list-background: #1e1e1e;
+    --list-border: #333;
+    --navbar-background: #1e1e1e;
+    --navbar-border: #333;
+    --navbar-link-active-background: #64b5f6;
+    --navbar-link-active-color: #ffffff;
+    --navbar-link-color: #64b5f6;
+    --navbar-link-hover-background: #333;
+    --tab-active-background: #1e1e1e;
+    --tab-background: #2c2c2c;
+    --tab-border: #444;
+    --text-color: #ffffff;
+}
+
+/* Apply global styles */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+
+    /* Force a minimum page size for the benefit of other body styling */
+    min-height: 100vh;
+}
+
+/* Theme toggle button */
+.theme-toggle-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: var(--navbar-link-color);
+    color: var(--navbar-link-active-color);
+}
+
+/* Navbar styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--navbar-background);
+    border-bottom: 1px solid var(--navbar-border);
+    padding: 10px 20px;
+}
+
+.navbar-icon {
+    width: 36px;
+    height: 36px;
+    fill: var(--button-background);
+    transition: fill 0.3s;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--button-background);
+    text-decoration: none;
+}
