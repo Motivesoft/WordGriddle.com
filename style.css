@@ -1,6 +1,8 @@
 /* Define CSS variables for default and light theme */
 :root,
 [data-theme="light"] {
+    --brand-color: #9030B0;
+
     --background-color: #ffffff;
     --button-active-background: #0056b3;
     --button-background: #007bff;
@@ -31,6 +33,8 @@
 
 /* Define CSS variables for dark theme */
 [data-theme="dark"] {
+    --brand-color: #9030B0;
+
     --background-color: #121212;
     --button-active-background: #4a90e2;
     --button-background: #64b5f6;
@@ -106,7 +110,7 @@ body {
 .navbar-brand {
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--button-background);
+    color: var(--brand-color);
     text-decoration: none;
 
     /* To accommodate icon-container*/
