@@ -89,11 +89,16 @@ body {
     background-color: var(--navbar-background);
     border-bottom: 1px solid var(--navbar-border);
     padding: 10px 20px;
+
+    /* width: calc(100% - 64px - 20px);
+    margin-left: calc(64px + 20px);
+    margin-top: 6px; */
+    margin-top: 6px;
 }
 
 .navbar-icon {
-    width: 36px;
-    height: 36px;
+    width: 64px;
+    height: 64px;
     fill: var(--button-background);
     transition: fill 0.3s;
 }
@@ -103,4 +108,22 @@ body {
     font-weight: bold;
     color: var(--button-background);
     text-decoration: none;
+
+    /* To accommodate icon-container*/
+    margin-left: 64px;
+}
+
+.icon-container {
+    position: absolute;
+    top: 20;
+    left: 20;
+
+    /* Indentation. Add this value to the navbar-brand.margin-left */
+    padding-left: 0px;
+}
+
+.top-left-icon {
+    /* Let the icon dictate its size */
+    width: 100%;
+    height: 100%;
 }
