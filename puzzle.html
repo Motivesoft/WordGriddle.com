@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fileUrl = urlParams.get('file');
+
+            if (fileUrl) {
+                fetch(fileUrl)
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        const json = JSON.parse(data);
+                        document.getElementById('puzzleDetails').innerHTML = json.puzzle.title;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div id="puzzleDetails"></div>
+</body>
+
+</html>
