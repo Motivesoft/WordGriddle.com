@@ -13,14 +13,35 @@
     <!-- Navbar -->
     <nav class="navbar">
         <a href="#">
-            <svg class="navbar-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                <g>
-                    <!-- r=min(h/w)/2, cy=h/2, cx=w/2 -->
-                    <circle id="svg_1" r="24" fill="#DAA520" cy="24" cx="24" />
-                </g>
-                <g>
-                    <!-- r=min(h/w)/4, cy=h-r, cx=w-r -->
-                    <circle id="svg_2" r="12" fill="#800000" cy="36" cx="36" />
+            <!-- Application Icon, designed at 256x256 and scaled for use here -->
+            <svg class="appIcon" viewBox="0 0 256 256" style="width: 64px; height: auto;" xmlns="http://www.w3.org/2000/svg">
+                <style>
+                    .appIcon {
+                        --background-color: #4A5D7D;
+                        --stroke-color: white;
+                        --stroke-width: 8;
+                    }
+                </style>
+
+                <rect width="100%" height="100%" fill="var(--background-color)" />
+
+                <g fill="none" stroke="var(--stroke-color)" stroke-width="var(--stroke-width)">
+                    <!-- Grid -->
+                    <rect x="64" y="64" width="128" height="128" />
+                    <line x1="128" y1="64" x2="128" y2="192" />
+                    <line x1="64" y1="128" x2="192" y2="128" />
+
+                    <!-- Left -->
+                    <path d="M 64 64 A 32 32 0 0 0 64 128" />
+
+                    <!-- Right -->
+                    <path d="M 192 128 A 32 32 0 0 1 192 192" />
+
+                    <!-- Top -->
+                    <path d="M 128 64 A 32 32 0 0 1 192 64" />
+
+                    <!-- Bottom -->
+                    <path d="M 64 192 A 32 32 0 0 0 128 192" />
                 </g>
             </svg>
         </a>
