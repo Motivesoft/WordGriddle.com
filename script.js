@@ -53,8 +53,6 @@ function loadTheme() {
     }
 }
 
-loadTheme();
-
 // Listen on OS preference change and react accordingly. Note this will only 
 // impact the UI if the user has not explicitly chosen a theme
 if (window.matchMedia) {
@@ -70,7 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function finalSetup() {
     console.log("Final setup complete");
 
-    // Theme toggle logic
+    // Theme toggle logic for a UI control wanting
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     themeToggleBtn.addEventListener('click', function () {
         const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -81,3 +79,6 @@ async function finalSetup() {
         }
     });
 }
+
+// Initialise the current theme
+loadTheme();

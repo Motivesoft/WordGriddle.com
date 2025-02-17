@@ -54,7 +54,6 @@
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     aspect-ratio: 1 / 1; /* Ensure the grid is square */
     width: 80%; /* Relative width to container */
@@ -68,7 +67,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5em;
+    font-size: 4vw;
     aspect-ratio: 1 / 1; /* Ensure each cell is square */
     user-select: none;
     touch-action: none;
