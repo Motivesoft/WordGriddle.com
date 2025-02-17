@@ -33,7 +33,7 @@
 
 /* Define CSS variables for dark theme */
 [data-theme="dark"] {
-    --brand-color: #9030B0;
+    --brand-color: #ffffff;
 
     --background-color: #121212;
     --button-active-background: #4a90e2;
@@ -68,7 +68,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: Arial, sans-serif;
-    margin: 0;
+    margin: 0px;
     padding: 20px;
 
     /* Force a minimum page size for the benefit of other body styling */
