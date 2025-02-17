@@ -1,5 +1,6 @@
 {
     "puzzle": {
+        "id": 1,
         "title": "Demo Puzzle #1",
         "author": 2,
         "size": 4,
