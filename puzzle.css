@@ -1,16 +1,14 @@
 /* CSS specific to the puzzle page(s) */
 
 :root,
-[data-theme="light"] 
-{
+[data-theme="light"] {
     --panel-background: var(--navbar-background);
     --panel-border: var(--navbar-border);
     --grid-cell-background: #f4f4f4;
     --grid-cell-border: #ccc;
 }
 
-[data-theme="dark"] 
-{
+[data-theme="dark"] {
     --panel-background: var(--navbar-background);
     --panel-border: var(--navbar-border);
     --grid-cell-background: #343434;
@@ -23,7 +21,8 @@
     flex-direction: row;
     padding: 20px;
     gap: 20px;
-    height: calc(100vh - 120px); /* Full height minus navbar and title */
+    height: calc(100vh - 120px);
+    /* Full height minus navbar and title */
     box-sizing: border-box;
 }
 
@@ -36,29 +35,38 @@
 
 /* Left Side (Grid and Controls) */
 .left-side {
-    flex: 1; /* Equal size to right side */
+    flex: 1;
+    /* Equal size to right side */
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center the grid horizontally */
-    justify-content: center; /* Center the grid vertically */
+    align-items: center;
+    /* Center the grid horizontally */
+    justify-content: center;
+    /* Center the grid vertically */
     gap: 20px;
 }
 
 /* Right Side (Scrollable Content) */
 .right-side {
-    flex: 1; /* Equal size to left side */
+    flex: 1;
+    /* Equal size to left side */
     overflow-y: auto;
     padding-left: 20px;
-    max-height: calc(100vh - 120px); /* Adjust as needed */
+    max-height: calc(100vh - 120px);
+    /* Adjust as needed */
 }
 
 .grid-container {
     display: grid;
     gap: 10px;
-    aspect-ratio: 1 / 1; /* Ensure the grid is square */
-    width: 80%; /* Relative width to container */
-    max-width: 400px; /* Maximum size */
-    min-width: 200px; /* Minimum size */
+    aspect-ratio: 1 / 1;
+    /* Ensure the grid is square */
+    width: 80%;
+    /* Relative width to container */
+    max-width: 400px;
+    /* Maximum size */
+    min-width: 200px;
+    /* Minimum size */
 }
 
 .grid-container div {
@@ -68,16 +76,26 @@
     align-items: center;
     justify-content: center;
     font-size: 4vw;
-    aspect-ratio: 1 / 1; /* Ensure each cell is square */
+    aspect-ratio: 1 / 1;
+    /* Ensure each cell is square */
     user-select: none;
     touch-action: none;
+}
+
+canvas {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    pointer-events: none;
 }
 
 /* Responsive Design for Portrait Mode */
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
-        height: auto; /* Allow container to grow in height */
+        height: auto;
+        /* Allow container to grow in height */
     }
 
     .left-side {
@@ -91,7 +109,9 @@
     }
 
     .grid {
-        width: 100%; /* Full width in portrait mode */
-        max-width: 400px; /* Adjust for smaller screens */
+        width: 100%;
+        /* Full width in portrait mode */
+        max-width: 400px;
+        /* Adjust for smaller screens */
     }
 }
