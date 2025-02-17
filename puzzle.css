@@ -72,14 +72,15 @@
 }
 
 .grid-container div {
-    background-color: var(--grid-cell-background);
-    border: 1px solid var(--grid-cell-border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3vw;
     aspect-ratio: 1 / 1;
-    /* Ensure each cell is square */
+    
+    background-color: var(--grid-cell-background);
+    border: 1px solid var(--grid-cell-border);
+    font-size: 3vw;
+
     user-select: none;
     touch-action: none;
 }

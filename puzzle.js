@@ -41,6 +41,10 @@ const currentPuzzle = {
     selectedLetters: [],
     currentTrail: [],
     mostRecentCell: null,
+
+    // Game progress
+    foundKeyWords: [],
+    foundOtherWords: [],
 };
 
 function openPuzzle(puzzle) {
@@ -61,6 +65,8 @@ function openPuzzle(puzzle) {
     currentPuzzle.mostRecentCell = null;
 
     // TODO other setup/state stuff
+    currentPuzzle.foundKeyWords.length = 0;
+    currentPuzzle.foundOtherWords.length = 0;
 
     // Initiate things using our 'currentPuzzle' state object
     initialiseGrid();
@@ -220,6 +226,31 @@ function stopDragGesture() {
         currentPuzzle.isDrawing = false;
 
         // TODO do word finding logic here
+        const selectedWord = currentPuzzle.selectedLetters.map(item => item.letter).join('').toLowerCase();
+        const selectedPath = currentPuzzle.selectedLetters.map(item => `[${item.index}]`).join('');
+
+        currentPuzzle.puzzle.keyWords.forEach(([word, path]) => {
+            if (word === selectedWord) {
+                console.log(`Found key word: ${word}`);
+
+                // TODO add to found key words list (and save)
+                // TODO reduce red/grey scores and see if we're finished
+                currentPuzzle.foundKeyWords.push(word);
+
+                if (currentPuzzle.foundKeyWords.length == currentPuzzle.puzzle.keyWords.length) {
+                    alert( "Congratulations. You've found all of the key words!");
+                }
+            }
+        });
+
+        currentPuzzle.puzzle.otherWords.forEach(([word, path]) => {
+            if (word == selectedWord) {
+                console.log(`Found other word: ${word}`);
+
+                // TODO add to found other words list (and save)
+                currentPuzzle.foundOtherWords.push(word);
+            }
+        });
 
         // Clear any selection decorations
         clearTrail();
@@ -231,28 +262,32 @@ function stopDragGesture() {
 }
 
 function redrawTrail() {
+    // Draw the train onto a canvas floating above the grid
     const trailCanvas = getTrailCanvas();
     const ctx = trailCanvas.getContext('2d');
-    ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
-
+    
+    // Actually, draw to an offscreen, replica canvas first
     const offscreenCanvas = document.createElement("canvas");
-    offscreenCanvas.width = trailCanvas.width;
-    offscreenCanvas.height = trailCanvas.height;
     const offscreenCtx = offscreenCanvas.getContext("2d");
 
-    // Redraw the whole trail from the start
+    offscreenCanvas.width = trailCanvas.width;
+    offscreenCanvas.height = trailCanvas.height;
+
+    // Use a CSS variable for the color of the trail so it can be modified by themes
     const color = getComputedStyle(document.documentElement).getPropertyValue('--trail-color');
 
     let cells = currentPuzzle.currentTrail.length;
     if (cells > 0) {
         let from = currentPuzzle.currentTrail[0];
 
+        // Start the trail with a blob
         canvasDrawBlob(offscreenCtx, color, from);
 
         let index = 1;
         while (index < cells) {
             let to = currentPuzzle.currentTrail[index++];
 
+            // Continue the trail from cell to cell
             canvasDrawLine(offscreenCtx, color, from, to);
 
             // Step forward
@@ -263,6 +298,8 @@ function redrawTrail() {
     // Use globalCompositeOperation to apply transparency when drawing onto the main canvas
     ctx.globalCompositeOperation = "source-over";
     ctx.globalAlpha = 0.4; // Set transparency
+
+    ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
     ctx.drawImage(offscreenCanvas, 0, 0);
 }
 
