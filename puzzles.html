@@ -13,7 +13,8 @@
             for (let btnId in buttons) {
                 document.getElementById(btnId).addEventListener('click', function () {
                     const fileUrl = buttons[btnId].fileUrl;
-                    window.location.href = `puzzle.html?file=${encodeURIComponent(fileUrl)}`;
+
+                    window.location.href = `puzzle.html?puzzle=${encodeURIComponent(fileUrl)}`;
                 });
             }
         });

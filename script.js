@@ -1,3 +1,5 @@
+// Scripting applicable to all pages
+
 // Theme toggle logic
 const themeToggleBtn = document.getElementById('themeToggleBtn');
 themeToggleBtn.addEventListener('click', function () {

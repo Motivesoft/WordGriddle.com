@@ -2,45 +2,51 @@
 <html lang="en">
 
 <head>
-    <script>
-        // Assume we will be loaded with a 'file' parameter that points to a puzzle file on the server.
-        // Load that puzzle and let the user play it
-        document.addEventListener('DOMContentLoaded', function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const fileUrl = urlParams.get('file');
-
-            // Assuming we have a file, load it and populate the page
-            if (fileUrl) {
-                fetch(fileUrl)
-                    .then(response => response.text())
-                    .then(data => {
-                        // Assumes:
-                        // {
-                        //   "puzzle": {
-                        //      "title": "<puzzle title>",
-                        //      ...
-                        //   }
-                        // }
-                        const json = JSON.parse(data);
-
-                        // Populating this field is just the proof of concept
-                        document.getElementById('puzzleDetails').innerHTML = json.puzzle.title;
-                    })
-                    .catch(error => console.error('Error:', error));
-            } else {
-                document.getElementById('puzzleDetails').innerHTML = 'This page needs to be launched from the puzzles catalog page.';
-            }
-        });
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordGriddle Puzzle Page</title>
+    <meta name="description"
+        content="WordGriddle is a word search puzzle using a grid of letters and a list of words to find. Fun challenge.">
+    <meta name="apple-mobile-web-app-title" content="WordGriddle">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="48x48">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" title="WordGriddle">
+    <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="puzzle.css">
+    <link rel="canonical" href="https://wordgriddle.com" />
+    <script src="script.js" defer></script>
+    <script src="puzzle.js" defer></script>
 </head>
 
 <body>
-    <!-- 
-        Make this hold together as a (somewhat useless) web page even if called without a puzzle 
+    <!--
+        This page expects to be launched with a puzzle.
+
+        TODO Make sure this holds together as a web page (albeit useless) even if called without a puzzle 
         For example, populate the page with "Sorry, this needs a puzzle file" somwhere that gets 
         obliterated by successfully loading an actual puzzle
      -->
-    <div id="puzzleDetails"></div>
+
+    <!-- App icon -->
+    <div class="icon-container">
+        <a href="/">
+            <img src="icon-64-purple.png" width="64" height="64" alt="WordGriddle" class="top-left-icon">
+        </a>
+    </div>
+    
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">WordGriddle</a>
+        <button type="button" class="theme-toggle-btn" id="themeToggleBtn">Dark</button>
+    </nav>
+
+    <div class="container">
+        <div class="left-side">
+            <h2 id="puzzle-title"></h2>
+        </div>
+    </div>
 </body>
 
 </html>

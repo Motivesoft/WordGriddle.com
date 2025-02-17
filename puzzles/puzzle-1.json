@@ -1,5 +1,15 @@
 {
     "puzzle": {
-        "title": "--Puzzle 1--"
+        "title": "Demo Puzzle #1",
+        "author": 2,
+        "size": 4,
+        "origin": 9,
+        "letters": "VALTDUESYTNEHGIN",
+        "keywords": [
+            ["valt","[1][2][3][4]"]
+        ],
+        "irrelevant": [
+            ["hgin","[12][13][14][15]"]
+        ]
     }
 }
