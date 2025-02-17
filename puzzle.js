@@ -229,28 +229,32 @@ function stopDragGesture() {
         const selectedWord = currentPuzzle.selectedLetters.map(item => item.letter).join('').toLowerCase();
         const selectedPath = currentPuzzle.selectedLetters.map(item => `[${item.index}]`).join('');
 
-        currentPuzzle.puzzle.keyWords.forEach(([word, path]) => {
-            if (word === selectedWord) {
-                console.log(`Found key word: ${word}`);
-
-                // TODO add to found key words list (and save)
-                // TODO reduce red/grey scores and see if we're finished
-                currentPuzzle.foundKeyWords.push(word);
-
-                if (currentPuzzle.foundKeyWords.length == currentPuzzle.puzzle.keyWords.length) {
-                    alert( "Congratulations. You've found all of the key words!");
+        if (currentPuzzle.puzzle.keyWords) {
+            currentPuzzle.puzzle.keyWords.forEach(([word, path]) => {
+                if (word === selectedWord) {
+                    console.log(`Found key word: ${word}`);
+    
+                    // TODO add to found key words list (and save)
+                    // TODO reduce red/grey scores and see if we're finished
+                    currentPuzzle.foundKeyWords.push(word);
+    
+                    if (currentPuzzle.foundKeyWords.length == currentPuzzle.puzzle.keyWords.length) {
+                        alert( "Congratulations. You've found all of the key words!");
+                    }
                 }
-            }
-        });
+            });
+        }
 
-        currentPuzzle.puzzle.otherWords.forEach(([word, path]) => {
-            if (word == selectedWord) {
-                console.log(`Found other word: ${word}`);
-
-                // TODO add to found other words list (and save)
-                currentPuzzle.foundOtherWords.push(word);
-            }
-        });
+        if (currentPuzzle.puzzle.otherWords) {
+            currentPuzzle.puzzle.otherWords.forEach(([word, path]) => {
+                if (word == selectedWord) {
+                    console.log(`Found other word: ${word}`);
+    
+                    // TODO add to found other words list (and save)
+                    currentPuzzle.foundOtherWords.push(word);
+                }
+            });
+        }
 
         // Clear any selection decorations
         clearTrail();
