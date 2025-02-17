@@ -29,3 +29,8 @@ Homepage for the upcoming WordGriddle game.
 - restart puzzle button
   - (enabled only when there are saved results, once we can save results) 
 
+- Put together a complete puzzle with solution
+- Store progress and have 'reset progress' to clear that
+  - Test with F5 Refresh etc.
+- Show found words, word totals/countdowns
+- Show red/grey numbers (optional)

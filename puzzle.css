@@ -76,7 +76,7 @@
     align-items: center;
     justify-content: center;
     aspect-ratio: 1 / 1;
-    
+
     background-color: var(--grid-cell-background);
     border: 1px solid var(--grid-cell-border);
     font-size: 3vw;
@@ -85,6 +85,37 @@
     touch-action: none;
 }
 
+.grid-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #edeff1;
+    color: #1a1a1b;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 10%;
+    position: relative;
+  }
+  
+/* The user is currently clicking or dragging through this cell */
+.grid-item.selected {
+    background-color: #e9ba3a;
+}
+
+/* This cell is empty (e.g. as in a waffle grid)*/
+.grid-item.hidden {
+    background-color: #ffffff;
+    cursor: default;
+}
+
+/* There are no more scoring words using this letter */
+.grid-item.zerozero {
+    background-color: #cccccc;
+    color: #aaaaaa;
+  }
+  
 canvas {
     position: absolute;
     z-index: 1000;

@@ -1,0 +1,16 @@
+{
+    "puzzle": {
+        "id": 1,
+        "title": "Demo Puzzle #0",
+        "author": 1,
+        "size": 3,
+        "origin": 1,
+        "letters": "ANTE.EPOL",
+        "keyWords": [
+            ["antelope","[0][1][2][5][8][7][6][5]"]
+        ],
+        "otherWords": [
+            ["pean","[6][3][0][1]"]
+        ]
+    }
+}
