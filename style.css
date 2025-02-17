@@ -77,7 +77,8 @@ body {
 
 /* Theme toggle button */
 .theme-toggle-btn {
-    padding: 8px 16px;
+    padding: 4px 8px;
+    font-size: 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
