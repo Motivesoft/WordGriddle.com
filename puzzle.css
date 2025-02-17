@@ -5,12 +5,16 @@
 {
     --panel-background: var(--navbar-background);
     --panel-border: var(--navbar-border);
+    --grid-cell-background: #f4f4f4;
+    --grid-cell-border: #ccc;
 }
 
 [data-theme="dark"] 
 {
     --panel-background: var(--navbar-background);
     --panel-border: var(--navbar-border);
+    --grid-cell-background: #343434;
+    --grid-cell-border: #646464;
 }
 
 /* Container for the main content */
@@ -59,13 +63,15 @@
 }
 
 .grid-container div {
-    background-color: #f4f4f4;
-    border: 1px solid #ccc;
+    background-color: var(--grid-cell-background);
+    border: 1px solid var(--grid-cell-border);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5em;
     aspect-ratio: 1 / 1; /* Ensure each cell is square */
+    user-select: none;
+    touch-action: none;
 }
 
 /* Responsive Design for Portrait Mode */
