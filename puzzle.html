@@ -3,25 +3,43 @@
 
 <head>
     <script>
+        // Assume we will be loaded with a 'file' parameter that points to a puzzle file on the server.
+        // Load that puzzle and let the user play it
         document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
             const fileUrl = urlParams.get('file');
 
+            // Assuming we have a file, load it and populate the page
             if (fileUrl) {
                 fetch(fileUrl)
                     .then(response => response.text())
                     .then(data => {
-                        console.log(data);
+                        // Assumes:
+                        // {
+                        //   "puzzle": {
+                        //      "title": "<puzzle title>",
+                        //      ...
+                        //   }
+                        // }
                         const json = JSON.parse(data);
+
+                        // Populating this field is just the proof of concept
                         document.getElementById('puzzleDetails').innerHTML = json.puzzle.title;
                     })
                     .catch(error => console.error('Error:', error));
+            } else {
+                document.getElementById('puzzleDetails').innerHTML = 'This page needs to be launched from the puzzles catalog page.';
             }
         });
     </script>
 </head>
 
 <body>
+    <!-- 
+        Make this hold together as a (somewhat useless) web page even if called without a puzzle 
+        For example, populate the page with "Sorry, this needs a puzzle file" somwhere that gets 
+        obliterated by successfully loading an actual puzzle
+     -->
     <div id="puzzleDetails"></div>
 </body>
 
