@@ -241,17 +241,19 @@ function redrawTrail() {
     const offscreenCtx = offscreenCanvas.getContext("2d");
 
     // Redraw the whole trail from the start
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--trail-color');
+
     let cells = currentPuzzle.currentTrail.length;
     if (cells > 0) {
         let from = currentPuzzle.currentTrail[0];
 
-        canvasDrawBlob(offscreenCtx, from);
+        canvasDrawBlob(offscreenCtx, color, from);
 
         let index = 1;
         while (index < cells) {
             let to = currentPuzzle.currentTrail[index++];
 
-            canvasDrawLine(offscreenCtx, from, to);
+            canvasDrawLine(offscreenCtx, color, from, to);
 
             // Step forward
             from = to;
@@ -265,16 +267,16 @@ function redrawTrail() {
 }
 
 // Draw a line between cells to indicate the selection
-function canvasDrawLine(ctx, from, to) {
+function canvasDrawLine(ctx, color, from, to) {
     // TODO confirm whether we need this in the calculations below
     const gridElement = getGridElement();
 
-    // TODO use a var here. save as in drawBlob
-    ctx.strokeStyle = 'rgba(128,0,0)';//'rgba(111, 176, 92, 0.4)'; // Green with some transparency
+    // Begin a new path
+    ctx.beginPath();
+
+    ctx.strokeStyle = color;
     ctx.lineWidth = 15;
     ctx.lineCap = 'round'; // Rounded line ends
-
-    ctx.beginPath();
 
     const fromXCentre = (from.offsetLeft - gridElement.offsetLeft) + from.offsetWidth / 2;
     const fromYCentre = (from.offsetTop - gridElement.offsetTop) + from.offsetHeight / 2;
@@ -288,15 +290,14 @@ function canvasDrawLine(ctx, from, to) {
 }
 
 // Draw a blob on the first cell of a selection
-function canvasDrawBlob(ctx, cell) {
+function canvasDrawBlob(ctx, color, cell) {
     // TODO confirm whether we need this in the calculations below
     const gridElement = getGridElement();
 
-    // TODO use a var here
-    ctx.fillStyle = 'rgba(128,0,0)';//'rgba(111, 176, 92, 0.4)'; // Green with some transparency
-
     // Begin a new path
     ctx.beginPath();
+
+    ctx.fillStyle = color;
 
     // Draw a circle
     const radius = 24;
