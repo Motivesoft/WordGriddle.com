@@ -148,7 +148,7 @@ function continueDragGesture(cell, clientX, clientY) {
 
     // If we're on a cell in the grid and have moved from the previous cell, treat this as a drag gesture
     // unless the cell contains a space, intended to mean a gap in the layout that the user may not select
-    if (cell.classList.contains('grid-item') && cell !== currentPuzzle.mostRecentCell && cell.dataset.letter !== ' ') {
+    if (cell.classList.contains('grid-item') && cell !== currentPuzzle.mostRecentCell && cell.dataset.letter !== '.') {
         // Reject points too close to the edge sto avoid false positives
         const cellRect = cell.getBoundingClientRect();
         const cellCentreX = cellRect.left + (cellRect.width / 2);
@@ -229,60 +229,50 @@ function stopDragGesture() {
     if (currentPuzzle.isDrawing) {
         currentPuzzle.isDrawing = false;
 
-        // TODO do word finding logic here
-        const selectedWord = currentPuzzle.selectedLetters.map(item => item.letter).join('');
-        const selectedPath = currentPuzzle.selectedLetters.map(item => `[${item.index}]`).join('');
+        const selectedWordUpper = currentPuzzle.selectedLetters.map(item => item.letter).join('').toUpperCase();
+        const selectedWordLower = selectedWordUpper.toLowerCase();
 
-        if (selectedWord.length < 4) {
+        // TODO Not needed right now: 
+        //   const selectedPath = currentPuzzle.selectedLetters.map(item => `[${item.index}]`).join('');
+
+        // Check for the selected word being either:
+        // - too short
+        // - a key word (that may or may not have already been found)
+        // - an extra word (that may or may not have already been found)
+        // - not a word at all
+        if (selectedWordUpper.length < 4) {
             updateOutcomeDisplay(`Word too short`);
+        } else if (currentPuzzle.puzzle.keyWords?.some(([word, _]) => word === selectedWordLower)) {
+            console.log(`Found key word: ${selectedWordUpper}`);
+
+            if (currentPuzzle.foundKeyWords.has(selectedWordUpper)) {
+                updateOutcomeDisplay(`Key word already found: ${selectedWordUpper}`);
+            } else {
+                // TODO add to found key words list (and save)
+                // TODO reduce red/grey scores and see if we're finished
+                currentPuzzle.foundKeyWords.add(selectedWordUpper);
+
+                if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
+                    alert("Congratulations. You've found all of the key words!");
+                }
+
+                updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
+            }
+        } else if (currentPuzzle.puzzle.otherWords?.some(([word, _]) => word === selectedWordLower)) {
+            console.log(`Found other word: ${selectedWordUpper}`);
+
+            if (currentPuzzle.foundOtherWords.has(selectedWordUpper)) {
+                updateOutcomeDisplay(`Extra word already found: ${selectedWordUpper}`);
+            } else {
+                // TODO add to found other words list (and save)
+                currentPuzzle.foundOtherWords.add(selectedWordUpper);
+
+                updateOutcomeDisplay(`Extra word found: ${selectedWordUpper}`);
+            }
         } else {
-            let wordKnown = false;
-            if (currentPuzzle.puzzle.keyWords) {
-                currentPuzzle.puzzle.keyWords.forEach(([word, path]) => {
-                    if (word.toUpperCase() === selectedWord) {
-                        console.log(`Found key word: ${word}`);
+            updateOutcomeDisplay(`Not a recognised word: ${selectedWordUpper}`);
 
-                        wordKnown = true;
-
-                        if (currentPuzzle.foundKeyWords.has(word)) {
-                            updateOutcomeDisplay(`Key word already found: ${selectedWord}`);
-                        } else {
-                            // TODO add to found key words list (and save)
-                            // TODO reduce red/grey scores and see if we're finished
-                            currentPuzzle.foundKeyWords.add(word);
-    
-                            if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
-                                alert("Congratulations. You've found all of the key words!");
-                            }
-    
-                            updateOutcomeDisplay(`Key word found: ${selectedWord}`);
-                        }
-                    }
-                });
-            }
-
-            if (!wordKnown && currentPuzzle.puzzle.otherWords) {
-                currentPuzzle.puzzle.otherWords.forEach(([word, path]) => {
-                    if (word.toUpperCase() == selectedWord) {
-                        console.log(`Found other word: ${word}`);
-
-                        wordKnown = true;
-
-                        if (currentPuzzle.foundOtherWords.has(word)) {
-                            updateOutcomeDisplay(`Extra word already found: ${selectedWord}`);
-                        } else {
-                            // TODO add to found other words list (and save)
-                            currentPuzzle.foundOtherWords.push(word);
-                        }
-                    }
-
-                    updateOutcomeDisplay(`Extra word found: ${selectedWord}`);
-                });
-            }
-
-            if (!wordKnown) {
-                updateOutcomeDisplay(`Not a recognised word: ${selectedWord}`);
-            }
+            // TODO any penatlies for this?
         }
 
         // Clear any selection decorations
