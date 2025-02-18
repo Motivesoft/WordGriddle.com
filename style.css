@@ -24,7 +24,9 @@
     --navbar-link-active-background: #007bff;
     --navbar-link-active-color: #ffffff;
     --navbar-link-color: #007bff;
-    --navbar-link-hover-background: #e9ecef;
+    --navbar-link-hover-background: #f664b4;
+    --panel-background: #e9ecef;
+    --panel-border: #ccc;
     --tab-active-background: #ffffff;
     --tab-background: #f1f1f1;
     --tab-border: #ccc;
@@ -56,23 +58,47 @@
     --navbar-link-active-background: #64b5f6;
     --navbar-link-active-color: #ffffff;
     --navbar-link-color: #64b5f6;
-    --navbar-link-hover-background: #333;
+    --navbar-link-hover-background: #f664b4;
+    --panel-background: #1e1e1e;
+    --panel-border: #333;
     --tab-active-background: #1e1e1e;
     --tab-background: #2c2c2c;
     --tab-border: #444;
-    --text-color: #ffffff;
+    --text-color: #eee;
 }
 
 /* Apply global styles */
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: Arial, sans-serif;
+    font-family: Verdana, Arial, sans-serif;
     margin: 0px;
     padding: 20px;
 
     /* Force a minimum page size for the benefit of other body styling */
     min-height: 100vh;
+}
+
+/* Links */
+
+a {
+    text-decoration: none;
+}
+
+a:link {
+    color: var(--navbar-link-color);
+}
+
+a:visited {
+    color: var(--navbar-link-active-background);
+}
+
+a:hover {
+    color: var(--navbar-link-hover-background);
+}
+
+a:active {
+    color: var(--navbar-link-active-color);
 }
 
 /* Theme toggle button */
@@ -131,4 +157,64 @@ body {
     /* Let the icon dictate its size */
     width: 100%;
     height: 100%;
+}
+
+/* Panel */
+
+/* Container for the main content */
+.panel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    padding: 20px;
+    gap: 20px;
+    box-sizing: border-box;
+
+    /* Full height minus navbar and title */
+    height: calc(100vh - 120px);
+}
+
+.inner-panel {
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    background-color: var(--panel-background);
+
+    flex: 0 1 65%;
+    max-width: 65%;
+
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: 20px;
+}
+
+.parapgraph {
+    margin: 0px;
+    padding: 20px 20px 0px 20px;
+}
+
+/* CSS rules for mobile devices go here */
+@media only screen and (max-width: 480px) {
+    body {
+        font-family: 'Roboto', 'Open Sans', Verdana, sans-serif;
+    }
+}
+
+/* Media query for portrait mode */
+@media (orientation: portrait) {
+    .panel {
+        flex-direction: column;
+        justify-content: start;
+    }
+
+    .inner-panel {
+        max-width: 100%;
+        /* Allow items to take full width in portrait */
+        flex: none;
+        /* Prevent flex-grow/shrink */
+    }
 }

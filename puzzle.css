@@ -1,9 +1,8 @@
 /* CSS specific to the puzzle page(s) */
+@import '/style.css';
 
 :root,
 [data-theme="light"] {
-    --panel-background: var(--navbar-background);
-    --panel-border: var(--navbar-border);
     --grid-cell-background: #f4f4f4;
     --grid-cell-border: #ccc;
     --trail-color: #800000;
@@ -11,8 +10,6 @@
 }
 
 [data-theme="dark"] {
-    --panel-background: var(--navbar-background);
-    --panel-border: var(--navbar-border);
     --grid-cell-background: #343434;
     --grid-cell-border: #646464;
     --trail-color: #800000;
