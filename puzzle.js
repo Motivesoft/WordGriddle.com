@@ -74,7 +74,9 @@ function openPuzzle(puzzle) {
     // We are using local storage for progress, so let's check
     loadProgress();
 
+    // Update the other parts of the display
     updatePuzzleProgressMessage();
+    updateSelectedLettersDisplay();
 }
 
 function initialiseGrid() {
@@ -473,7 +475,11 @@ function getPuzzleTitleElement() {
 }
 
 function updateSelectedLettersDisplay() {
-    document.getElementById('outcome-message').innerHTML = currentPuzzle.selectedLetters.map((item) => item.letter).join('');
+    if (currentPuzzle.selectedLetters?.length) {
+        document.getElementById('outcome-message').innerHTML = currentPuzzle.selectedLetters.map((item) => item.letter).join('');
+    } else {
+        document.getElementById('outcome-message').innerHTML = '&nbsp;';
+    }
 }
 
 function updateOutcomeDisplay(message) {
