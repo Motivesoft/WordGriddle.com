@@ -537,33 +537,37 @@ function getExtraWordStorageKey() {
 
 function storeProgress() {
     console.log(`Store: ${Array.from(currentPuzzle.foundKeyWords).join(',')}`);
-    localStorage.setItem(getKeyWordStorageKey(), Array.from(currentPuzzle.foundKeyWords).join(',')); 
-    localStorage.setItem(getExtraWordStorageKey(), Array.from(currentPuzzle.foundExtraWords).join(',')); 
+    localStorage.setItem(getKeyWordStorageKey(), Array.from(currentPuzzle.foundKeyWords).join(','));
+    localStorage.setItem(getExtraWordStorageKey(), Array.from(currentPuzzle.foundExtraWords).join(','));
 }
 
 function loadProgress() {
-    const progressKeyWords = localStorage.getItem(getKeyWordStorageKey()); 
+    const progressKeyWords = localStorage.getItem(getKeyWordStorageKey());
     if (progressKeyWords) {
         const words = progressKeyWords.split(',');
-        words.forEach((word)=>{
+        words.forEach((word) => {
             currentPuzzle.foundKeyWords.add(word);
         })
     }
-    
+
     const progressExtraWords = localStorage.getItem(getKeyWordStorageKey());
     if (progressExtraWords) {
         const words = progressExtraWords.split(',');
-        words.forEach((word)=>{
+        words.forEach((word) => {
             currentPuzzle.foundExtraWords.add(word);
         })
     }
 }
 
-function resetProgress() {
-    localStorage.removeItem(getKeyWordStorageKey()); 
+async function resetProgress() {
+    localStorage.removeItem(getKeyWordStorageKey());
     localStorage.removeItem(getExtraWordStorageKey());
-    
+
     // Reload everything
+    await openMessageBox('This is an informational message.', 'info');
+    await openMessageBox('This is an warning message.', 'warning');
+    await openMessageBox('This is an error message.', 'error');
+
     openPuzzle(currentPuzzle.puzzle);
 }
 
