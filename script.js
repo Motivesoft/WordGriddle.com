@@ -13,7 +13,7 @@ function openMessageBox(message, type = 'info') {
     const okBtn = document.getElementById('okBtn');
 
     // Set the message
-    messageBoxText.textContent = message;
+    messageBoxText.innerHTML = message;
 
     // Set the icon and dialog class based on the message type
     dialog.className = type; // Apply the type-specific class
@@ -22,11 +22,11 @@ function openMessageBox(message, type = 'info') {
             icon.innerHTML = '&#x2139';
             icon.className = 'info-icon';
             break;
-            case 'warning':
+        case 'warning':
             icon.innerHTML = '&#x26a0';
             icon.className = 'warning-icon';
             break;
-            case 'error':
+        case 'error':
             icon.innerHTML = '&#x2716';
             icon.className = 'error-icon';
             break;
@@ -42,6 +42,31 @@ function openMessageBox(message, type = 'info') {
         okBtn.addEventListener('click', function () {
             dialog.close();
             resolve();
+        }, { once: true });
+    });
+}
+
+// Function to open the confirmation dialog
+function openConfirmationDialog(message) {
+    const dialog = document.getElementById('confirmationDialog');
+    const dialogMessage = document.getElementById('dialogMessage');
+    const noBtn = document.getElementById('noBtn');
+
+    // Set the dialog message
+    dialogMessage.innerHTML = message;
+
+    // Show the dialog
+    dialog.showModal();
+
+    // Return a promise that resolves to the user's choice
+    return new Promise((resolve) => {
+        dialog.addEventListener('close', function () {
+            resolve(dialog.returnValue === 'yes');
+        }, { once: true });
+
+        // Handle No button click
+        noBtn.addEventListener('click', function () {
+            dialog.close('no');
         }, { once: true });
     });
 }

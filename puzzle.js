@@ -564,11 +564,11 @@ async function resetProgress() {
     localStorage.removeItem(getExtraWordStorageKey());
 
     // Reload everything
-    await openMessageBox('This is an informational message.', 'info');
-    await openMessageBox('This is an warning message.', 'warning');
-    await openMessageBox('This is an error message.', 'error');
+    const userConfirmed = await openConfirmationDialog('This will delete all progress for this puzzle.<br/><br/>Do you want to proceed?');
 
-    openPuzzle(currentPuzzle.puzzle);
+    if (userConfirmed) {
+        openPuzzle(currentPuzzle.puzzle);
+    }
 }
 
 // Get ready

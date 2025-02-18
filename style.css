@@ -230,6 +230,16 @@ dialog button {
     color: var(--button-text-color);
 }
 
+dialog button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+}
+
+dialog button[type="button"] {
+    background-color: #dc3545;
+    color: white;
+}
+
 /* Icon styles */
 .icon {
     font-size: 24px;
