@@ -23,6 +23,7 @@
     padding: 20px;
     gap: 20px;
     height: calc(100vh - 120px);
+
     /* Full height minus navbar and title */
     box-sizing: border-box;
 }
@@ -32,29 +33,27 @@
     border: 1px solid var(--panel-border);
     border-radius: 8px;
     background-color: var(--panel-background);
+
+    padding-bottom: 20px;
 }
 
 /* Left Side (Grid and Controls) */
 .left-side {
     flex: 1;
-    /* Equal size to right side */
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Center the grid horizontally */
     justify-content: start;
-    /* Center the grid vertically */
     gap: 20px;
+    height: min-content;
 }
 
 /* Right Side (Scrollable Content) */
 .right-side {
     flex: 1;
-    /* Equal size to left side */
     overflow-y: auto;
     padding-left: 20px;
-    max-height: calc(100vh - 120px);
-    /* Adjust as needed */
+    max-height: calc(80vh);
 }
 
 .grid-container {
@@ -96,8 +95,8 @@
     transition: all 0.3s ease;
     border-radius: 10%;
     position: relative;
-  }
-  
+}
+
 /* The user is currently clicking or dragging through this cell */
 .grid-item.selected {
     background-color: #e9ba3a;
@@ -114,8 +113,8 @@
 .grid-item.zerozero {
     background-color: #cccccc;
     color: #aaaaaa;
-  }
-  
+}
+
 canvas {
     position: absolute;
     z-index: 1000;
@@ -124,12 +123,18 @@ canvas {
     pointer-events: none;
 }
 
+@media (max-width: 768px) and (orientation: landscape) {
+
+    /* Your CSS rules for landscape mode on mobile devices go here */
+    .container {
+        height: fit-content;
+    }
+}
+
 /* Responsive Design for Portrait Mode */
-@media (max-width: 768px) {
+@media (max-width: 768px) and (orientation: portrait) {
     .container {
         flex-direction: column;
-        height: auto;
-        /* Allow container to grow in height */
     }
 
     .left-side {
@@ -139,7 +144,6 @@ canvas {
     .right-side {
         order: 2;
         padding-left: 0;
-        max-height: none;
     }
 
     .grid {

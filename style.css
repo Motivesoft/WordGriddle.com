@@ -190,6 +190,7 @@ a:active {
     align-items: center;
     justify-content: start;
     gap: 20px;
+    padding-bottom: 20px;
 }
 
 .parapgraph {
