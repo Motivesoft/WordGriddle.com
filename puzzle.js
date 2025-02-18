@@ -2,7 +2,7 @@
 
 // Assume we will be loaded with a 'file' parameter that points to a puzzle file on the server.
 // Load that puzzle and let the user play it
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     const urlParams = new URLSearchParams(window.location.search);
     const fileUrl = urlParams.get('puzzle');
 
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error(error));
     } else {
         // TODO do this better
-        alert('This page needs to be launched from the puzzles catalog page.');
+        await openMessageBox('This page needs to be launched from the puzzles catalog page.', 'error');
     }
 });
 
@@ -231,7 +231,7 @@ function continueDragGesture(cell, clientX, clientY) {
 }
 
 // End a drag operation and process the outcome
-function endDragGesture() {
+async function endDragGesture() {
     if (currentPuzzle.isDrawing) {
         currentPuzzle.isDrawing = false;
 
@@ -259,7 +259,7 @@ function endDragGesture() {
                 currentPuzzle.foundKeyWords.add(selectedWordUpper);
 
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
-                    alert("Congratulations. You've found all of the key words!");
+                    await openMessageBox('Congratulations. You have found all of the key words!', 'info');
                 }
 
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
@@ -525,7 +525,6 @@ function updatePuzzleProgressMessage() {
 }
 
 // Progress storage
-
 
 function getKeyWordStorageKey() {
     return `puzzle-${currentPuzzle.puzzle.id}.keyWords`;
