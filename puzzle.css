@@ -115,6 +115,12 @@
     color: #aaaaaa;
 }
 
+/* All words have been found (does not include bonus, just main words) */
+.grid-item.completed {
+    background-color: #e0e0e0;
+    color: #b82828;
+}
+
 canvas {
     position: absolute;
     z-index: 1000;

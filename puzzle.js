@@ -522,6 +522,10 @@ function updatePuzzleProgressMessage() {
 
         countsMessageElement.innerHTML = `<ul>${countsHtml}</ul>`;
     }
+
+    if (currentPuzzle.puzzle.keyWords.length === currentPuzzle.foundKeyWords.size) {
+        showGridAsComplete();
+    }
 }
 
 // Progress storage
@@ -567,6 +571,17 @@ async function resetProgress() {
 
     if (userConfirmed) {
         openPuzzle(currentPuzzle.puzzle);
+    }
+}
+
+function showGridAsComplete() {
+    const gridElement = getGridElement();
+    for( let i = 0; i < gridElement.children.length; i++) {
+        const cell = gridElement.children[i];
+        if (!cell.classList.contains('hidden')) {
+            cell.classList.remove('zerozero');
+            cell.classList.add('completed');
+        }
     }
 }
 
