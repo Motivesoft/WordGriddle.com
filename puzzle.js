@@ -44,7 +44,7 @@ const currentPuzzle = {
 
     // Game progress
     foundKeyWords: new Set(),
-    foundOtherWords: new Set(),
+    foundExtraWords: new Set(),
 };
 
 function openPuzzle(puzzle) {
@@ -57,7 +57,6 @@ function openPuzzle(puzzle) {
     currentPuzzle.height = puzzle.size;
 
     getPuzzleTitleElement().innerHTML = puzzle.title;
-    updatePuzzleProgressMessage();
 
     // Transient variables
     currentPuzzle.isDrawing = false;
@@ -67,10 +66,15 @@ function openPuzzle(puzzle) {
 
     // TODO other setup/state stuff
     currentPuzzle.foundKeyWords.clear();
-    currentPuzzle.foundOtherWords.clear();
+    currentPuzzle.foundExtraWords.clear();
 
     // Initiate things using our 'currentPuzzle' state object
     initialiseGrid();
+
+    // We are using local storage for progress, so let's check
+    loadProgress();
+
+    updatePuzzleProgressMessage();
 }
 
 function initialiseGrid() {
@@ -224,8 +228,8 @@ function continueDragGesture(cell, clientX, clientY) {
     }
 }
 
-// Stop a drag operation and process the outcome
-function stopDragGesture() {
+// End a drag operation and process the outcome
+function endDragGesture() {
     if (currentPuzzle.isDrawing) {
         currentPuzzle.isDrawing = false;
 
@@ -258,14 +262,14 @@ function stopDragGesture() {
 
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
             }
-        } else if (currentPuzzle.puzzle.otherWords?.some(([word, _]) => word === selectedWordLower)) {
+        } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
             console.log(`Found other word: ${selectedWordUpper}`);
 
-            if (currentPuzzle.foundOtherWords.has(selectedWordUpper)) {
+            if (currentPuzzle.foundExtraWords.has(selectedWordUpper)) {
                 updateOutcomeDisplay(`Extra word already found: ${selectedWordUpper}`);
             } else {
                 // TODO add to found other words list (and save)
-                currentPuzzle.foundOtherWords.add(selectedWordUpper);
+                currentPuzzle.foundExtraWords.add(selectedWordUpper);
 
                 updateOutcomeDisplay(`Extra word found: ${selectedWordUpper}`);
             }
@@ -274,6 +278,8 @@ function stopDragGesture() {
 
             // TODO any penatlies for this?
         }
+
+        storeProgress();
 
         // Clear any selection decorations
         clearTrail();
@@ -416,7 +422,7 @@ function handleMouseMove(e) {
 }
 
 function handleMouseEnd(e) {
-    stopDragGesture();
+    endDragGesture();
 }
 
 // Touch handlers
@@ -436,7 +442,7 @@ function handleTouchMove(e) {
 }
 
 function handleTouchEnd(e) {
-    stopDragGesture();
+    endDragGesture();
 }
 
 function handleResize() {
@@ -510,6 +516,49 @@ function updatePuzzleProgressMessage() {
 
         countsMessageElement.innerHTML = `<ul>${countsHtml}</ul>`;
     }
+}
+
+// Progress storage
+
+
+function getKeyWordStorageKey() {
+    return `puzzle-${currentPuzzle.puzzle.id}.keyWords`;
+}
+
+function getExtraWordStorageKey() {
+    return `puzzle-${currentPuzzle.puzzle.id}.extraWords`;
+}
+
+function storeProgress() {
+    console.log(`Store: ${Array.from(currentPuzzle.foundKeyWords).join(',')}`);
+    localStorage.setItem(getKeyWordStorageKey(), Array.from(currentPuzzle.foundKeyWords).join(',')); 
+    localStorage.setItem(getExtraWordStorageKey(), Array.from(currentPuzzle.foundExtraWords).join(',')); 
+}
+
+function loadProgress() {
+    const progressKeyWords = localStorage.getItem(getKeyWordStorageKey()); 
+    if (progressKeyWords) {
+        const words = progressKeyWords.split(',');
+        words.forEach((word)=>{
+            currentPuzzle.foundKeyWords.add(word);
+        })
+    }
+    
+    const progressExtraWords = localStorage.getItem(getKeyWordStorageKey());
+    if (progressExtraWords) {
+        const words = progressExtraWords.split(',');
+        words.forEach((word)=>{
+            currentPuzzle.foundExtraWords.add(word);
+        })
+    }
+}
+
+function resetProgress() {
+    localStorage.removeItem(getKeyWordStorageKey()); 
+    localStorage.removeItem(getExtraWordStorageKey());
+    
+    // Reload everything
+    openPuzzle(currentPuzzle.puzzle);
 }
 
 // Get ready
