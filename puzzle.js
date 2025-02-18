@@ -230,7 +230,7 @@ function stopDragGesture() {
         currentPuzzle.isDrawing = false;
 
         // TODO do word finding logic here
-        const selectedWord = currentPuzzle.selectedLetters.map(item => item.letter).join('').toLowerCase();
+        const selectedWord = currentPuzzle.selectedLetters.map(item => item.letter).join('');
         const selectedPath = currentPuzzle.selectedLetters.map(item => `[${item.index}]`).join('');
 
         if (selectedWord.length < 4) {
@@ -239,33 +239,41 @@ function stopDragGesture() {
             let wordKnown = false;
             if (currentPuzzle.puzzle.keyWords) {
                 currentPuzzle.puzzle.keyWords.forEach(([word, path]) => {
-                    if (word === selectedWord) {
+                    if (word.toUpperCase() === selectedWord) {
                         console.log(`Found key word: ${word}`);
 
                         wordKnown = true;
 
-                        // TODO add to found key words list (and save)
-                        // TODO reduce red/grey scores and see if we're finished
-                        currentPuzzle.foundKeyWords.add(word);
-
-                        if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
-                            alert("Congratulations. You've found all of the key words!");
+                        if (currentPuzzle.foundKeyWords.has(word)) {
+                            updateOutcomeDisplay(`Key word already found: ${selectedWord}`);
+                        } else {
+                            // TODO add to found key words list (and save)
+                            // TODO reduce red/grey scores and see if we're finished
+                            currentPuzzle.foundKeyWords.add(word);
+    
+                            if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
+                                alert("Congratulations. You've found all of the key words!");
+                            }
+    
+                            updateOutcomeDisplay(`Key word found: ${selectedWord}`);
                         }
-
-                        updateOutcomeDisplay(`Key word found: ${selectedWord}`);
                     }
                 });
             }
 
-            if (currentPuzzle.puzzle.otherWords) {
+            if (!wordKnown && currentPuzzle.puzzle.otherWords) {
                 currentPuzzle.puzzle.otherWords.forEach(([word, path]) => {
-                    if (word == selectedWord) {
+                    if (word.toUpperCase() == selectedWord) {
                         console.log(`Found other word: ${word}`);
 
                         wordKnown = true;
 
-                        // TODO add to found other words list (and save)
-                        currentPuzzle.foundOtherWords.push(word);
+                        if (currentPuzzle.foundOtherWords.has(word)) {
+                            updateOutcomeDisplay(`Extra word already found: ${selectedWord}`);
+                        } else {
+                            // TODO add to found other words list (and save)
+                            currentPuzzle.foundOtherWords.push(word);
+                        }
                     }
 
                     updateOutcomeDisplay(`Extra word found: ${selectedWord}`);
@@ -468,7 +476,7 @@ function getPuzzleTitleElement() {
 }
 
 function updateSelectedLettersDisplay() {
-    document.getElementById('selected-letters').innerHTML = currentPuzzle.selectedLetters.map((item) => item.letter).join('');
+    document.getElementById('outcome-message').innerHTML = currentPuzzle.selectedLetters.map((item) => item.letter).join('');
 }
 
 function updateOutcomeDisplay(message) {
