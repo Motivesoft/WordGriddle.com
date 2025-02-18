@@ -43,8 +43,8 @@ const currentPuzzle = {
     mostRecentCell: null,
 
     // Game progress
-    foundKeyWords: [],
-    foundOtherWords: [],
+    foundKeyWords: new Set(),
+    foundOtherWords: new Set(),
 };
 
 function openPuzzle(puzzle) {
@@ -57,6 +57,7 @@ function openPuzzle(puzzle) {
     currentPuzzle.height = puzzle.size;
 
     getPuzzleTitleElement().innerHTML = puzzle.title;
+    updatePuzzleProgressMessage();
 
     // Transient variables
     currentPuzzle.isDrawing = false;
@@ -65,8 +66,8 @@ function openPuzzle(puzzle) {
     currentPuzzle.mostRecentCell = null;
 
     // TODO other setup/state stuff
-    currentPuzzle.foundKeyWords.length = 0;
-    currentPuzzle.foundOtherWords.length = 0;
+    currentPuzzle.foundKeyWords.clear();
+    currentPuzzle.foundOtherWords.clear();
 
     // Initiate things using our 'currentPuzzle' state object
     initialiseGrid();
@@ -129,6 +130,8 @@ function startDragGesture(e) {
 
         // Draw the start of a new trail
         redrawTrail();
+        updateSelectedLettersDisplay();
+        updateOutcomeDisplay();
 
         // Remember where we are for backtracking
         currentPuzzle.mostRecentCell = cell;
@@ -217,6 +220,7 @@ function continueDragGesture(cell, clientX, clientY) {
 
         // Draw the updated trail
         redrawTrail();
+        updateSelectedLettersDisplay();
     }
 }
 
@@ -229,31 +233,48 @@ function stopDragGesture() {
         const selectedWord = currentPuzzle.selectedLetters.map(item => item.letter).join('').toLowerCase();
         const selectedPath = currentPuzzle.selectedLetters.map(item => `[${item.index}]`).join('');
 
-        if (currentPuzzle.puzzle.keyWords) {
-            currentPuzzle.puzzle.keyWords.forEach(([word, path]) => {
-                if (word === selectedWord) {
-                    console.log(`Found key word: ${word}`);
-    
-                    // TODO add to found key words list (and save)
-                    // TODO reduce red/grey scores and see if we're finished
-                    currentPuzzle.foundKeyWords.push(word);
-    
-                    if (currentPuzzle.foundKeyWords.length == currentPuzzle.puzzle.keyWords.length) {
-                        alert( "Congratulations. You've found all of the key words!");
-                    }
-                }
-            });
-        }
+        if (selectedWord.length < 4) {
+            updateOutcomeDisplay(`Word too short`);
+        } else {
+            let wordKnown = false;
+            if (currentPuzzle.puzzle.keyWords) {
+                currentPuzzle.puzzle.keyWords.forEach(([word, path]) => {
+                    if (word === selectedWord) {
+                        console.log(`Found key word: ${word}`);
 
-        if (currentPuzzle.puzzle.otherWords) {
-            currentPuzzle.puzzle.otherWords.forEach(([word, path]) => {
-                if (word == selectedWord) {
-                    console.log(`Found other word: ${word}`);
-    
-                    // TODO add to found other words list (and save)
-                    currentPuzzle.foundOtherWords.push(word);
-                }
-            });
+                        wordKnown = true;
+
+                        // TODO add to found key words list (and save)
+                        // TODO reduce red/grey scores and see if we're finished
+                        currentPuzzle.foundKeyWords.add(word);
+
+                        if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
+                            alert("Congratulations. You've found all of the key words!");
+                        }
+
+                        updateOutcomeDisplay(`Key word found: ${selectedWord}`);
+                    }
+                });
+            }
+
+            if (currentPuzzle.puzzle.otherWords) {
+                currentPuzzle.puzzle.otherWords.forEach(([word, path]) => {
+                    if (word == selectedWord) {
+                        console.log(`Found other word: ${word}`);
+
+                        wordKnown = true;
+
+                        // TODO add to found other words list (and save)
+                        currentPuzzle.foundOtherWords.push(word);
+                    }
+
+                    updateOutcomeDisplay(`Extra word found: ${selectedWord}`);
+                });
+            }
+
+            if (!wordKnown) {
+                updateOutcomeDisplay(`Not a recognised word: ${selectedWord}`);
+            }
         }
 
         // Clear any selection decorations
@@ -262,6 +283,9 @@ function stopDragGesture() {
         document.querySelectorAll('.grid-item').forEach(item => {
             item.classList.remove('selected');
         });
+
+        // Update progress
+        updatePuzzleProgressMessage();
     };
 }
 
@@ -269,7 +293,7 @@ function redrawTrail() {
     // Draw the train onto a canvas floating above the grid
     const trailCanvas = getTrailCanvas();
     const ctx = trailCanvas.getContext('2d');
-    
+
     // Actually, draw to an offscreen, replica canvas first
     const offscreenCanvas = document.createElement("canvas");
     const offscreenCtx = offscreenCanvas.getContext("2d");
@@ -441,6 +465,52 @@ function getTrailCanvas() {
 
 function getPuzzleTitleElement() {
     return document.getElementById('puzzle-title');
+}
+
+function updateSelectedLettersDisplay() {
+    document.getElementById('selected-letters').innerHTML = currentPuzzle.selectedLetters.map((item) => item.letter).join('');
+}
+
+function updateOutcomeDisplay(message) {
+    document.getElementById('outcome-message').innerHTML = message || '&nbsp;';
+}
+
+function updatePuzzleProgressMessage() {
+    const progressMessageElement = document.getElementById('progress-message');
+    const countsMessageElement = document.getElementById('counts-message');
+
+    if (currentPuzzle.puzzle) {
+        progressMessageElement.innerHTML = `You have found ${currentPuzzle.foundKeyWords.size} of ${currentPuzzle.puzzle.keyWords.length} words.`;
+
+        // Work out count of words at each word length
+        const counts = new Map();
+        let longestWordLength = 0;
+        currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
+            // Make sure we've got an entry for this length of word
+            if (!counts.has(word.length)) {
+                counts.set(word.length, 0);
+            }
+
+            // Increment the number of words of this length
+            counts.set(word.length, counts.get(word.length) + 1);
+
+            longestWordLength = Math.max(longestWordLength, word.length);
+        });
+
+        // Now take away the ones we've found
+        currentPuzzle.foundKeyWords.forEach((word) => {
+            counts.set(word.length, counts.get(word.length) - 1);
+        });
+
+        let countsHtml = '';
+        for (let i = 1; i <= longestWordLength; i++) {
+            if (counts.has(i)) {
+                countsHtml += `<li>${i} letter words: ${counts.get(i)}</li>`;
+            }
+        }
+
+        countsMessageElement.innerHTML = `<ul>${countsHtml}</ul>`;
+    }
 }
 
 // Get ready
