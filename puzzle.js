@@ -311,6 +311,7 @@ function redrawTrail() {
 
     // Use a CSS variable for the color of the trail so it can be modified by themes
     const color = getComputedStyle(document.documentElement).getPropertyValue('--trail-color');
+    const transparency = getComputedStyle(document.documentElement).getPropertyValue('--trail-transparency');
 
     let cells = currentPuzzle.currentTrail.length;
     if (cells > 0) {
@@ -333,7 +334,7 @@ function redrawTrail() {
 
     // Use globalCompositeOperation to apply transparency when drawing onto the main canvas
     ctx.globalCompositeOperation = "source-over";
-    ctx.globalAlpha = 0.4; // Set transparency
+    ctx.globalAlpha = Number.parseFloat(transparency); // Set transparency
 
     ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
     ctx.drawImage(offscreenCanvas, 0, 0);

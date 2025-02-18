@@ -7,6 +7,7 @@
     --grid-cell-background: #f4f4f4;
     --grid-cell-border: #ccc;
     --trail-color: #800000;
+    --trail-transparency: 0.2;
 }
 
 [data-theme="dark"] {
@@ -15,6 +16,7 @@
     --grid-cell-background: #343434;
     --grid-cell-border: #646464;
     --trail-color: #800000;
+    --trail-transparency: 0.3;
 }
 
 /* Container for the main content */
