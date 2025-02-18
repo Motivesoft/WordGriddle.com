@@ -44,7 +44,7 @@ const currentPuzzle = {
 
     // Game progress
     foundKeyWords: new Set(),
-    foundOtherWords: new Set(),
+    foundExtraWords: new Set(),
 };
 
 function openPuzzle(puzzle) {
@@ -57,7 +57,6 @@ function openPuzzle(puzzle) {
     currentPuzzle.height = puzzle.size;
 
     getPuzzleTitleElement().innerHTML = puzzle.title;
-    updatePuzzleProgressMessage();
 
     // Transient variables
     currentPuzzle.isDrawing = false;
@@ -67,10 +66,17 @@ function openPuzzle(puzzle) {
 
     // TODO other setup/state stuff
     currentPuzzle.foundKeyWords.clear();
-    currentPuzzle.foundOtherWords.clear();
+    currentPuzzle.foundExtraWords.clear();
 
     // Initiate things using our 'currentPuzzle' state object
     initialiseGrid();
+
+    // We are using local storage for progress, so let's check
+    loadProgress();
+
+    // Update the other parts of the display
+    updatePuzzleProgressMessage();
+    updateSelectedLettersDisplay();
 }
 
 function initialiseGrid() {
@@ -148,7 +154,7 @@ function continueDragGesture(cell, clientX, clientY) {
 
     // If we're on a cell in the grid and have moved from the previous cell, treat this as a drag gesture
     // unless the cell contains a space, intended to mean a gap in the layout that the user may not select
-    if (cell.classList.contains('grid-item') && cell !== currentPuzzle.mostRecentCell && cell.dataset.letter !== ' ') {
+    if (cell.classList.contains('grid-item') && cell !== currentPuzzle.mostRecentCell && cell.dataset.letter !== '.') {
         // Reject points too close to the edge sto avoid false positives
         const cellRect = cell.getBoundingClientRect();
         const cellCentreX = cellRect.left + (cellRect.width / 2);
@@ -224,66 +230,58 @@ function continueDragGesture(cell, clientX, clientY) {
     }
 }
 
-// Stop a drag operation and process the outcome
-function stopDragGesture() {
+// End a drag operation and process the outcome
+function endDragGesture() {
     if (currentPuzzle.isDrawing) {
         currentPuzzle.isDrawing = false;
 
-        // TODO do word finding logic here
-        const selectedWord = currentPuzzle.selectedLetters.map(item => item.letter).join('');
-        const selectedPath = currentPuzzle.selectedLetters.map(item => `[${item.index}]`).join('');
+        const selectedWordUpper = currentPuzzle.selectedLetters.map(item => item.letter).join('').toUpperCase();
+        const selectedWordLower = selectedWordUpper.toLowerCase();
 
-        if (selectedWord.length < 4) {
+        // TODO Not needed right now: 
+        //   const selectedPath = currentPuzzle.selectedLetters.map(item => `[${item.index}]`).join('');
+
+        // Check for the selected word being either:
+        // - too short
+        // - a key word (that may or may not have already been found)
+        // - an extra word (that may or may not have already been found)
+        // - not a word at all
+        if (selectedWordUpper.length < 4) {
             updateOutcomeDisplay(`Word too short`);
+        } else if (currentPuzzle.puzzle.keyWords?.some(([word, _]) => word === selectedWordLower)) {
+            console.log(`Found key word: ${selectedWordUpper}`);
+
+            if (currentPuzzle.foundKeyWords.has(selectedWordUpper)) {
+                updateOutcomeDisplay(`Key word already found: ${selectedWordUpper}`);
+            } else {
+                // TODO add to found key words list (and save)
+                // TODO reduce red/grey scores and see if we're finished
+                currentPuzzle.foundKeyWords.add(selectedWordUpper);
+
+                if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
+                    alert("Congratulations. You've found all of the key words!");
+                }
+
+                updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
+            }
+        } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
+            console.log(`Found other word: ${selectedWordUpper}`);
+
+            if (currentPuzzle.foundExtraWords.has(selectedWordUpper)) {
+                updateOutcomeDisplay(`Extra word already found: ${selectedWordUpper}`);
+            } else {
+                // TODO add to found other words list (and save)
+                currentPuzzle.foundExtraWords.add(selectedWordUpper);
+
+                updateOutcomeDisplay(`Extra word found: ${selectedWordUpper}`);
+            }
         } else {
-            let wordKnown = false;
-            if (currentPuzzle.puzzle.keyWords) {
-                currentPuzzle.puzzle.keyWords.forEach(([word, path]) => {
-                    if (word.toUpperCase() === selectedWord) {
-                        console.log(`Found key word: ${word}`);
+            updateOutcomeDisplay(`Not a recognised word: ${selectedWordUpper}`);
 
-                        wordKnown = true;
-
-                        if (currentPuzzle.foundKeyWords.has(word)) {
-                            updateOutcomeDisplay(`Key word already found: ${selectedWord}`);
-                        } else {
-                            // TODO add to found key words list (and save)
-                            // TODO reduce red/grey scores and see if we're finished
-                            currentPuzzle.foundKeyWords.add(word);
-    
-                            if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
-                                alert("Congratulations. You've found all of the key words!");
-                            }
-    
-                            updateOutcomeDisplay(`Key word found: ${selectedWord}`);
-                        }
-                    }
-                });
-            }
-
-            if (!wordKnown && currentPuzzle.puzzle.otherWords) {
-                currentPuzzle.puzzle.otherWords.forEach(([word, path]) => {
-                    if (word.toUpperCase() == selectedWord) {
-                        console.log(`Found other word: ${word}`);
-
-                        wordKnown = true;
-
-                        if (currentPuzzle.foundOtherWords.has(word)) {
-                            updateOutcomeDisplay(`Extra word already found: ${selectedWord}`);
-                        } else {
-                            // TODO add to found other words list (and save)
-                            currentPuzzle.foundOtherWords.push(word);
-                        }
-                    }
-
-                    updateOutcomeDisplay(`Extra word found: ${selectedWord}`);
-                });
-            }
-
-            if (!wordKnown) {
-                updateOutcomeDisplay(`Not a recognised word: ${selectedWord}`);
-            }
+            // TODO any penatlies for this?
         }
+
+        storeProgress();
 
         // Clear any selection decorations
         clearTrail();
@@ -426,7 +424,7 @@ function handleMouseMove(e) {
 }
 
 function handleMouseEnd(e) {
-    stopDragGesture();
+    endDragGesture();
 }
 
 // Touch handlers
@@ -446,7 +444,7 @@ function handleTouchMove(e) {
 }
 
 function handleTouchEnd(e) {
-    stopDragGesture();
+    endDragGesture();
 }
 
 function handleResize() {
@@ -477,7 +475,11 @@ function getPuzzleTitleElement() {
 }
 
 function updateSelectedLettersDisplay() {
-    document.getElementById('outcome-message').innerHTML = currentPuzzle.selectedLetters.map((item) => item.letter).join('');
+    if (currentPuzzle.selectedLetters?.length) {
+        document.getElementById('outcome-message').innerHTML = currentPuzzle.selectedLetters.map((item) => item.letter).join('');
+    } else {
+        document.getElementById('outcome-message').innerHTML = '&nbsp;';
+    }
 }
 
 function updateOutcomeDisplay(message) {
@@ -520,6 +522,49 @@ function updatePuzzleProgressMessage() {
 
         countsMessageElement.innerHTML = `<ul>${countsHtml}</ul>`;
     }
+}
+
+// Progress storage
+
+
+function getKeyWordStorageKey() {
+    return `puzzle-${currentPuzzle.puzzle.id}.keyWords`;
+}
+
+function getExtraWordStorageKey() {
+    return `puzzle-${currentPuzzle.puzzle.id}.extraWords`;
+}
+
+function storeProgress() {
+    console.log(`Store: ${Array.from(currentPuzzle.foundKeyWords).join(',')}`);
+    localStorage.setItem(getKeyWordStorageKey(), Array.from(currentPuzzle.foundKeyWords).join(',')); 
+    localStorage.setItem(getExtraWordStorageKey(), Array.from(currentPuzzle.foundExtraWords).join(',')); 
+}
+
+function loadProgress() {
+    const progressKeyWords = localStorage.getItem(getKeyWordStorageKey()); 
+    if (progressKeyWords) {
+        const words = progressKeyWords.split(',');
+        words.forEach((word)=>{
+            currentPuzzle.foundKeyWords.add(word);
+        })
+    }
+    
+    const progressExtraWords = localStorage.getItem(getKeyWordStorageKey());
+    if (progressExtraWords) {
+        const words = progressExtraWords.split(',');
+        words.forEach((word)=>{
+            currentPuzzle.foundExtraWords.add(word);
+        })
+    }
+}
+
+function resetProgress() {
+    localStorage.removeItem(getKeyWordStorageKey()); 
+    localStorage.removeItem(getExtraWordStorageKey());
+    
+    // Reload everything
+    openPuzzle(currentPuzzle.puzzle);
 }
 
 // Get ready
