@@ -1,6 +1,6 @@
 {
     "puzzle": {
-        "id": 1,
+        "id": 0,
         "title": "Demo Puzzle #0",
         "author": 1,
         "size": 3,
@@ -44,7 +44,7 @@
                 "[0][1][2][5][8][7][6][3]"
             ]
         ],
-        "otherWords": [
+        "extraWords": [
             [
                 "etna",
                 "[5][2][1][0]"
