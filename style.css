@@ -193,9 +193,69 @@ a:active {
     padding-bottom: 20px;
 }
 
-.parapgraph {
+.paragraph {
     margin: 0px;
     padding: 20px 20px 0px 20px;
+}
+
+/* Message Box */
+
+/* Styling for the dialog */
+dialog {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid var(--dialog-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    background-color: var(--dialog-background);
+    color: var(--text-color);
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+dialog p {
+    margin: 10px 0 20px;
+    font-size: 16px;
+}
+
+dialog button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: var(--button-background);
+    color: var(--button-text-color);
+}
+
+dialog button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+}
+
+dialog button[type="button"] {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Icon styles */
+.icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.info .icon {
+    color: var(--icon-info-color);
+}
+
+.warning .icon {
+    color: var(--icon-warning-color);
+}
+
+.error .icon {
+    color: var(--icon-error-color);
 }
 
 /* CSS rules for mobile devices go here */

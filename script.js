@@ -3,6 +3,74 @@
 // This script should be loaded in <head>, without using 'defer' to reduce any theme flickering
 // An event handler at the end allows for any actions that require the DOM to have been loaded
 
+// ** MESSAGE DISPlAY
+
+// Function to open the message box with an icon
+function openMessageBox(message, type = 'info') {
+    const dialog = document.getElementById('messageBoxDialog');
+    const messageBoxText = document.getElementById('messageBoxText');
+    const icon = dialog.querySelector('.icon div');
+    const okBtn = document.getElementById('okBtn');
+
+    // Set the message
+    messageBoxText.innerHTML = message;
+
+    // Set the icon and dialog class based on the message type
+    dialog.className = type; // Apply the type-specific class
+    switch (type) {
+        case 'info':
+            icon.innerHTML = '&#x2139';
+            icon.className = 'info-icon';
+            break;
+        case 'warning':
+            icon.innerHTML = '&#x26a0';
+            icon.className = 'warning-icon';
+            break;
+        case 'error':
+            icon.innerHTML = '&#x2716';
+            icon.className = 'error-icon';
+            break;
+        default:
+            icon.className = 'info-icon';
+    }
+
+    // Show the dialog
+    dialog.showModal();
+
+    // Return a promise that resolves when the user clicks OK
+    return new Promise((resolve) => {
+        okBtn.addEventListener('click', function () {
+            dialog.close();
+            resolve();
+        }, { once: true });
+    });
+}
+
+// Function to open the confirmation dialog
+function openConfirmationDialog(message) {
+    const dialog = document.getElementById('confirmationDialog');
+    const dialogMessage = document.getElementById('dialogMessage');
+    const noBtn = document.getElementById('noBtn');
+
+    // Set the dialog message
+    dialogMessage.innerHTML = message;
+
+    // Show the dialog
+    dialog.showModal();
+
+    // Return a promise that resolves to the user's choice
+    return new Promise((resolve) => {
+        dialog.addEventListener('close', function () {
+            resolve(dialog.returnValue === 'yes');
+        }, { once: true });
+
+        // Handle No button click
+        noBtn.addEventListener('click', function () {
+            dialog.close('no');
+        }, { once: true });
+    });
+}
+
 // ** THEME FUNCTIONS
 
 // Function to set the theme and store it for future sessions

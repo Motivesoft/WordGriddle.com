@@ -62,8 +62,30 @@
             <h3>Words Remaining</h3>
             <div id="counts-message"></div>
             <button type="button" onclick="resetProgress()">Restart Puzzle</button>
+            <p>Information = &#x2139</p>
+            <p>Warning = &#x26a0</p>
+            <p>Error = &#x2716</p>
         </div>
     </div>
+
+    <!-- Messge Boxes -->
+
+    <dialog id="messageBoxDialog">
+        <div class="icon">
+            <div class="info-icon"></div>
+        </div>
+        <p id="messageBoxText">This is a message.</p>
+        <button type="button" id="okBtn">OK</button>
+    </dialog>
+
+    <dialog id="confirmationDialog">
+        <form method="dialog">
+            <p id="dialogMessage">Are you sure?</p>
+            <button type="submit" value="yes">Yes</button>
+            <button type="button" id="noBtn">No</button>
+        </form>
+    </dialog>
+
 </body>
 
 </html>
