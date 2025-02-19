@@ -99,6 +99,9 @@ function initialiseGrid() {
     gridElement.style.gridTemplateColumns = `repeat(${currentPuzzle.width}, 1fr)`;
     gridElement.style.gridTemplateRows = `repeat(${currentPuzzle.height}, 1fr)`;
 
+    // Test for a gap (empty cell, a hole) in the puzzle
+    const isEmptyCell = (char) => char === ' ' || char === '-' || char === '.';
+
     currentPuzzle.letterArray.forEach((letter, index) => {
         const cell = document.createElement('div');
         cell.className = 'grid-item';
@@ -111,7 +114,7 @@ function initialiseGrid() {
         
         // '.' is meaningful in terms of puzzle design, but don't show in the grid
         // Style the unusable parts of the grid so they look and interact as we need them to
-        if (letter === ' ' || letter === '.') {
+        if (isEmptyCell(letter)) {
             cell.classList.add('hidden');
             cell.textContent = ' ';
         } else {
