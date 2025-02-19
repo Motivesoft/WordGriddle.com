@@ -111,7 +111,7 @@ function initialiseGrid() {
         
         // '.' is meaningful in terms of puzzle design, but don't show in the grid
         // Style the unusable parts of the grid so they look and interact as we need them to
-        if (letter === '.') {
+        if (letter === ' ' || letter === '.') {
             cell.classList.add('hidden');
             cell.textContent = ' ';
         } else {
