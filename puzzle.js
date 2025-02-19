@@ -1,5 +1,30 @@
 // Scripting specific to the puzzle.html page
 
+// Enums
+const FoundMoveSortOrder = Object.freeze({
+    FOUND_ORDER: 1,
+    ALPHABETICAL: 2,
+    WORD_LENGTH: 3
+});
+
+// State
+const currentPuzzle = {
+    puzzle: null,
+    letterArray: [],
+    width: 0,
+    height: 0,
+
+    // Transient state variables
+    isDrawing: false,
+    selectedLetters: [],
+    currentTrail: [],
+    mostRecentCell: null,
+
+    // Game progress
+    foundKeyWords: new Set(),
+    foundExtraWords: new Set(),
+};
+
 // Assume we will be loaded with a 'file' parameter that points to a puzzle file on the server.
 // Load that puzzle and let the user play it
 document.addEventListener('DOMContentLoaded', async function () {
@@ -29,23 +54,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         await openMessageBox('This page needs to be launched from the puzzles catalog page.', 'error');
     }
 });
-
-const currentPuzzle = {
-    puzzle: null,
-    letterArray: [],
-    width: 0,
-    height: 0,
-
-    // Transient state variables
-    isDrawing: false,
-    selectedLetters: [],
-    currentTrail: [],
-    mostRecentCell: null,
-
-    // Game progress
-    foundKeyWords: new Set(),
-    foundExtraWords: new Set(),
-};
 
 function openPuzzle(puzzle) {
     console.debug(`openPuzzle with ID: ${puzzle.id}, a ${puzzle.size}x${puzzle.size} with title: ${puzzle.title}`);
@@ -555,23 +563,54 @@ function updateWordsFound() {
         return;
     }
 
-    const wordsFoundMap = new Map();
+    // const wordsFoundMap = new Map();
+    // currentPuzzle.foundKeyWords.forEach((word) => {
+    //     if (!wordsFoundMap.has(word.length)) {
+    //         wordsFoundMap.set(word.length, []);
+    //     }
+    //     wordsFoundMap.get(word.length).push(word);
+    // });
+
+    // TODO get this from config and let it be editable
+    const foundOrdering = FoundMoveSortOrder.WORD_LENGTH;
+
+    // Copy the array so we can sort the copy and leave the original untouched
+    const wordList = [];
     currentPuzzle.foundKeyWords.forEach((word) => {
-        if (!wordsFoundMap.has(word.length)) {
-            wordsFoundMap.set(word.length, []);
-        }
-        wordsFoundMap.get(word.length).push(word);
+        wordList.push(word);
     });
 
-    let html = '';
-    wordsFoundMap.forEach((words, index) => {
-        html += `<h4>${index}-letter words:</h4>`;
-        html += `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; padding-bottom: 10px;">`;
-        words.forEach((word) => {
-            html += `<div>${word}</div>`;
-        });
-        html += `</div>`;
+    switch (foundOrdering) {
+        default:
+        case FoundMoveSortOrder.FOUND_ORDER:
+            // The order in which the user discovered them
+            // Nothing to do here as the list will already be in this order
+            break;
+
+        case FoundMoveSortOrder.ALPHABETICAL:
+            // Alphabetically
+            wordList.sort();
+            break;
+
+        case FoundMoveSortOrder.WORD_LENGTH:
+            // By length, then alphabetical
+            wordList.sort((a,b) => {
+                if (a.length === b.length) {
+                    return a.localeCompare(b);
+                }
+                return a.length - b.length;
+            });
+            break;
+    }
+
+    // Build the list
+    let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 1rem; padding-bottom: 10px;">`;
+
+    wordList.forEach((word) => {
+        html += `<div>${word}</div>`;
     });
+
+    html += `</div>`;
 
     const wordsFoundElement = getWordsFoundElement();
     wordsFoundElement.innerHTML = html;
