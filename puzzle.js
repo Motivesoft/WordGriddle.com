@@ -72,11 +72,12 @@ function openPuzzle(puzzle) {
     initialiseGrid();
 
     // We are using local storage for progress, so let's check
-    loadProgress();
+    restoreProgress();
 
     // Update the other parts of the display
     updatePuzzleProgressMessage();
     updateSelectedLettersDisplay();
+    updateRedGreyDisplay();
 }
 
 function initialiseGrid() {
@@ -102,10 +103,26 @@ function initialiseGrid() {
         cell.dataset.letter = letter;
         cell.dataset.index = index;
         cell.dataset.coord = `[${index}]`;
+        cell.dataset.red = 0;
+        cell.dataset.grey = 0;
 
         // Style the unusable parts of the grid so they look and interact as we need them to
         if (letter === '.') {
             cell.classList.add('hidden');
+        } else {
+            currentPuzzle.puzzle.keyWords.forEach(([_, path]) => {
+                if (path.startsWith(cell.dataset.coord)) {
+                    cell.dataset.red++;
+                }
+    
+                if (path.includes(cell.dataset.coord)) {
+                    cell.dataset.grey++;
+                }
+            });
+    
+             if (cell.dataset.grey == 0) {
+                cell.classList.add('zerozero');
+            }
         }
 
         // Add the cell to the grid
@@ -249,29 +266,24 @@ async function endDragGesture() {
         if (selectedWordUpper.length < 4) {
             updateOutcomeDisplay(`Word too short`);
         } else if (currentPuzzle.puzzle.keyWords?.some(([word, _]) => word === selectedWordLower)) {
-            console.log(`Found key word: ${selectedWordUpper}`);
-
             if (currentPuzzle.foundKeyWords.has(selectedWordUpper)) {
                 updateOutcomeDisplay(`Key word already found: ${selectedWordUpper}`);
             } else {
-                // TODO add to found key words list (and save)
-                // TODO reduce red/grey scores and see if we're finished
-                currentPuzzle.foundKeyWords.add(selectedWordUpper);
+                currentPuzzle.foundKeyWords.add(selectedWordLower);
+
+                updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
+                decrementRedGrey(selectedWordLower);
 
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
                     await openMessageBox('Congratulations. You have found all of the key words!', 'info');
                 }
-
-                updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
-            console.log(`Found other word: ${selectedWordUpper}`);
-
             if (currentPuzzle.foundExtraWords.has(selectedWordUpper)) {
                 updateOutcomeDisplay(`Extra word already found: ${selectedWordUpper}`);
             } else {
                 // TODO add to found other words list (and save)
-                currentPuzzle.foundExtraWords.add(selectedWordUpper);
+                currentPuzzle.foundExtraWords.add(selectedWordLower);
 
                 updateOutcomeDisplay(`Extra word found: ${selectedWordUpper}`);
             }
@@ -291,6 +303,7 @@ async function endDragGesture() {
         });
 
         // Update progress
+        updateRedGreyDisplay();
         updatePuzzleProgressMessage();
     };
 }
@@ -486,6 +499,80 @@ function updateOutcomeDisplay(message) {
     document.getElementById('outcome-message').innerHTML = message || '&nbsp;';
 }
 
+function decrementRedGrey(foundWord) {
+    currentPuzzle.puzzle.keyWords.forEach(([word, path]) => {
+        if (foundWord === word) {
+            const gridElement = getGridElement();
+            for (let i = 0; i < gridElement.children.length; i++) {
+                const cell = gridElement.children[i];
+
+                if (path.startsWith(cell.dataset.coord)) {
+                    cell.dataset.red--;
+                }
+
+                if (path.includes(cell.dataset.coord)) {
+                    cell.dataset.grey--;
+    
+                    if (cell.dataset.grey == 0 ) {
+                        cell.classList.add('zerozero');
+                    }
+                }
+
+                var attr = '';
+                if (cell.dataset.red > 9) {
+                    attr = '+';
+                } else if (cell.dataset.red > 0) {
+                    attr = `${cell.dataset.red}`;
+                }
+
+                cell.setAttribute('red-counter', attr);
+
+                var attr = '';
+                if (cell.dataset.grey > 9) {
+                    attr = '+';
+                } else if (cell.dataset.grey > 0) {
+                    attr = `${cell.dataset.grid}`;
+                }
+
+                cell.setAttribute('grey-counter', attr);
+            }
+        }
+    });
+}
+
+function updateRedGreyDisplay() {
+    const gridElement = getGridElement();
+    for (let i = 0; i < gridElement.children.length; i++) {
+        const cell = gridElement.children[i];
+        
+        if (cell.dataset.letter == '.') {
+            continue;
+        }
+        
+        if (cell.dataset.grey == 0) {
+            cell.classList.add('zerozero');
+        }
+
+        var attr = '';
+        if (cell.dataset.red > 9) {
+            attr = '+';
+        } else if (cell.dataset.red > 0) {
+            attr = `${cell.dataset.red}`;
+        }
+
+        cell.setAttribute('red-counter', attr);
+
+        var attr = '';
+        if (cell.dataset.grey > 9) {
+            attr = '+';
+        } else if (cell.dataset.grey > 0) {
+            attr = `${cell.dataset.grey}`;
+        }
+
+        cell.setAttribute('grey-counter', attr);
+    }
+}
+
 function updatePuzzleProgressMessage() {
     const progressMessageElement = document.getElementById('progress-message');
     const countsMessageElement = document.getElementById('counts-message');
@@ -539,18 +626,17 @@ function getExtraWordStorageKey() {
 }
 
 function storeProgress() {
-    console.log(`Store: ${Array.from(currentPuzzle.foundKeyWords).join(',')}`);
     localStorage.setItem(getKeyWordStorageKey(), Array.from(currentPuzzle.foundKeyWords).join(','));
     localStorage.setItem(getExtraWordStorageKey(), Array.from(currentPuzzle.foundExtraWords).join(','));
 }
 
-function loadProgress() {
+function restoreProgress() {
     const progressKeyWords = localStorage.getItem(getKeyWordStorageKey());
     if (progressKeyWords) {
         const words = progressKeyWords.split(',');
         words.forEach((word) => {
             currentPuzzle.foundKeyWords.add(word);
-        })
+        });
     }
 
     const progressExtraWords = localStorage.getItem(getKeyWordStorageKey());
@@ -558,8 +644,15 @@ function loadProgress() {
         const words = progressExtraWords.split(',');
         words.forEach((word) => {
             currentPuzzle.foundExtraWords.add(word);
-        })
+        });
     }
+
+    // Adjust the red/grey with these restored finds
+    currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
+        if (currentPuzzle.foundKeyWords.has(word)) {
+            decrementRedGrey(word);
+        }
+    });
 }
 
 async function resetProgress() {
@@ -576,7 +669,7 @@ async function resetProgress() {
 
 function showGridAsComplete() {
     const gridElement = getGridElement();
-    for( let i = 0; i < gridElement.children.length; i++) {
+    for (let i = 0; i < gridElement.children.length; i++) {
         const cell = gridElement.children[i];
         if (!cell.classList.contains('hidden')) {
             cell.classList.remove('zerozero');

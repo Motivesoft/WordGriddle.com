@@ -134,8 +134,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Perform final setup tasks
 async function finalSetup() {
-    console.log("Final setup complete");
-
     // Theme toggle logic for a UI control wanting
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     themeToggleBtn.addEventListener('click', function () {
