@@ -2,9 +2,9 @@
 
 // Enums
 const FoundMoveSortOrder = Object.freeze({
-    FOUND_ORDER: "1",
-    ALPHABETICAL: "2",
-    WORD_LENGTH: "3"
+    FOUND_ORDER: "FOUND_ORDER",
+    ALPHABETICAL: "ALPHABETICAL",
+    WORD_LENGTH: "WORD_LENGTH"
 });
 
 // State
