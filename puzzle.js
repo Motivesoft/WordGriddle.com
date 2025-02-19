@@ -267,7 +267,7 @@ async function endDragGesture() {
         if (selectedWordUpper.length < 4) {
             updateOutcomeDisplay(`Word too short`);
         } else if (currentPuzzle.puzzle.keyWords?.some(([word, _]) => word === selectedWordLower)) {
-            if (currentPuzzle.foundKeyWords.has(selectedWordUpper)) {
+            if (currentPuzzle.foundKeyWords.has(selectedWordLower)) {
                 updateOutcomeDisplay(`Key word already found: ${selectedWordUpper}`);
             } else {
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
@@ -284,7 +284,7 @@ async function endDragGesture() {
                 }
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
-            if (currentPuzzle.foundExtraWords.has(selectedWordUpper)) {
+            if (currentPuzzle.foundExtraWords.has(selectedWordLower)) {
                 updateOutcomeDisplay(`Extra word already found: ${selectedWordUpper}`);
             } else {
                 // TODO add to found other words list (and save)
