@@ -1,0 +1,186 @@
+/* CSS specific to the puzzle page(s) */
+@import '/style.css';
+
+:root,
+[data-theme="light"] {
+    --grid-cell-background: #f4f4f4;
+    --grid-cell-border: #ccc;
+    --grid-cell-completed-background: #cccccc;
+    --grid-cell-completed-color: #b82828;
+    --grid-cell-completed-zerozero: #aaaaaa;
+    --trail-color: #800000;
+    --trail-transparency: 0.2;
+}
+
+[data-theme="dark"] {
+    --grid-cell-background: #343434;
+    --grid-cell-border: #646464;
+    --grid-cell-completed-background: #1e1e1e;
+    --grid-cell-completed-color: #b82828;
+    --grid-cell-completed-zerozero: #444;
+    --trail-color: #400000;
+    --trail-transparency: 0.3;
+}
+
+/* Container for the main content */
+.container {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    gap: 20px;
+    height: calc(100vh - 120px);
+
+    /* Full height minus navbar and title */
+    box-sizing: border-box;
+}
+
+.left-side,
+.right-side {
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    background-color: var(--panel-background);
+
+    padding-bottom: 20px;
+}
+
+/* Left Side (Grid and Controls) */
+.left-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: 20px;
+    height: min-content;
+}
+
+/* Right Side (Scrollable Content) */
+.right-side {
+    flex: 1;
+    overflow-y: auto;
+    padding-left: 20px;
+    max-height: calc(80vh);
+}
+
+.grid-container {
+    display: grid;
+    gap: 10px;
+    aspect-ratio: 1 / 1;
+    /* Ensure the grid is square */
+    width: 80%;
+    /* Relative width to container */
+    max-width: 400px;
+    /* Maximum size */
+    min-width: 200px;
+    /* Minimum size */
+}
+
+.grid-container div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+
+    background-color: var(--grid-cell-background);
+    border: 1px solid var(--grid-cell-border);
+    font-size: 3vw;
+
+    user-select: none;
+    touch-action: none;
+}
+
+.grid-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #edeff1;
+    color: var(--text-color);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 10%;
+    position: relative;
+}
+
+/* The user is currently clicking or dragging through this cell */
+.grid-item.selected {
+    background-color: #e9ba3a;
+}
+
+/* This cell is empty (e.g. as in a waffle grid)*/
+.grid-item.hidden {
+    background-color: var(--panel-background);
+    border: none;
+    cursor: default;
+}
+
+/* There are no more scoring words using this letter */
+.grid-item.zerozero {
+    background-color: var(--grid-cell-completed-background);
+    color: var(--grid-cell-completed-zerozero);
+}
+
+/* All words have been found (does not include bonus, just main words) */
+.grid-item.completed {
+    background-color: var(--grid-cell-completed-background);
+    color: var(--grid-cell-completed-color);;
+}
+
+.grid-item::before,
+.grid-item::after {
+    position: absolute;
+    bottom: 2px;
+    font-size: 15px;
+}
+
+.grid-item::before {
+    content: attr(red-counter);
+    left: 2px;
+    color: #e03030;
+}
+
+.grid-item::after {
+    content: attr(grey-counter);
+    right: 2px;
+    color: #666;
+}
+
+canvas {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+
+    /* Your CSS rules for landscape mode on mobile devices go here */
+    .container {
+        height: fit-content;
+    }
+}
+
+/* Responsive Design for Portrait Mode */
+@media (max-width: 768px) and (orientation: portrait) {
+    .container {
+        flex-direction: column;
+    }
+
+    .left-side {
+        order: 1;
+    }
+
+    .right-side {
+        order: 2;
+        padding-left: 0;
+    }
+
+    .grid {
+        width: 100%;
+        /* Full width in portrait mode */
+        max-width: 400px;
+        /* Adjust for smaller screens */
+    }
+}
