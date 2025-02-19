@@ -42,7 +42,7 @@
     --button-background: #64b5f6;
     --button-disabled-background: #333;
     --button-hover-background: #4a90e2;
-    --button-text-color: #ffffff;
+    --button-text-color: #333;
     --checkbox-color: #64b5f6;
     --control-background: #2c2c2c;
     --control-border: #555;
@@ -99,6 +99,33 @@ a:hover {
 
 a:active {
     color: var(--navbar-link-active-color);
+}
+
+/* Buttons */
+
+.button {
+    background-color: var(--button-background);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 4px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.button:active {
+    background-color: var(--button-active-background);
+}
+
+.button:hover {
+    background-color: var(--button-hover-background);
+}
+
+.button:disabled {
+    background-color: var(--button-disabled-background);
+}
+
+.button.active {
+    background-color: var(--button-active-background);
 }
 
 /* Theme toggle button */
