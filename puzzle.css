@@ -40,7 +40,14 @@
     border-radius: 8px;
     background-color: var(--panel-background);
 
+    padding-top: 0px;
     padding-bottom: 20px;
+}
+
+.left-side h3,
+.right-side h3 {
+    margin-top: 0px;
+    padding-top: 20px;
 }
 
 /* Left Side (Grid and Controls) */
