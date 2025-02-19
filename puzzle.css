@@ -5,6 +5,9 @@
 [data-theme="light"] {
     --grid-cell-background: #f4f4f4;
     --grid-cell-border: #ccc;
+    --grid-cell-completed-background: #cccccc;
+    --grid-cell-completed-color: #b82828;
+    --grid-cell-completed-zerozero: #aaaaaa;
     --trail-color: #800000;
     --trail-transparency: 0.2;
 }
@@ -12,7 +15,10 @@
 [data-theme="dark"] {
     --grid-cell-background: #343434;
     --grid-cell-border: #646464;
-    --trail-color: #800000;
+    --grid-cell-completed-background: #1e1e1e;
+    --grid-cell-completed-color: #b82828;
+    --grid-cell-completed-zerozero: #444;
+    --trail-color: #400000;
     --trail-transparency: 0.3;
 }
 
@@ -111,14 +117,14 @@
 
 /* There are no more scoring words using this letter */
 .grid-item.zerozero {
-    background-color: #cccccc;
-    color: #aaaaaa;
+    background-color: var(--grid-cell-completed-background);
+    color: var(--grid-cell-completed-zerozero);
 }
 
 /* All words have been found (does not include bonus, just main words) */
 .grid-item.completed {
-    background-color: #e0e0e0;
-    color: #b82828;
+    background-color: var(--grid-cell-completed-background);
+    color: var(--grid-cell-completed-color);;
 }
 
 .grid-item::before,
