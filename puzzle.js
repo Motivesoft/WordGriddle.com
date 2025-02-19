@@ -115,13 +115,13 @@ function initialiseGrid() {
                 if (path.startsWith(cell.dataset.coord)) {
                     cell.dataset.red++;
                 }
-    
+
                 if (path.includes(cell.dataset.coord)) {
                     cell.dataset.grey++;
                 }
             });
-    
-             if (cell.dataset.grey == 0) {
+
+            if (cell.dataset.grey == 0) {
                 cell.classList.add('zerozero');
             }
         }
@@ -273,7 +273,7 @@ async function endDragGesture() {
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
 
                 currentPuzzle.foundKeyWords.add(selectedWordLower);
-                
+
                 decrementRedGrey(selectedWordLower);
 
                 updateRedGreyDisplay();
@@ -520,8 +520,8 @@ function decrementRedGrey(foundWord) {
 
                 if (path.includes(cell.dataset.coord)) {
                     cell.dataset.grey--;
-    
-                    if (cell.dataset.grey == 0 ) {
+
+                    if (cell.dataset.grey == 0) {
                         cell.classList.add('zerozero');
                     }
                 }
@@ -549,16 +549,22 @@ function decrementRedGrey(foundWord) {
 }
 
 function updateWordsFound() {
+    if (currentPuzzle.foundKeyWords.size == 0) {
+        const wordsFoundElement = getWordsFoundElement();
+        wordsFoundElement.innerHTML = 'None';
+        return;
+    }
+
     const wordsFoundMap = new Map();
-    currentPuzzle.foundKeyWords.forEach((word)=>{
+    currentPuzzle.foundKeyWords.forEach((word) => {
         if (!wordsFoundMap.has(word.length)) {
-            wordsFoundMap.set(word.length,[]);
+            wordsFoundMap.set(word.length, []);
         }
         wordsFoundMap.get(word.length).push(word);
     });
 
     let html = '';
-    wordsFoundMap.forEach((words,index) => {
+    wordsFoundMap.forEach((words, index) => {
         html += `<h4>${index}-letter words:</h4>`;
         html += `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; padding-bottom: 10px;">`;
         words.forEach((word) => {
@@ -575,11 +581,11 @@ function updateRedGreyDisplay() {
     const gridElement = getGridElement();
     for (let i = 0; i < gridElement.children.length; i++) {
         const cell = gridElement.children[i];
-        
+
         if (cell.dataset.letter == '.') {
             continue;
         }
-        
+
         if (cell.dataset.grey == 0) {
             cell.classList.add('zerozero');
         }
