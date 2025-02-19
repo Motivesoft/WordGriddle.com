@@ -161,8 +161,8 @@ function startDragGesture(e) {
 
         // Draw the start of a new trail
         redrawTrail();
-        updateSelectedLettersDisplay();
         updateOutcomeDisplay();
+        updateSelectedLettersDisplay();
 
         // Remember where we are for backtracking
         currentPuzzle.mostRecentCell = cell;
@@ -272,7 +272,11 @@ async function endDragGesture() {
         // - an extra word (that may or may not have already been found)
         // - not a word at all
         if (selectedWordUpper.length < 4) {
-            updateOutcomeDisplay(`Word too short`);
+            if (selectedWordUpper.length > 1) {
+                updateOutcomeDisplay(`Word too short`);
+            } else {
+                updateOutcomeDisplay();
+            }
         } else if (currentPuzzle.puzzle.keyWords?.some(([word, _]) => word === selectedWordLower)) {
             if (currentPuzzle.foundKeyWords.has(selectedWordLower)) {
                 updateOutcomeDisplay(`Key word already found: ${selectedWordUpper}`);
