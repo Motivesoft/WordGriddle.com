@@ -2,9 +2,9 @@
 
 // Enums
 const FoundMoveSortOrder = Object.freeze({
-    FOUND_ORDER: 1,
-    ALPHABETICAL: 2,
-    WORD_LENGTH: 3
+    FOUND_ORDER: "1",
+    ALPHABETICAL: "2",
+    WORD_LENGTH: "3"
 });
 
 // State
@@ -431,6 +431,28 @@ function attachEventListeners() {
     gridElement.addEventListener('touchmove', handleTouchMove);
     document.addEventListener('touchend', handleTouchEnd);
 
+    // Listen to, and populate, the found word ordering combo
+    const combobox = document.getElementById('found-order-selection');
+
+    // Load the saved option from localStorage or use a default
+    const savedOption = localStorage.getItem('foundWordOrdering');
+    if (savedOption) {
+        combobox.value = savedOption;
+    } else {
+        combobox.value = FoundMoveSortOrder.FOUND_ORDER;
+    }
+    
+    // Handle change event
+    combobox.addEventListener('change', function() {
+        const selectedValue = this.value;
+        
+        // Save to localStorage
+        localStorage.setItem('foundWordOrdering', selectedValue);
+    
+        // Apply the change
+        updateWordsFound();
+    });
+
     // Make sure our canvas for drawing selection lines is always the right size
     window.addEventListener('resize', handleResize);
 }
@@ -563,16 +585,7 @@ function updateWordsFound() {
         return;
     }
 
-    // const wordsFoundMap = new Map();
-    // currentPuzzle.foundKeyWords.forEach((word) => {
-    //     if (!wordsFoundMap.has(word.length)) {
-    //         wordsFoundMap.set(word.length, []);
-    //     }
-    //     wordsFoundMap.get(word.length).push(word);
-    // });
-
-    // TODO get this from config and let it be editable
-    const foundOrdering = FoundMoveSortOrder.WORD_LENGTH;
+    const foundWordOrdering = localStorage.getItem('foundWordOrdering');
 
     // Copy the array so we can sort the copy and leave the original untouched
     const wordList = [];
@@ -580,7 +593,7 @@ function updateWordsFound() {
         wordList.push(word);
     });
 
-    switch (foundOrdering) {
+    switch (foundWordOrdering) {
         default:
         case FoundMoveSortOrder.FOUND_ORDER:
             // The order in which the user discovered them
