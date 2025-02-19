@@ -100,24 +100,20 @@ function initialiseGrid() {
     gridElement.style.gridTemplateRows = `repeat(${currentPuzzle.height}, 1fr)`;
 
     currentPuzzle.letterArray.forEach((letter, index) => {
-        // '.' is meaningful in terms of puzzle design, but don't show in the grid
-        let displayLetter = letter;
-        if (letter === '.') {
-            displayLetter = ' ';
-        }
-
         const cell = document.createElement('div');
         cell.className = 'grid-item';
-        cell.textContent = displayLetter;
+        cell.textContent = letter;
         cell.dataset.letter = letter;
         cell.dataset.index = index;
         cell.dataset.coord = `[${index}]`;
         cell.dataset.red = 0;
         cell.dataset.grey = 0;
-
+        
+        // '.' is meaningful in terms of puzzle design, but don't show in the grid
         // Style the unusable parts of the grid so they look and interact as we need them to
         if (letter === '.') {
             cell.classList.add('hidden');
+            cell.textContent = ' ';
         } else {
             currentPuzzle.puzzle.keyWords.forEach(([_, path]) => {
                 if (path.startsWith(cell.dataset.coord)) {
@@ -180,7 +176,7 @@ function continueDragGesture(cell, clientX, clientY) {
 
     // If we're on a cell in the grid and have moved from the previous cell, treat this as a drag gesture
     // unless the cell contains a space, intended to mean a gap in the layout that the user may not select
-    if (cell.classList.contains('grid-item') && cell !== currentPuzzle.mostRecentCell && cell.dataset.letter !== '.') {
+    if (cell.classList.contains('grid-item') && !cell.classList.contains('hidden') && cell !== currentPuzzle.mostRecentCell) {
         // Reject points too close to the edge sto avoid false positives
         const cellRect = cell.getBoundingClientRect();
         const cellCentreX = cellRect.left + (cellRect.width / 2);
@@ -634,7 +630,7 @@ function updateRedGreyDisplay() {
     for (let i = 0; i < gridElement.children.length; i++) {
         const cell = gridElement.children[i];
 
-        if (cell.dataset.letter == '.') {
+        if (cell.classList.contains('hidden')) {
             continue;
         }
 
