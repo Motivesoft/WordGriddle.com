@@ -78,6 +78,7 @@ function openPuzzle(puzzle) {
     updatePuzzleProgressMessage();
     updateSelectedLettersDisplay();
     updateRedGreyDisplay();
+    updateWordsFound();
 }
 
 function initialiseGrid() {
@@ -269,10 +270,14 @@ async function endDragGesture() {
             if (currentPuzzle.foundKeyWords.has(selectedWordUpper)) {
                 updateOutcomeDisplay(`Key word already found: ${selectedWordUpper}`);
             } else {
-                currentPuzzle.foundKeyWords.add(selectedWordLower);
-
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
+
+                currentPuzzle.foundKeyWords.add(selectedWordLower);
+                
                 decrementRedGrey(selectedWordLower);
+
+                updateRedGreyDisplay();
+                updateWordsFound();
 
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
                     await openMessageBox('Congratulations. You have found all of the key words!', 'info');
@@ -303,7 +308,6 @@ async function endDragGesture() {
         });
 
         // Update progress
-        updateRedGreyDisplay();
         updatePuzzleProgressMessage();
     };
 }
@@ -487,6 +491,10 @@ function getPuzzleTitleElement() {
     return document.getElementById('puzzle-title');
 }
 
+function getWordsFoundElement() {
+    return document.getElementById('words-found');
+}
+
 function updateSelectedLettersDisplay() {
     if (currentPuzzle.selectedLetters?.length) {
         document.getElementById('outcome-message').innerHTML = currentPuzzle.selectedLetters.map((item) => item.letter).join('');
@@ -538,6 +546,29 @@ function decrementRedGrey(foundWord) {
             }
         }
     });
+}
+
+function updateWordsFound() {
+    const wordsFoundMap = new Map();
+    currentPuzzle.foundKeyWords.forEach((word)=>{
+        if (!wordsFoundMap.has(word.length)) {
+            wordsFoundMap.set(word.length,[]);
+        }
+        wordsFoundMap.get(word.length).push(word);
+    });
+
+    let html = '';
+    wordsFoundMap.forEach((words,index) => {
+        html += `<h4>${index}-letter words:</h4>`;
+        html += `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; padding-bottom: 10px;">`;
+        words.forEach((word) => {
+            html += `<div>${word}</div>`;
+        });
+        html += `</div>`;
+    });
+
+    const wordsFoundElement = getWordsFoundElement();
+    wordsFoundElement.innerHTML = html;
 }
 
 function updateRedGreyDisplay() {
