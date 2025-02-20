@@ -3,6 +3,11 @@
 // This script should be loaded in <head>, without using 'defer' to reduce any theme flickering
 // An event handler at the end allows for any actions that require the DOM to have been loaded
 
+// Constants for local storage keys
+const ScriptLocalStorageKeys = Object.freeze({
+    THEME: "theme",
+});
+
 // ** MESSAGE DISPlAY
 
 // Function to open the message box with an icon
@@ -78,17 +83,17 @@ function setTheme(theme) {
     // Set the theme and store it for future - or reset if an undefined value is provided
     if (theme) {
         document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
+        localStorage.setItem(ScriptLocalStorageKeys.THEME, theme);
     } else {
         document.documentElement.removeAttribute('data-theme');
-        localStorage.removeItem('theme');
+        localStorage.removeItem(ScriptLocalStorageKeys.THEME);
     }
 }
 
 // Function to forget any stored theme and use default behaviour
 function resetTheme() {
     // Forget any stored value
-    localStorage.removeItem('theme');
+    localStorage.removeItem(ScriptLocalStorageKeys.THEME);
 
     // Use the default behaviour, which includes using OS preferences
     loadTheme();
@@ -101,9 +106,9 @@ function loadTheme() {
     // Don't store any theme chosen here as this is either already stored or an OS default
     // If the user wants to explicitly set the theme, use a technique that calls 'setTheme'
 
-    if (localStorage.getItem('theme')) {
+    if (localStorage.getItem(ScriptLocalStorageKeys.THEME)) {
         // Use a stored value - this is used in preference to OS settings
-        const theme = localStorage.getItem('theme');
+        const theme = localStorage.getItem(ScriptLocalStorageKeys.THEME);
 
         document.documentElement.setAttribute('data-theme', theme);
     } else if (window.matchMedia) {

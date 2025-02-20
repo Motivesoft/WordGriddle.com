@@ -7,6 +7,14 @@ const FoundMoveSortOrder = Object.freeze({
     WORD_LENGTH: "WORD_LENGTH"
 });
 
+// Constants for local storage keys
+const PuzzleLocalStorageKeys = Object.freeze({
+    FOUND_WORD_ORDERING: "foundWordOrdering",
+    SHOW_EXTRA_WORDS: "showExtraWords",
+    KEY_WORD_STORAGE: "puzzle-%id.keyWords",
+    EXTRA_WORD_STORAGE: "puzzle-%id.extraWords",
+});
+
 // State
 const currentPuzzle = {
     puzzle: null,
@@ -438,7 +446,7 @@ function attachEventListeners() {
     const combobox = document.getElementById('found-order-selection');
 
     // Load the saved option from localStorage or use a default
-    const savedOption = localStorage.getItem('foundWordOrdering');
+    const savedOption = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING);
     if (savedOption) {
         combobox.value = savedOption;
     } else {
@@ -450,7 +458,7 @@ function attachEventListeners() {
         const selectedValue = this.value;
 
         // Save to localStorage
-        localStorage.setItem('foundWordOrdering', selectedValue);
+        localStorage.setItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING, selectedValue);
 
         // Apply the change
         updateWordsFound();
@@ -461,11 +469,11 @@ function attachEventListeners() {
 
     // Load state from localStorage
     const checkbox = getShowExtraWordsElement();
-    checkbox.checked = localStorage.getItem('showExtraWords') === 'true';
+    checkbox.checked = localStorage.getItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS) === 'true';
 
     // Handle state changes
     checkbox.addEventListener('change', function () {
-        localStorage.setItem('showExtraWords', this.checked ? 'true' : 'false');
+        localStorage.setItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS, this.checked ? 'true' : 'false');
 
         updateExtraWordsFound();
     });
@@ -617,7 +625,7 @@ function updateExtraWordsFound() {
     const wordsFoundElement = getExtraWordsFoundElement();
 
     // Don't display anything if the checkbox is unchecked
-    if (localStorage.getItem('showExtraWords') !== 'true') {
+    if (localStorage.getItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS) !== 'true') {
         wordsFoundElement.innerHTML = ``;
         return;
     }
@@ -632,7 +640,7 @@ function updateExtraWordsFound() {
 
 // Given a word collection, return it as a columnar list in HTML 
 function buildWordListHtml(foundWords) {
-    const foundWordOrdering = localStorage.getItem('foundWordOrdering');
+    const foundWordOrdering = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING);
 
     // Copy the array so we can sort the copy and leave the original untouched
     const wordList = [];
@@ -756,11 +764,11 @@ function updatePuzzleProgressMessage() {
 // Progress storage
 
 function getKeyWordStorageKey() {
-    return `puzzle-${currentPuzzle.puzzle.id}.keyWords`;
+    return PuzzleLocalStorageKeys.KEY_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
 }
 
 function getExtraWordStorageKey() {
-    return `puzzle-${currentPuzzle.puzzle.id}.extraWords`;
+    return PuzzleLocalStorageKeys.EXTRA_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
 }
 
 function storeProgress() {
