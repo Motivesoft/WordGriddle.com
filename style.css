@@ -244,6 +244,7 @@ a:active {
     color: var(--button-text-color);
     border-radius: 4px;
     padding: 8px;
+    height: 35px;
 }
 
 .combobox:hover {
