@@ -641,7 +641,7 @@ function updateWordsFound() {
             break;
     }
 
-    wordsFoundElement.innerHTML = buildWordListHTML(wordList);
+    wordsFoundElement.innerHTML = buildWordListHtml(wordList);
 }
 
 function updateExtraWordsFound() {
@@ -661,15 +661,15 @@ function updateExtraWordsFound() {
 
         wordList.sort();
 
-        wordsFoundElement.innerHTML = buildWordListHTML(wordList);
+        wordsFoundElement.innerHTML = buildWordListHtml(wordList);
     } else {
         wordsFoundElement.innerHTML = "&nbsp;";
     }
 }
 
 // Given a word array, return it as a columnar list 
-function buildWordListHTML(wordList) {
-    let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); padding-bottom: 10px;">`;
+function buildWordListHtml(wordList) {
+    let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); padding-bottom: 10px; padding-left: 20px;">`;
 
     wordList.forEach((word) => {
         html += `<div>${word}</div>`;
