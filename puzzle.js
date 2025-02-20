@@ -669,7 +669,7 @@ function updateExtraWordsFound() {
 
 // Given a word array, return it as a columnar list 
 function buildWordListHtml(wordList) {
-    let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); padding-bottom: 10px; padding-left: 20px;">`;
+    let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); padding: 20px;">`;
 
     wordList.forEach((word) => {
         html += `<div>${word}</div>`;

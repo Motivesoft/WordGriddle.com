@@ -266,7 +266,6 @@ a:active {
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
-    margin-bottom: 20px;
 }
 
 .checkbox-container input {
