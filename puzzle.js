@@ -454,17 +454,18 @@ function attachEventListeners() {
 
         // Apply the change
         updateWordsFound();
+        updateExtraWordsFound();
     });
 
     // Show extra words
 
     // Load state from localStorage
     const checkbox = getShowExtraWordsElement();
-    checkbox.checked = localStorage.getItem('show-extra-words') === 'true';
+    checkbox.checked = localStorage.getItem('showExtraWords') === 'true';
 
     // Handle state changes
     checkbox.addEventListener('change', function () {
-        localStorage.setItem('show-extra-words', this.checked);
+        localStorage.setItem('showExtraWords', this.checked ? 'true' : 'false');
 
         updateExtraWordsFound();
     });
@@ -604,17 +605,38 @@ function decrementRedGrey(foundWord) {
 
 function updateWordsFound() {
     const wordsFoundElement = getWordsFoundElement();
-
     if (currentPuzzle.foundKeyWords.size == 0) {
         wordsFoundElement.innerHTML = `<div style="padding: 20px;">No words found</div>`;
         return;
     }
+    
+    wordsFoundElement.innerHTML = buildWordListHtml(currentPuzzle.foundKeyWords);
+}
 
+function updateExtraWordsFound() {
+    const wordsFoundElement = getExtraWordsFoundElement();
+
+    // Don't display anything if the checkbox is unchecked
+    if (localStorage.getItem('showExtraWords') !== 'true') {
+        wordsFoundElement.innerHTML = ``;
+        return;
+    }
+
+    if (currentPuzzle.foundExtraWords.size == 0) {
+        wordsFoundElement.innerHTML = `<div style="padding: 20px;">No extra words found</div>`;
+        return;
+    }
+    
+    wordsFoundElement.innerHTML = buildWordListHtml(currentPuzzle.foundExtraWords);
+}
+
+// Given a word collection, return it as a columnar list in HTML 
+function buildWordListHtml(foundWords) {
     const foundWordOrdering = localStorage.getItem('foundWordOrdering');
 
     // Copy the array so we can sort the copy and leave the original untouched
     const wordList = [];
-    currentPuzzle.foundKeyWords.forEach((word) => {
+    foundWords.forEach((word) => {
         wordList.push(word);
     });
 
@@ -640,35 +662,7 @@ function updateWordsFound() {
             });
             break;
     }
-
-    wordsFoundElement.innerHTML = buildWordListHtml(wordList);
-}
-
-function updateExtraWordsFound() {
-    const wordsFoundElement = getExtraWordsFoundElement();
-
-    if (currentPuzzle.foundExtraWords.size == 0) {
-        wordsFoundElement.innerHTML = `<div style="padding: 20px;">No extra words found</div>`;
-        return;
-    }
-
-    const checkbox = getShowExtraWordsElement();
-    if (checkbox.checked) {
-        const wordList = [];
-        currentPuzzle.foundExtraWords.forEach((word) => {
-            wordList.push(word);
-        });
-
-        wordList.sort();
-
-        wordsFoundElement.innerHTML = buildWordListHtml(wordList);
-    } else {
-        wordsFoundElement.innerHTML = "&nbsp;";
-    }
-}
-
-// Given a word array, return it as a columnar list 
-function buildWordListHtml(wordList) {
+    
     let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); padding: 20px;">`;
 
     wordList.forEach((word) => {
