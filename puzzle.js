@@ -740,18 +740,18 @@ function updatePuzzleProgressMessage() {
             counts.set(word.length, counts.get(word.length) - 1);
         });
 
-        let countsHtml = `<div class="word-count-List">`;
+        let countsTable = `<table style="width: 100%; max-width: 200px; border-collapse: collapse; margin-left: 20px;">`;
         for (let i = 1; i <= longestWordLength; i++) {
             if (counts.has(i)) {
-                countsHtml += `<div class="word-count-item">`;
-                countsHtml += `  <span class="word-count-word">${i}-letter words:</span>`;
-                countsHtml += `  <span class="word-count-total">${counts.get(i)}</span>`;
-                countsHtml += `</div>`;
+                countsTable += `<tr>`;
+                countsTable += `  <td style="padding: 4px 0px;">${i}-letter words:</td>`;
+                countsTable += `  <td class="total" style="text-align: right;">${counts.get(i)}</td>`;
+                countsTable += `</tr>`;
             }
         }
-        countsHtml += `</div>`;
+        countsTable += `</table>`;
 
-        countsMessageElement.innerHTML = `${countsHtml}`;
+        countsMessageElement.innerHTML = `${countsTable}`;
     }
 
     if (currentPuzzle.puzzle.keyWords.length === currentPuzzle.foundKeyWords.size) {

@@ -166,18 +166,15 @@ canvas {
 
 .word-count-list {
     width: 100%;
-    max-width: 200px; /* Adjust the max-width to keep the panel smaller */
 }
 
 .word-count-item {
     display: flex;
-    justify-content: left; /* Space between fruit and total */
-    align-items: center; /* Vertically center items */
     padding: 4px 0; /* Add some vertical spacing */
     margin-left: 20px;
-  }
-  
-  .word-count-word {
+}
+
+.word-count-word {
     text-align: left;
   }
   
