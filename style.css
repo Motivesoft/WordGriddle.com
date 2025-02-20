@@ -10,6 +10,17 @@
     --button-hover-background: #0056b3;
     --button-text-color: #ffffff;
     --checkbox-color: #007bff;
+    --checkbox-border: #333;
+
+    --primary-color: blue;
+    --secondary-color: white;
+    --error-color: red;
+    --border-light: #ccc;
+    /* Light border color for dark mode */
+    --border-dark: #333;
+    /* Dark border color for light mode */
+
+
     --control-background: #ffffff;
     --control-border: #ccc;
     --dialog-background: #ffffff;
@@ -44,6 +55,7 @@
     --button-hover-background: #4a90e2;
     --button-text-color: #333;
     --checkbox-color: #64b5f6;
+    --checkbox-border: #eee;
     --control-background: #2c2c2c;
     --control-border: #555;
     --dialog-background: #1e1e1e;
@@ -245,22 +257,67 @@ a:active {
 
 /* CheckBox */
 
+/* Dark mode */
+
 .checkbox-container {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    margin-bottom: 20px;
 }
 
-.checkbox-container input[type="checkbox"] {
-    margin-right: 10px;
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 20px;
     width: 20px;
-    height: 20px;
-    accent-color: var(--button-background);
+    border: 2px solid var(--text-color);
+    border-radius: 4px;
+    background-color: transparent;
+    flex-shrink: 0;
+    margin-right: 8px;
 }
 
-.checkbox-container label {
-    margin: 0;
-    height: 20px;
+.checkbox-container input:checked~.checkmark {
+    background-color: var(--button-background);
+    border-color: var(--text-color);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked~.checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--button-text-color);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-container input:not(:checked)~.checkmark {
+    background-color: transparent;
+    border-color: var(--checkbox-border);
 }
 
 /* Message Box */
