@@ -151,5 +151,13 @@ async function finalSetup() {
     });
 }
 
+async function displayVersion(elementId) {
+    fetch('/version.txt')
+        .then(response => response.text())
+        .then(version => {
+            document.getElementById(elementId).textContent = `Version: ${version}`;
+        });
+}
+
 // Initialise the current theme
 loadTheme();
