@@ -63,14 +63,20 @@
             <h3>Words Remaining</h3>
             <div id="counts-message"></div>
             <h3>Words Found</h3>
-            <div style="padding-bottom: 20px; font-size: 16px;">Sort By:
-                <select id="found-order-selection">
+            <div style="padding-bottom: 20px; font-size: 16px;">Sort by:
+                <select class="combobox" id="found-order-selection">
                     <option value="FOUND_ORDER">Found Order</option>
                     <option value="ALPHABETICAL">Alphabetically</option>
                     <option value="WORD_LENGTH">Word Length</option>
                 </select>
-              </div>            
+            </div>
             <div id="words-found"></div>
+            <h3>Extra Words</h3>
+            <div class="checkbox-container">
+                <input type="checkbox" id="show-extra-words" class="checkbox">
+                <label for="show-extra-words">Show extra words</label>
+            </div>
+            <div id="extra-words-found"></div>
         </div>
     </div>
 

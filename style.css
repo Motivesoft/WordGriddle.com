@@ -225,6 +225,44 @@ a:active {
     padding: 20px 20px 0px 20px;
 }
 
+/* ComboBox*/
+
+.combobox {
+    background-color: var(--button-background);
+    color: var(--button-text-color);
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.combobox:hover {
+    border-color: var(--text-color);
+}
+
+.combobox option {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* CheckBox */
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 20px;
+    height: 20px;
+    accent-color: var(--button-background);
+}
+
+.checkbox-container label {
+    margin: 0;
+    margin-bottom: 10px;
+}
+
 /* Message Box */
 
 /* Styling for the dialog */

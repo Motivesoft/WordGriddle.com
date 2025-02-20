@@ -87,6 +87,7 @@ function openPuzzle(puzzle) {
     updateSelectedLettersDisplay();
     updateRedGreyDisplay();
     updateWordsFound();
+    updateExtraWordsFound();
 }
 
 function initialiseGrid() {
@@ -111,7 +112,7 @@ function initialiseGrid() {
         cell.dataset.coord = `[${index}]`;
         cell.dataset.red = 0;
         cell.dataset.grey = 0;
-        
+
         // '.' is meaningful in terms of puzzle design, but don't show in the grid
         // Style the unusable parts of the grid so they look and interact as we need them to
         if (isEmptyCell(letter)) {
@@ -281,12 +282,11 @@ async function endDragGesture() {
             if (currentPuzzle.foundKeyWords.has(selectedWordLower)) {
                 updateOutcomeDisplay(`Key word already found: ${selectedWordUpper}`);
             } else {
-                updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
-
                 currentPuzzle.foundKeyWords.add(selectedWordLower);
 
                 decrementRedGrey(selectedWordLower);
 
+                updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
                 updateRedGreyDisplay();
                 updateWordsFound();
 
@@ -298,10 +298,10 @@ async function endDragGesture() {
             if (currentPuzzle.foundExtraWords.has(selectedWordLower)) {
                 updateOutcomeDisplay(`Extra word already found: ${selectedWordUpper}`);
             } else {
-                // TODO add to found other words list (and save)
                 currentPuzzle.foundExtraWords.add(selectedWordLower);
 
                 updateOutcomeDisplay(`Extra word found: ${selectedWordUpper}`);
+                updateExtraWordsFound();
             }
         } else {
             updateOutcomeDisplay(`Not a recognised word: ${selectedWordUpper}`);
@@ -444,16 +444,29 @@ function attachEventListeners() {
     } else {
         combobox.value = FoundMoveSortOrder.FOUND_ORDER;
     }
-    
+
     // Handle change event
-    combobox.addEventListener('change', function() {
+    combobox.addEventListener('change', function () {
         const selectedValue = this.value;
-        
+
         // Save to localStorage
         localStorage.setItem('foundWordOrdering', selectedValue);
-    
+
         // Apply the change
         updateWordsFound();
+    });
+
+    // Show extra words
+
+    // Load state from localStorage
+    const checkbox = getShowExtraWordsElement();
+    checkbox.checked = localStorage.getItem('show-extra-words') === 'true';
+
+    // Handle state changes
+    checkbox.addEventListener('change', function () {
+        localStorage.setItem('show-extra-words', this.checked);
+
+        updateExtraWordsFound();
     });
 
     // Make sure our canvas for drawing selection lines is always the right size
@@ -528,6 +541,14 @@ function getWordsFoundElement() {
     return document.getElementById('words-found');
 }
 
+function getShowExtraWordsElement() {
+    return document.getElementById('show-extra-words');
+}
+
+function getExtraWordsFoundElement() {
+    return document.getElementById('extra-words-found');
+}
+
 function updateSelectedLettersDisplay() {
     if (currentPuzzle.selectedLetters?.length) {
         document.getElementById('outcome-message').innerHTML = currentPuzzle.selectedLetters.map((item) => item.letter).join('');
@@ -582,9 +603,10 @@ function decrementRedGrey(foundWord) {
 }
 
 function updateWordsFound() {
+    const wordsFoundElement = getWordsFoundElement();
+
     if (currentPuzzle.foundKeyWords.size == 0) {
-        const wordsFoundElement = getWordsFoundElement();
-        wordsFoundElement.innerHTML = 'None';
+        wordsFoundElement.innerHTML = 'No words found';
         return;
     }
 
@@ -610,7 +632,7 @@ function updateWordsFound() {
 
         case FoundMoveSortOrder.WORD_LENGTH:
             // By length, then alphabetical
-            wordList.sort((a,b) => {
+            wordList.sort((a, b) => {
                 if (a.length === b.length) {
                     return a.localeCompare(b);
                 }
@@ -628,8 +650,38 @@ function updateWordsFound() {
 
     html += `</div>`;
 
-    const wordsFoundElement = getWordsFoundElement();
     wordsFoundElement.innerHTML = html;
+}
+
+function updateExtraWordsFound() {
+    const wordsFoundElement = getExtraWordsFoundElement();
+
+    if (currentPuzzle.foundExtraWords.size == 0) {
+        wordsFoundElement.innerHTML = "No extra words found";
+        return;
+    }
+
+    const checkbox = getShowExtraWordsElement();
+    if (checkbox.checked) {
+        const wordList = [];
+        currentPuzzle.foundExtraWords.forEach((word) => {
+            wordList.push(word);
+        });
+
+        wordList.sort();
+
+        let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 1rem; padding-bottom: 10px;">`;
+
+        wordList.forEach((word) => {
+            html += `<div>${word}</div>`;
+        });
+
+        html += `</div>`;
+
+        wordsFoundElement.innerHTML = html;
+    } else {
+        wordsFoundElement.innerHTML = "&nbsp;";
+    }
 }
 
 function updateRedGreyDisplay() {
@@ -731,7 +783,7 @@ function restoreProgress() {
         });
     }
 
-    const progressExtraWords = localStorage.getItem(getKeyWordStorageKey());
+    const progressExtraWords = localStorage.getItem(getExtraWordStorageKey());
     if (progressExtraWords) {
         const words = progressExtraWords.split(',');
         words.forEach((word) => {
