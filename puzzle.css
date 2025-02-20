@@ -131,7 +131,8 @@
 /* All words have been found (does not include bonus, just main words) */
 .grid-item.completed {
     background-color: var(--grid-cell-completed-background);
-    color: var(--grid-cell-completed-color);;
+    color: var(--grid-cell-completed-color);
+    ;
 }
 
 .grid-item::before,
@@ -160,6 +161,32 @@ canvas {
     left: 0;
     pointer-events: none;
 }
+
+/* Word counts list*/
+
+.word-count-list {
+    width: 100%;
+    max-width: 200px; /* Adjust the max-width to keep the panel smaller */
+}
+
+.word-count-item {
+    display: flex;
+    justify-content: left; /* Space between fruit and total */
+    align-items: center; /* Vertically center items */
+    padding: 4px 0; /* Add some vertical spacing */
+    margin-left: 20px;
+  }
+  
+  .word-count-word {
+    text-align: left;
+  }
+  
+  .word-count-total {
+    text-align: right;
+    padding-left: 16px; /* Add some spacing between fruit and total */
+  }
+
+/* Media queries */
 
 @media (max-width: 768px) and (orientation: landscape) {
 

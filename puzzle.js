@@ -606,7 +606,7 @@ function updateWordsFound() {
     const wordsFoundElement = getWordsFoundElement();
 
     if (currentPuzzle.foundKeyWords.size == 0) {
-        wordsFoundElement.innerHTML = 'No words found';
+        wordsFoundElement.innerHTML = `<div style="padding: 20px;">No words found</div>`;
         return;
     }
 
@@ -648,7 +648,7 @@ function updateExtraWordsFound() {
     const wordsFoundElement = getExtraWordsFoundElement();
 
     if (currentPuzzle.foundExtraWords.size == 0) {
-        wordsFoundElement.innerHTML = "No extra words found";
+        wordsFoundElement.innerHTML = `<div style="padding: 20px;">No extra words found</div>`;
         return;
     }
 
@@ -740,14 +740,18 @@ function updatePuzzleProgressMessage() {
             counts.set(word.length, counts.get(word.length) - 1);
         });
 
-        let countsHtml = '';
+        let countsHtml = `<div class="word-count-List">`;
         for (let i = 1; i <= longestWordLength; i++) {
             if (counts.has(i)) {
-                countsHtml += `<li>${i} letter words: ${counts.get(i)}</li>`;
+                countsHtml += `<div class="word-count-item">`;
+                countsHtml += `  <span class="word-count-word">${i}-letter words:</span>`;
+                countsHtml += `  <span class="word-count-total">${counts.get(i)}</span>`;
+                countsHtml += `</div>`;
             }
         }
+        countsHtml += `</div>`;
 
-        countsMessageElement.innerHTML = `<ul>${countsHtml}</ul>`;
+        countsMessageElement.innerHTML = `${countsHtml}`;
     }
 
     if (currentPuzzle.puzzle.keyWords.length === currentPuzzle.foundKeyWords.size) {
