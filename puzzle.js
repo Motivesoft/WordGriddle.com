@@ -641,16 +641,7 @@ function updateWordsFound() {
             break;
     }
 
-    // Build the list
-    let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 1rem; padding-bottom: 10px;">`;
-
-    wordList.forEach((word) => {
-        html += `<div>${word}</div>`;
-    });
-
-    html += `</div>`;
-
-    wordsFoundElement.innerHTML = html;
+    wordsFoundElement.innerHTML = buildWordListHTML(wordList);
 }
 
 function updateExtraWordsFound() {
@@ -670,18 +661,23 @@ function updateExtraWordsFound() {
 
         wordList.sort();
 
-        let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 1rem; padding-bottom: 10px;">`;
-
-        wordList.forEach((word) => {
-            html += `<div>${word}</div>`;
-        });
-
-        html += `</div>`;
-
-        wordsFoundElement.innerHTML = html;
+        wordsFoundElement.innerHTML = buildWordListHTML(wordList);
     } else {
         wordsFoundElement.innerHTML = "&nbsp;";
     }
+}
+
+// Given a word array, return it as a columnar list 
+function buildWordListHTML(wordList) {
+    let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); padding-bottom: 10px;">`;
+
+    wordList.forEach((word) => {
+        html += `<div>${word}</div>`;
+    });
+
+    html += `</div>`;
+
+    return html;
 }
 
 function updateRedGreyDisplay() {
