@@ -151,6 +151,10 @@ a:active {
     color: var(--navbar-link-active-color);
 }
 
+.theme-toggle-btn:hover {
+    background-color: var(--button-hover-background);
+}
+
 /* Navbar styles */
 .navbar {
     display: flex;
@@ -268,7 +272,7 @@ a:active {
     align-items: center;
     position: relative;
     cursor: pointer;
-    
+
     -webkit-user-select: none;
     user-select: none;
     white-space: nowrap;
@@ -301,8 +305,14 @@ a:active {
 }
 
 .checkbox-container input:checked~.checkmark:hover {
-    background-color: var(--button-active-background);
+    background-color: var(--button-hover-background);
     border-color: var(--text-color);
+}
+
+/* Apply focus styles regardless of whether the checkbox is checked or not */
+.checkbox-container input:focus~.checkmark {
+    outline: 1px solid var(--text-color);
+    outline-offset: 0px;
 }
 
 .checkmark:after {
@@ -320,7 +330,7 @@ a:active {
     top: 2px;
     width: 5px;
     height: 10px;
-    border: solid var(--button-text-color);
+    border: 1px solid var(--button-text-color);
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
@@ -331,7 +341,7 @@ a:active {
 }
 
 .checkbox-container input:not(:checked)~.checkmark:hover {
-    background-color: var(--button-active-background);
+    background-color: var(--button-hover-background);
     border-color: var(--text-color);
 }
 
