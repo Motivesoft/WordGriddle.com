@@ -6,8 +6,8 @@
     --grid-cell-background: #f4f4f4;
     --grid-cell-border: #ccc;
     --grid-cell-completed-background: #cccccc;
-    --grid-cell-completed-color: #b82828;
-    --grid-cell-completed-zerozero: #aaaaaa;
+    --grid-cell-completed-color: #d26f49;
+    --grid-cell-completed-zerozero: #ccc;
     --trail-color: #800000;
     --trail-transparency: 0.2;
 }
@@ -16,8 +16,8 @@
     --grid-cell-background: #343434;
     --grid-cell-border: #646464;
     --grid-cell-completed-background: #1e1e1e;
-    --grid-cell-completed-color: #b82828;
-    --grid-cell-completed-zerozero: #444;
+    --grid-cell-completed-color: #deb93d;
+    --grid-cell-completed-zerozero: #646464;
     --trail-color: #400000;
     --trail-transparency: 0.3;
 }
