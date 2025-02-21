@@ -155,7 +155,7 @@ function initialiseGrid() {
 function startDragGesture(e) {
     // React to a click or touch, unless on a 'hidden' square
     const cell = e.target;
-    if (cell.classList.contains('grid-item')) {
+    if (cell.classList.contains('grid-item') && !cell.classList.contains('hidden')) {
         currentPuzzle.isDrawing = true;
         currentPuzzle.selectedLetters = [{
             letter: cell.dataset.letter,
