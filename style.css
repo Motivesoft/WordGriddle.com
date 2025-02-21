@@ -266,6 +266,7 @@ a:active {
     position: relative;
     cursor: pointer;
     user-select: none;
+    -webkit-user-select: none;
     white-space: nowrap;
 }
 
