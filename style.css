@@ -11,16 +11,6 @@
     --button-text-color: #ffffff;
     --checkbox-color: #007bff;
     --checkbox-border: #333;
-
-    --primary-color: blue;
-    --secondary-color: white;
-    --error-color: red;
-    --border-light: #ccc;
-    /* Light border color for dark mode */
-    --border-dark: #333;
-    /* Dark border color for light mode */
-
-
     --control-background: #ffffff;
     --control-border: #ccc;
     --dialog-background: #ffffff;
@@ -122,6 +112,7 @@ a:active {
     border-radius: 4px;
     margin-top: 10px;
     padding: 10px;
+    font-size: 16px;
 }
 
 .button:active {

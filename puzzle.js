@@ -408,7 +408,7 @@ function canvasDrawBlob(ctx, color, cell) {
     ctx.fillStyle = color;
 
     // Draw a circle
-    const radius = 24;
+    const radius = 16;
     const xCentre = (cell.offsetLeft - gridElement.offsetLeft) + cell.offsetWidth / 2;
     const yCentre = (cell.offsetTop - gridElement.offsetTop) + cell.offsetHeight / 2;
     ctx.arc(xCentre, yCentre, radius, 0, 2 * Math.PI);
