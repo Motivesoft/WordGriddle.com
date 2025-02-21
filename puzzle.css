@@ -92,8 +92,8 @@
     border: 1px solid var(--grid-cell-border);
     font-size: 3vw;
 
-    user-select: none;
     -webkit-user-select: none;
+    user-select: none;
     touch-action: none;
 }
 
