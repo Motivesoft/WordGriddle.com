@@ -81,6 +81,148 @@ body {
     min-height: 100vh;
 }
 
+/* Navbar */
+
+.navbar {
+    background-color: var(--navbar-background);
+    height: 48px;
+    /* Fixed height for the navbar */
+    display: flex;
+    align-items: center;
+    /* Vertically center items */
+    justify-content: flex-end;
+    /* Align items to the right */
+    padding: 0px;
+    /* 20px margin on the sides */
+    position: relative;
+    /* Needed for absolute positioning of the product icon */
+    /* margin: 20px; */
+    /* 20px margin around the navbar */
+}
+
+/* Product container (icon and name) */
+.product-container {
+    display: flex;
+    align-items: center;
+    /* Vertically center the icon and name */
+    text-decoration: none;
+    /* Remove underline from link */
+    color: white;
+    /* Text color */
+    position: absolute;
+    /* Position the container absolutely */
+    left: 8px;
+    /* Align to the left margin */
+    top: -8px;
+    /* Protrude 4px above the navbar */
+}
+
+/* Product icon */
+.product-icon {
+    width: 64px;
+    /* Size of the icon */
+    height: 64px;
+    /* Size of the icon */
+    background-color: #555;
+    /* Background color of the icon */
+    display: flex;
+    align-items: center;
+    /* Center the icon vertically */
+    justify-content: center;
+    /* Center the icon horizontally */
+    border-radius: 5px;
+    /* Slightly rounded corners */
+}
+
+.product-icon i {
+    font-size: 1.5em;
+    /* Size of the icon */
+}
+
+/* Product name label */
+.product-name {
+    font-size: 1.2em;
+    /* Size of the product name */
+    font-weight: bold;
+    /* Make the name stand out */
+    margin-left: 10px;
+    /* Space between icon and name */
+    color: var(--brand-color);
+}
+
+/* Right side of the navbar (buttons with icons) */
+.navbar-right {
+    display: flex;
+    gap: 4px;
+    padding-right: 4px;
+    /* Space between buttons */
+}
+
+/* Button Styles */
+:root {
+    --icon-stroke-color: #000000;
+    /* Default stroke color (light theme) */
+    --icon-fill-color: none;
+    /* Default fill color (light theme) */
+}
+
+[data-theme="dark"] {
+    --icon-stroke-color: #ffffff;
+    /* Stroke color for dark theme */
+    --icon-fill-color: none;
+    /* Fill color for dark theme */
+}
+
+.toolbar-button {
+    background-color: transparent;
+    border: none;
+    color: var(--background-color);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    display: inline-block;
+}
+
+.toolbar-button-icon {
+    background-color: transparent;
+    width: 24px;
+    height: 24px;
+    stroke: var(--icon-stroke-color);
+    fill: var(--icon-fill-color);
+    transition: stroke 0.3s, fill 0.3s;
+}
+
+.toolbar-button-icon:hover {
+    stroke: var(--navbar-link-hover-background);
+}
+
+.tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: var(--control-background);
+    border: 1px solid var(--control-border);
+    color: var(--text-color);
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.toolbar-button:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
 /* Links */
 
 a {
@@ -129,68 +271,6 @@ a:active {
 
 .button.active {
     background-color: var(--button-active-background);
-}
-
-/* Theme toggle button */
-.theme-toggle-btn {
-    padding: 4px 8px;
-    font-size: 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: var(--navbar-link-color);
-    color: var(--navbar-link-active-color);
-}
-
-.theme-toggle-btn:hover {
-    background-color: var(--button-hover-background);
-}
-
-/* Navbar styles */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--navbar-background);
-    border-bottom: 1px solid var(--navbar-border);
-    padding: 10px 20px;
-
-    /* width: calc(100% - 64px - 20px);
-    margin-left: calc(64px + 20px);
-    margin-top: 6px; */
-    margin-top: 6px;
-}
-
-.navbar-icon {
-    width: 64px;
-    height: 64px;
-    fill: var(--button-background);
-    transition: fill 0.3s;
-}
-
-.navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--brand-color);
-    text-decoration: none;
-
-    /* To accommodate icon-container*/
-    margin-left: 64px;
-}
-
-.icon-container {
-    position: absolute;
-    top: 20;
-    left: 20;
-
-    /* Indentation. Add this value to the navbar-brand.margin-left */
-    padding-left: 0px;
-}
-
-.top-left-icon {
-    /* Let the icon dictate its size */
-    width: 100%;
-    height: 100%;
 }
 
 /* Panel */
@@ -366,6 +446,7 @@ dialog button {
     cursor: pointer;
     background-color: var(--button-background);
     color: var(--button-text-color);
+    font-size: 16px;
 }
 
 dialog button[type="submit"] {
