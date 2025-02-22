@@ -90,7 +90,7 @@
 
     background-color: var(--grid-cell-background);
     border: 1px solid var(--grid-cell-border);
-    font-size: 3vw;
+    font-size: 5vw;
 
     -webkit-user-select: none;
     user-select: none;
@@ -133,14 +133,13 @@
 .grid-item.completed {
     background-color: var(--grid-cell-completed-background);
     color: var(--grid-cell-completed-color);
-    ;
 }
 
 .grid-item::before,
 .grid-item::after {
     position: absolute;
     bottom: 2px;
-    font-size: 15px;
+    font-size: 10px;
 }
 
 .grid-item::before {
