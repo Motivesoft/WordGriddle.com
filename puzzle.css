@@ -90,7 +90,7 @@
 
     background-color: var(--grid-cell-background);
     border: 1px solid var(--grid-cell-border);
-    font-size: 3vw;
+    font-size: 1.5em;
 
     -webkit-user-select: none;
     user-select: none;
@@ -138,19 +138,19 @@
 .grid-item::before,
 .grid-item::after {
     position: absolute;
-    bottom: 2px;
-    font-size: 10px;
+    bottom: 0px;
+    font-size: 0.5em;
 }
 
 .grid-item::before {
     content: attr(red-counter);
-    left: 2px;
+    left: 0px;
     color: #e03030;
 }
 
 .grid-item::after {
     content: attr(grey-counter);
-    right: 2px;
+    right: 0px;
     color: #666;
 }
 
