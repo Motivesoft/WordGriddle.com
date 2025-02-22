@@ -90,7 +90,7 @@
 
     background-color: var(--grid-cell-background);
     border: 1px solid var(--grid-cell-border);
-    font-size: 5vw;
+    font-size: 3vw;
 
     -webkit-user-select: none;
     user-select: none;
@@ -186,14 +186,11 @@ canvas {
 /* Media queries */
 
 @media (max-width: 768px) and (orientation: landscape) {
-
-    /* Your CSS rules for landscape mode on mobile devices go here */
     .container {
         height: fit-content;
     }
 }
 
-/* Responsive Design for Portrait Mode */
 @media (max-width: 768px) and (orientation: portrait) {
     .container {
         flex-direction: column;
@@ -211,8 +208,6 @@ canvas {
 
     .grid {
         width: 100%;
-        /* Full width in portrait mode */
         max-width: 400px;
-        /* Adjust for smaller screens */
     }
 }
