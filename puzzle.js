@@ -498,7 +498,7 @@ function shareProgress() {
 
         let shareText = '';
         shareText += `I have been playing WordGriddle '${currentPuzzle.puzzle.title}'\n`;
-        shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} key words found${accuracyText}.\n`;
+        shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} key words found with ${getAccuracy()}% accuracy.\n`;
         shareText += `${currentPuzzle.foundExtraWords.size}/${currentPuzzle.puzzle.extraWords.length} extra words found.\n`;
         shareText += `Play this puzzle: ${window.location.href}`;
 
