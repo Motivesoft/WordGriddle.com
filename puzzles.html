@@ -32,8 +32,6 @@
 
                     const puzzleListElement = document.getElementById('puzzle-list');
                     data.puzzles.forEach(puzzle => {
-                        console.log(`${puzzle.title}, ${parseDate(puzzle.launchDate)}`);
-
                         const puzzleSelector = document.createElement('button');
                         puzzleSelector.classList.add('button');
                         puzzleSelector.setAttribute('type', 'button');

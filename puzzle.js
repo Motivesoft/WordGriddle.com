@@ -480,6 +480,33 @@ function attachEventListeners() {
 
         updateExtraWordsFound();
     });
+
+    // Share
+
+    document.getElementById("shareResultsBtn").addEventListener('click', () => {
+        shareProgress();
+      });
+}
+
+function shareProgress() {
+        const accuracyText = ``;
+
+        let shareText = '';
+        shareText += `I have been playing WordGriddle '${currentPuzzle.puzzle.title}'\n`;
+        shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} key words found${accuracyText}.\n`;
+        shareText += `${currentPuzzle.foundExtraWords.size}/${currentPuzzle.puzzle.extraWords.length} extra words found.\n`;
+        shareText += `Play this puzzle: ${window.location.href}`;
+
+        // Copy to clipboard
+        navigator.clipboard
+          .writeText(shareText)
+          .then(async () => {
+            await openMessageBox('Puzzle progress copied to the clipboard.', 'info');
+          })
+          .catch(async (err) => {
+            console.error("Failed to copy: ", err);
+            await openMessageBox('Failed to copy progress information to the clipboard.', 'info');
+          });
 }
 
 // Mouse handlers

@@ -2,8 +2,7 @@
     "puzzles": [
         {
             "title": "Puzzle #0",
-            "name": "puzzle-0",
-            "launchDate": "2025-02-23"
+            "name": "puzzle-0"
         },
         {
             "title": "Puzzle #1",
@@ -16,6 +15,14 @@
         {
             "title": "Puzzle #3",
             "name": "puzzle-3"
+        },
+        {
+            "title": "Test 10x10",
+            "name": "test-1010"
+        },
+        {
+            "title": "Test 5x5",
+            "name": "test-55"
         }
     ]
 }
