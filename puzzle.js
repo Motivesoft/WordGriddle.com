@@ -13,6 +13,7 @@ const PuzzleLocalStorageKeys = Object.freeze({
     SHOW_EXTRA_WORDS: "showExtraWords",
     KEY_WORD_STORAGE: "puzzle-%id.keyWords",
     EXTRA_WORD_STORAGE: "puzzle-%id.extraWords",
+    NON_WORD_STORAGE: "puzzle-%id.nonWords",
 });
 
 // State
@@ -31,6 +32,7 @@ const currentPuzzle = {
     // Game progress
     foundKeyWords: new Set(),
     foundExtraWords: new Set(),
+    nonWords: 0,
 };
 
 // Assume we will be loaded with a 'file' parameter that points to a puzzle file on the server.
@@ -302,7 +304,9 @@ async function endDragGesture() {
                 updateWordsFound();
 
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
-                    await openMessageBox('Congratulations. You have found all of the key words!', 'info');
+                    updatePuzzleProgressMessage();
+
+                    await openMessageBox(`Congratulations. You have found all of the key words!<br/><br/>You achieved a ${getAccuracy()}% accuracy`, 'info');
                 }
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
@@ -316,10 +320,11 @@ async function endDragGesture() {
             }
         } else {
             updateOutcomeDisplay(`Not a recognised word: ${selectedWordUpper}`);
-
-            // TODO any penatlies for this?
+            
+            currentPuzzle.nonWords++;
         }
 
+        // TODO do this after every word, even though this will sometimes be redundant
         storeProgress();
 
         // Clear any selection decorations
@@ -740,12 +745,27 @@ function updateRedGreyDisplay() {
     }
 }
 
+function getAccuracy() {
+    // Calculate a 0-1 number and then take the floor of that number multiplied by 100
+    let accuracyPercentage = 1;
+    if (currentPuzzle.nonWords) {
+        if (currentPuzzle.foundKeyWords.size) {
+            accuracyPercentage = (currentPuzzle.foundKeyWords.size/(currentPuzzle.nonWords+currentPuzzle.foundKeyWords.size));
+        } else {
+            accuracyPercentage = 0;
+        }
+    }
+    return Math.floor(accuracyPercentage * 100);
+}
+
 function updatePuzzleProgressMessage() {
     const progressMessageElement = document.getElementById('progress-message');
     const countsMessageElement = document.getElementById('counts-message');
 
     if (currentPuzzle.puzzle) {
-        progressMessageElement.innerHTML = `You have found ${currentPuzzle.foundKeyWords.size} of ${currentPuzzle.puzzle.keyWords.length} words.`;
+        console.log(`found-${currentPuzzle.foundKeyWords.size}, non-${currentPuzzle.nonWords}`);
+
+        progressMessageElement.innerHTML = `You have found ${currentPuzzle.foundKeyWords.size} of ${currentPuzzle.puzzle.keyWords.length} words with ${getAccuracy()}% accuracy.`;
 
         // Work out count of words at each word length
         const counts = new Map();
@@ -796,9 +816,14 @@ function getExtraWordStorageKey() {
     return PuzzleLocalStorageKeys.EXTRA_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
 }
 
+function getNonWordStorageKey() {
+    return PuzzleLocalStorageKeys.NON_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
+}
+
 function storeProgress() {
     localStorage.setItem(getKeyWordStorageKey(), Array.from(currentPuzzle.foundKeyWords).join(','));
     localStorage.setItem(getExtraWordStorageKey(), Array.from(currentPuzzle.foundExtraWords).join(','));
+    localStorage.setItem(getNonWordStorageKey(), currentPuzzle.nonWords);
 }
 
 function restoreProgress() {
@@ -824,16 +849,20 @@ function restoreProgress() {
             decrementRedGrey(word);
         }
     });
+
+    currentPuzzle.nonWords = localStorage.getItem(getNonWordStorageKey()) || 0;
 }
 
 async function resetProgress() {
-    localStorage.removeItem(getKeyWordStorageKey());
-    localStorage.removeItem(getExtraWordStorageKey());
-
-    // Reload everything
     const userConfirmed = await openConfirmationDialog('This will delete all progress for this puzzle.<br/><br/>Do you want to proceed?');
-
+    
     if (userConfirmed) {
+        // Clear stored information
+        localStorage.removeItem(getKeyWordStorageKey());
+        localStorage.removeItem(getExtraWordStorageKey());
+        localStorage.removeItem(getNonWordStorageKey());
+        
+        // Reload everything
         openPuzzle(currentPuzzle.puzzle);
     }
 }
