@@ -614,7 +614,7 @@ function decrementRedGrey(foundWord) {
 function updateWordsFound() {
     const wordsFoundElement = getWordsFoundElement();
     if (currentPuzzle.foundKeyWords.size == 0) {
-        wordsFoundElement.innerHTML = `<div id="no-words-message">No words found</div>`;
+        wordsFoundElement.innerHTML = `<div class="no-words-message">No words found</div>`;
         return;
     }
     
@@ -631,7 +631,7 @@ function updateExtraWordsFound() {
     }
 
     if (currentPuzzle.foundExtraWords.size == 0) {
-        wordsFoundElement.innerHTML = `<div id="no-extra-words-message">No extra words found</div>`;
+        wordsFoundElement.innerHTML = `<div class="no-words-message">No extra words found</div>`;
         return;
     }
     
@@ -671,7 +671,7 @@ function buildWordListHtml(foundWords) {
             break;
     }
     
-    let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); padding: 20px;">`;
+    let html = `<div class="found-word-list">`;
 
     wordList.forEach((word) => {
         html += `<div>${word}</div>`;
@@ -742,12 +742,12 @@ function updatePuzzleProgressMessage() {
             counts.set(word.length, counts.get(word.length) - 1);
         });
 
-        let countsTable = `<table style="width: 100%; max-width: 200px; border-collapse: collapse; margin-left: 20px;">`;
+        let countsTable = `<table class="word-count-table">`;
         for (let i = 1; i <= longestWordLength; i++) {
             if (counts.has(i)) {
                 countsTable += `<tr>`;
-                countsTable += `  <td style="padding: 4px 0px;">${i}-letter words:</td>`;
-                countsTable += `  <td class="total" style="text-align: right;">${counts.get(i)}</td>`;
+                countsTable += `  <td class="word-count-word">${i}-letter words:</td>`;
+                countsTable += `  <td class="word-count-total">${counts.get(i)}</td>`;
                 countsTable += `</tr>`;
             }
         }

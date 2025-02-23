@@ -27,10 +27,15 @@
     background: transparent
 }
 
-#no-words-message,
-#no-extra-words-message {
+.no-words-message {
     padding: 20px;
     font-style: italic;
+}
+
+.found-word-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    padding: 20px;
 }
 
 /* Container for the main content */
@@ -175,24 +180,22 @@ canvas {
 
 /* Word counts list*/
 
-.word-count-list {
+.word-count-table {
     width: 100%;
-}
-
-.word-count-item {
-    display: flex;
-    padding: 4px 0; /* Add some vertical spacing */
+    max-width: 200px;
+    border-collapse: collapse;
     margin-left: 20px;
 }
 
 .word-count-word {
     text-align: left;
-  }
-  
-  .word-count-total {
+    padding: 4px 0px;
+}
+
+.word-count-total {
     text-align: right;
-    padding-left: 16px; /* Add some spacing between fruit and total */
-  }
+    padding-left: 16px;
+}
 
 /* Media queries */
 
