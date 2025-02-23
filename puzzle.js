@@ -146,13 +146,16 @@ function initialiseGrid() {
         gridElement.appendChild(cell);
     });
 
-    handleResize();
+    prepareCanvas();
 }
 
 // Trail stuff
 
 // Start a new drag operation
 function startDragGesture(e) {
+    // Make sure our canvas is in the right place
+    prepareCanvas();
+
     // React to a click or touch, unless on a 'hidden' square
     const cell = e.target;
     if (cell.classList.contains('grid-item') && !cell.classList.contains('hidden')) {
@@ -477,9 +480,6 @@ function attachEventListeners() {
 
         updateExtraWordsFound();
     });
-
-    // Make sure our canvas for drawing selection lines is always the right size
-    window.addEventListener('resize', handleResize);
 }
 
 // Mouse handlers
@@ -519,17 +519,15 @@ function handleTouchEnd(e) {
     endDragGesture();
 }
 
-function handleResize() {
-    // Make sure the canvas stays resized to the grid
+function prepareCanvas() {
+    // Make sure the canvas is sized to the grid
     const gridElement = getGridElement();
-
     const trailCanvas = getTrailCanvas();
+
     trailCanvas.style.left = `${gridElement.offsetLeft}px`;
     trailCanvas.style.top = `${gridElement.offsetTop}px`;
     trailCanvas.width = gridElement.offsetWidth;
     trailCanvas.height = gridElement.offsetHeight;
-
-    // TODO do we need to redraw any active trail here?
 }
 
 // Helpers
