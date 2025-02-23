@@ -1,6 +1,10 @@
 /* CSS specific to the puzzle page(s) */
 @import '/style.css';
 
+:root {
+    --grid-cell-gap: 6px;
+}
+
 :root,
 [data-theme="light"] {
     --grid-cell-background: #f4f4f4;
@@ -79,7 +83,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    gap: 20px;
+    gap: 10px;
     height: min-content;
 }
 
@@ -93,10 +97,10 @@
 
 .grid-container {
     display: grid;
-    gap: 10px;
+    gap: var(--grid-cell-gap);
     aspect-ratio: 1 / 1;
     /* Ensure the grid is square */
-    width: 80%;
+    width: 90%;
     /* Relative width to container */
     max-width: 400px;
     /* Maximum size */
@@ -210,6 +214,10 @@ canvas {
         height: fit-content;
     }
 
+    .grid-container {
+        max-width: 300px;
+    }
+    
     .right-side {
         max-height: 100%;
     }
@@ -222,7 +230,7 @@ canvas {
 
     .left-side {
         order: 1;
-        min-height: 410px;
+        min-height: 420px;
     }
 
     .right-side {
