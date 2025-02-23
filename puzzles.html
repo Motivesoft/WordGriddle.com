@@ -15,24 +15,42 @@
             button3: { fileUrl: "puzzle-3" }
         };
 
-        document.addEventListener('DOMContentLoaded', function () {
-            for (let btnId in buttons) {
-                document.getElementById(btnId).addEventListener('click', function () {
-                    const fileUrl = buttons[btnId].fileUrl;
-
-                    window.location.href = `puzzle.html?puzzle=${encodeURIComponent(fileUrl)}`;
-                });
+        function parseDate(dateString) {
+            if (!dateString) {
+                return "";
             }
+            const [year, month, day] = dateString.split('-');
+            return new Date(year, month - 1, day);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/puzzles/catalog.json')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(`${data.puzzles.length}`);
+
+                    const puzzleListElement = document.getElementById('puzzle-list');
+                    data.puzzles.forEach(puzzle => {
+                        console.log(`${puzzle.title}, ${parseDate(puzzle.launchDate)}`);
+
+                        const puzzleSelector = document.createElement('button');
+                        puzzleSelector.classList.add('button');
+                        puzzleSelector.setAttribute('type', 'button');
+                        puzzleSelector.textContent = puzzle.title;
+                        puzzleSelector.addEventListener('click', function () {
+                            window.location.href = `puzzle.html?puzzle=${encodeURIComponent(puzzle.name)}`;
+                        });
+
+                        puzzleListElement.appendChild(puzzleSelector);
+                    });
+                });
         });
     </script>
 </head>
 
 <body>
-    Select a puzzle:<br/>
-    <button class="button" type="button" id="button0">Puzzle 0</button>
-    <button class="button" type="button" id="button1">Puzzle 1</button>
-    <button class="button" type="button" id="button2">Puzzle 2</button>
-    <button class="button" type="button" id="button3">Puzzle 3</button>
+    Select a puzzle:<br />
+    <div id="puzzle-list"></div>
 </body>
 
 </html>

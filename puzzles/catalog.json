@@ -1,0 +1,21 @@
+{
+    "puzzles": [
+        {
+            "title": "Puzzle #0",
+            "name": "puzzle-0",
+            "launchDate": "2025-02-23"
+        },
+        {
+            "title": "Puzzle #1",
+            "name": "puzzle-1"
+        },
+        {
+            "title": "Puzzle #2",
+            "name": "puzzle-2"
+        },
+        {
+            "title": "Puzzle #3",
+            "name": "puzzle-3"
+        }
+    ]
+}
