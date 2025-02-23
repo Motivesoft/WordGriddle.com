@@ -76,9 +76,6 @@ body {
     font-family: Verdana, Arial, sans-serif;
     margin: 0px;
     padding: 20px;
-
-    /* Force a minimum page size for the benefit of other body styling */
-    min-height: 100vh;
 }
 
 /* Navbar */

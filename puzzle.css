@@ -42,12 +42,14 @@
 .container {
     display: flex;
     flex-direction: row;
-    padding: 20px;
+    padding-top: 20px;
     gap: 20px;
-    height: calc(100vh - 120px);
+    /* height: calc(100vh - 120px); */
 
     /* Full height minus navbar and title */
     box-sizing: border-box;
+
+    flex-wrap: wrap;
 }
 
 .left-side,
@@ -58,6 +60,10 @@
 
     padding-top: 0px;
     padding-bottom: 20px;
+
+    min-width: 0;
+    min-height: 0;
+
 }
 
 .left-side h3,
@@ -203,6 +209,10 @@ canvas {
     .container {
         height: fit-content;
     }
+
+    .right-side {
+        max-height: 100%;
+    }
 }
 
 @media (max-width: 768px) and (orientation: portrait) {
@@ -212,6 +222,7 @@ canvas {
 
     .left-side {
         order: 1;
+        min-height: 410px;
     }
 
     .right-side {
