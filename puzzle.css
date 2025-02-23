@@ -22,6 +22,17 @@
     --trail-transparency: 0.3;
 }
 
+/* Trail canvas */
+#trail-canvas {
+    background: transparent
+}
+
+#no-words-message,
+#no-extra-words-message {
+    padding: 20px;
+    font-style: italic;
+}
+
 /* Container for the main content */
 .container {
     display: flex;

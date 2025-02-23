@@ -614,7 +614,7 @@ function decrementRedGrey(foundWord) {
 function updateWordsFound() {
     const wordsFoundElement = getWordsFoundElement();
     if (currentPuzzle.foundKeyWords.size == 0) {
-        wordsFoundElement.innerHTML = `<div style="padding: 20px;">No words found</div>`;
+        wordsFoundElement.innerHTML = `<div id="no-words-message">No words found</div>`;
         return;
     }
     
@@ -631,7 +631,7 @@ function updateExtraWordsFound() {
     }
 
     if (currentPuzzle.foundExtraWords.size == 0) {
-        wordsFoundElement.innerHTML = `<div style="padding: 20px;">No extra words found</div>`;
+        wordsFoundElement.innerHTML = `<div id="no-extra-words-message">No extra words found</div>`;
         return;
     }
     
