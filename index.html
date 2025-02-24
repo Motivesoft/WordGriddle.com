@@ -24,13 +24,13 @@
         <!-- Product icon and name (protruding above and below the navbar) -->
         <a href="/" class="product-container">
             <div class="product-icon">
-                <img src="icon-64-purple.png" width="64" height="64" alt="WordGriddle" class="top-left-icon">
+                <img src="/assets/icon-64-purple.png" width="64" height="64" alt="WordGriddle" class="top-left-icon">
             </div>
             <span class="product-name">WordGriddle</span>
         </a>
 
         <div class="navbar-right">
-            <button class="toolbar-button">
+            <button class="toolbar-button" id="aboutBoxBtn">
                 <!-- https://eldicons.com/create?path=M12_3A9_9_0_0_1_12_21A9_9_0_0_1_12_3M12_10L12_17M12_7L12_7 -->
                 <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
                     class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
@@ -81,6 +81,15 @@
             </p>
         </div>
     </div>
+
+    <dialog id="aboutBoxDialog">
+        <div class="icon">
+            <img src="/assets/icon-32-purple.png" width="32" height="32" alt="WordGriddle" class="top-left-icon">
+        </div>
+        <div id="aboutBoxText">
+        </div>
+        <button type="button" id="aboutBoxOkBtn">OK</button>
+    </dialog>
 </body>
 
 </html>

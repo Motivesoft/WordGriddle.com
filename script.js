@@ -15,7 +15,7 @@ function openMessageBox(message, type = 'info') {
     const dialog = document.getElementById('messageBoxDialog');
     const messageBoxText = document.getElementById('messageBoxText');
     const icon = dialog.querySelector('.icon div');
-    const okBtn = document.getElementById('okBtn');
+    const okBtn = document.getElementById('messageBoxOkBtn');
 
     // Set the message
     messageBoxText.innerHTML = message;
@@ -72,6 +72,41 @@ function openConfirmationDialog(message) {
         // Handle No button click
         noBtn.addEventListener('click', function () {
             dialog.close('no');
+        }, { once: true });
+    });
+}
+
+function openAboutBox() {
+    const dialog = document.getElementById('aboutBoxDialog');
+    const aboutBoxText = document.getElementById('aboutBoxText');
+    const okBtn = document.getElementById('aboutBoxOkBtn');
+
+    // Set the message
+    aboutBoxText.innerHTML = `
+        <h3>About WordGriddle</h3>
+        <div class="aboutBoxSocialMediaLinks">
+            <a href="https://discord.gg/vzdqBbnKX8" target="_blank" rel="noopener noreferrer">
+                <img src="assets/discord-mark-blue.svg" alt="WordGriddle Discord Server" class="aboutBoxSocialMediaIcon">
+            </a>
+            <a href="https://www.reddit.com/r/WordGriddle/" target="_blank" rel="noopener noreferrer">
+                <img src="assets/Reddit_Icon_2Color.svg" alt="WordGriddle channel on Reddit" class="aboutBoxSocialMediaIcon">
+            </a>
+        </div>
+        <p class="aboutBoxVersion"></p>
+        `;
+
+    // <object class="aboutBoxSocialMediaText">Join our Discord Server</object>
+    // <object class="aboutBoxSocialMediaText">Visit our Reddit channel</object>
+    displayVersion('aboutBoxVersion');
+
+    // Show the dialog
+    dialog.showModal();
+
+    // Return a promise that resolves when the user clicks OK
+    return new Promise((resolve) => {
+        okBtn.addEventListener('click', function () {
+            dialog.close();
+            resolve();
         }, { once: true });
     });
 }
@@ -141,14 +176,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function finalSetup() {
     // Theme toggle logic for a UI control wanting
     const themeToggleBtn = document.getElementById('themeToggleBtn');
-    themeToggleBtn.addEventListener('click', function () {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        if (currentTheme === 'dark') {
-            setTheme('light');
-        } else {
-            setTheme('dark');
-        }
-    });
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', function () {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        });
+    }
+
+    // Theme toggle logic for a UI control wanting
+    const aboutBoxBtn = document.getElementById('aboutBoxBtn');
+    if (aboutBoxBtn) {
+        aboutBoxBtn.addEventListener('click', async function () {
+            await openAboutBox();
+        });
+    }
 }
 
 async function displayVersion(elementId) {
