@@ -772,8 +772,6 @@ function updatePuzzleProgressMessage() {
     const countsMessageElement = document.getElementById('counts-message');
 
     if (currentPuzzle.puzzle) {
-        console.log(`found-${currentPuzzle.foundKeyWords.size}, non-${currentPuzzle.foundNonWords}`);
-
         progressMessageElement.innerHTML = `You have found ${currentPuzzle.foundKeyWords.size} of ${currentPuzzle.puzzle.keyWords.length} words with ${getAccuracy()}% accuracy.`;
 
         // Work out count of words at each word length

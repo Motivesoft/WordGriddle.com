@@ -28,8 +28,6 @@
             fetch('/puzzles/catalog.json')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(`${data.puzzles.length}`);
-
                     const puzzleListElement = document.getElementById('puzzle-list');
                     data.puzzles.forEach(puzzle => {
                         const puzzleSelector = document.createElement('button');
