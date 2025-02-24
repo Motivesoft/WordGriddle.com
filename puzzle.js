@@ -20,8 +20,7 @@ const PuzzleLocalStorageKeys = Object.freeze({
 const currentPuzzle = {
     puzzle: null,
     letterArray: [],
-    width: 0,
-    height: 0,
+    size: 0,
 
     // Transient state variables
     isDrawing: false,
@@ -40,11 +39,11 @@ const currentPuzzle = {
 // Load that puzzle and let the user play it
 document.addEventListener('DOMContentLoaded', async function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const fileUrl = urlParams.get('puzzle');
+    const puzzleFile = urlParams.get('puzzle');
 
     // Assuming we have a file, load it and populate the page
-    if (fileUrl) {
-        fetch(`/puzzles/${fileUrl}.json`)
+    if (puzzleFile) {
+        fetch(`/puzzles/${puzzleFile}.json`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error status: ${response.status}`);
@@ -59,21 +58,19 @@ document.addEventListener('DOMContentLoaded', async function () {
                     throw new Error("Missing puzzle information");
                 }
             })
-            .catch(error => console.error(error));
+            .catch(async error => {
+                await openMessageBox(`Failed to load puzzle '${puzzleFile}'.`, 'error');
+            });
     } else {
-        // TODO do this better
         await openMessageBox('This page needs to be launched from the puzzles catalog page.', 'error');
     }
 });
 
 function openPuzzle(puzzle) {
-    console.debug(`openPuzzle with ID: ${puzzle.id}, a ${puzzle.size}x${puzzle.size} with title: ${puzzle.title}`);
-
     // TODO initialise some internals
     currentPuzzle.puzzle = puzzle;
     currentPuzzle.letterArray = Array.from(puzzle.letters);
-    currentPuzzle.width = puzzle.size;
-    currentPuzzle.height = puzzle.size;
+    currentPuzzle.size = puzzle.size;
 
     getPuzzleTitleElement().innerHTML = puzzle.title;
 
@@ -104,14 +101,12 @@ function openPuzzle(puzzle) {
 }
 
 function initialiseGrid() {
-    console.debug(`initializeGrid at ${currentPuzzle.width} ${currentPuzzle.height}`);
-
     const gridElement = getGridElement();
 
     // Set grid dimensions
     gridElement.innerHTML = '';
-    gridElement.style.gridTemplateColumns = `repeat(${currentPuzzle.width}, 1fr)`;
-    gridElement.style.gridTemplateRows = `repeat(${currentPuzzle.height}, 1fr)`;
+    gridElement.style.gridTemplateColumns = `repeat(${currentPuzzle.size}, 1fr)`;
+    gridElement.style.gridTemplateRows = `repeat(${currentPuzzle.size}, 1fr)`;
 
     // Test for a gap (empty cell, a hole) in the puzzle
     const isEmptyCell = (char) => char === ' ' || char === '-' || char === '.';
@@ -151,7 +146,55 @@ function initialiseGrid() {
         gridElement.appendChild(cell);
     });
 
+    // This can be done whenever it seems like a useful idea 
     prepareCanvas();
+
+    scaleGrid();
+}
+
+function scaleGrid() {
+    // Work out screen size and orientation and set things like grid gap and font size
+    const size = currentPuzzle.size;
+
+    // Get a rough idea of what type of device we are on
+    const smallLandscape = window.matchMedia("(orientation: landscape) and (max-width: 1023px)");
+    const largeLandscape = window.matchMedia("(orientation: landscape) and (min-width: 1024px)");
+    const smallPortrait = window.matchMedia("(orientation: portrait) and (max-width: 499px)");
+    const largePortrait = window.matchMedia("(orientation: portrait) and (min-width: 500px)");
+
+    // Start with some defaults and then adjust them
+    let maxDimension = `360px`;
+    let gap = `10px`;
+    let fontSize = `24px`;
+
+    if (smallPortrait.matches) {
+        maxDimension = `322px`;
+        gap = `${size < 7 ? 11 : 4}px`;
+        fontSize = `${Math.min(40, 160 / size)}px`;
+    } else if (largePortrait.matches) {
+        maxDimension = `330px`;
+        gap = `${size < 7 ? 11 : 5}px`;
+        fontSize = `${170 / size}px`;
+    } else if (smallLandscape.matches) {
+        maxDimension = `223px`;
+        gap = `${size < 7 ? 7 : 3}px`;
+        fontSize = `${114 / size}px`;
+    } else if (largeLandscape.matches) {
+        maxDimension = `402px`;
+        gap = `${size < 7 ? 14 : 6}px`;
+        fontSize = `${210 / size}px`;
+    } else {
+        // Unknown scenario according to our rules - not much we can do but allow our default behaviour to do the right thing 
+        return;
+    }
+
+    // Apply the calculated size, font size and gap
+    const gridElement = getGridElement();
+    gridElement.style.width = maxDimension;
+    gridElement.style.height = maxDimension;
+
+    document.documentElement.style.setProperty('--grid-cell-gap', gap );
+    document.documentElement.style.setProperty('--grid-cell-font-size', fontSize );
 }
 
 // Trail stuff
@@ -213,13 +256,13 @@ function continueDragGesture(cell, clientX, clientY) {
 
         // Where are we?
         const cellIndex = parseInt(cell.dataset.index);
-        const cellCol = cellIndex % currentPuzzle.width;
-        const cellRow = (cellIndex - cellCol) / currentPuzzle.width;
+        const cellCol = cellIndex % currentPuzzle.size;
+        const cellRow = (cellIndex - cellCol) / currentPuzzle.size;
 
         // Where have we come from?
         const prevIndex = currentPuzzle.selectedLetters[currentPuzzle.selectedLetters.length - 1].index;
-        const prevCol = prevIndex % currentPuzzle.width;
-        const prevRow = (prevIndex - prevCol) / currentPuzzle.width;
+        const prevCol = prevIndex % currentPuzzle.size;
+        const prevRow = (prevIndex - prevCol) / currentPuzzle.size;
 
         // What will help us work out if this is a valid move - valid being -1 and 1 respectively
         const lastSelectedIndex = currentPuzzle.selectedLetters.findIndex(item => item.index === cellIndex);
@@ -252,7 +295,7 @@ function continueDragGesture(cell, clientX, clientY) {
                 // Pop the last selected letter and deselect its cell
 
                 const prevIndex = currentPuzzle.selectedLetters[currentPuzzle.selectedLetters.length - 1].index;
-                const prevCell = gridElement.childNodes[prevIndex];
+                const prevCell = gridElement.children[prevIndex];
                 prevCell.classList.remove('selected');
 
                 // Remove the step
@@ -500,6 +543,15 @@ function attachEventListeners() {
     document.getElementById("shareResultsBtn").addEventListener('click', () => {
         shareProgress();
       });
+
+    // Resize and device orientation changes
+    window.addEventListener('resize', () => {
+        scaleGrid();
+    });
+    
+    screen.orientation.addEventListener('change', () => {
+        scaleGrid();
+    });
 }
 
 function shareProgress() {
@@ -518,7 +570,6 @@ function shareProgress() {
             await openMessageBox('Puzzle progress copied to the clipboard.', 'info');
           })
           .catch(async (err) => {
-            console.error("Failed to copy: ", err);
             await openMessageBox('Failed to copy progress information to the clipboard.', 'info');
           });
 }
