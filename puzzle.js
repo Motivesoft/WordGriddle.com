@@ -32,7 +32,8 @@ const currentPuzzle = {
     // Game progress
     foundKeyWords: new Set(),
     foundExtraWords: new Set(),
-    nonWords: 0,
+    foundNonWords: 0,
+    completed: false,
 };
 
 // Assume we will be loaded with a 'file' parameter that points to a puzzle file on the server.
@@ -85,6 +86,8 @@ function openPuzzle(puzzle) {
     // TODO other setup/state stuff
     currentPuzzle.foundKeyWords.clear();
     currentPuzzle.foundExtraWords.clear();
+    currentPuzzle.foundNonWords = 0;
+    currentPuzzle.completed = false;
 
     // Initiate things using our 'currentPuzzle' state object
     initialiseGrid();
@@ -304,6 +307,8 @@ async function endDragGesture() {
                 updateWordsFound();
 
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
+                    currentPuzzle.completed = true;
+
                     updatePuzzleProgressMessage();
 
                     await openMessageBox(`Congratulations. You have found all of the key words!<br/><br/>You achieved a ${getAccuracy()}% accuracy`, 'info');
@@ -321,7 +326,11 @@ async function endDragGesture() {
         } else {
             updateOutcomeDisplay(`Not a recognised word: ${selectedWordUpper}`);
             
-            currentPuzzle.nonWords++;
+            // Stop counting non-words when the puzzle is finished so that the accuracy stays fixed
+            // to completing the main word search
+            if (!currentPuzzle.completed) {
+                currentPuzzle.foundNonWords++;
+            }
         }
 
         // TODO do this after every word, even though this will sometimes be redundant
@@ -748,9 +757,9 @@ function updateRedGreyDisplay() {
 function getAccuracy() {
     // Calculate a 0-1 number and then take the floor of that number multiplied by 100
     let accuracyPercentage = 1;
-    if (currentPuzzle.nonWords) {
+    if (currentPuzzle.foundNonWords) {
         if (currentPuzzle.foundKeyWords.size) {
-            accuracyPercentage = (currentPuzzle.foundKeyWords.size/(currentPuzzle.nonWords+currentPuzzle.foundKeyWords.size));
+            accuracyPercentage = (currentPuzzle.foundKeyWords.size/(currentPuzzle.foundNonWords+currentPuzzle.foundKeyWords.size));
         } else {
             accuracyPercentage = 0;
         }
@@ -763,7 +772,7 @@ function updatePuzzleProgressMessage() {
     const countsMessageElement = document.getElementById('counts-message');
 
     if (currentPuzzle.puzzle) {
-        console.log(`found-${currentPuzzle.foundKeyWords.size}, non-${currentPuzzle.nonWords}`);
+        console.log(`found-${currentPuzzle.foundKeyWords.size}, non-${currentPuzzle.foundNonWords}`);
 
         progressMessageElement.innerHTML = `You have found ${currentPuzzle.foundKeyWords.size} of ${currentPuzzle.puzzle.keyWords.length} words with ${getAccuracy()}% accuracy.`;
 
@@ -823,7 +832,7 @@ function getNonWordStorageKey() {
 function storeProgress() {
     localStorage.setItem(getKeyWordStorageKey(), Array.from(currentPuzzle.foundKeyWords).join(','));
     localStorage.setItem(getExtraWordStorageKey(), Array.from(currentPuzzle.foundExtraWords).join(','));
-    localStorage.setItem(getNonWordStorageKey(), currentPuzzle.nonWords);
+    localStorage.setItem(getNonWordStorageKey(), currentPuzzle.foundNonWords);
 }
 
 function restoreProgress() {
@@ -850,7 +859,10 @@ function restoreProgress() {
         }
     });
 
-    currentPuzzle.nonWords = localStorage.getItem(getNonWordStorageKey()) || 0;
+    currentPuzzle.foundNonWords = localStorage.getItem(getNonWordStorageKey()) || 0;
+
+    // Infer completed state
+    currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
 }
 
 async function resetProgress() {
