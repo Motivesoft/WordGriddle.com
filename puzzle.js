@@ -495,13 +495,13 @@ function clearTrail() {
 
 function attachEventListeners() {
     const gridElement = getGridElement();
-    gridElement.addEventListener('mousedown', handleMouseStart);
-    gridElement.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseEnd);
+    gridElement.addEventListener('mousedown', handleMouseStart, { passive: true });
+    gridElement.addEventListener('mousemove', handleMouseMove, { passive: true });
+    document.addEventListener('mouseup', handleMouseEnd, { passive: true });
 
-    gridElement.addEventListener('touchstart', handleTouchStart);
-    gridElement.addEventListener('touchmove', handleTouchMove);
-    document.addEventListener('touchend', handleTouchEnd);
+    gridElement.addEventListener('touchstart', handleTouchStart, { passive: true });
+    gridElement.addEventListener('touchmove', handleTouchMove, { passive: true });
+    document.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     // Listen to, and populate, the found word ordering combo
     const combobox = document.getElementById('found-order-selection');
@@ -830,6 +830,7 @@ function getAccuracy() {
             accuracyPercentage = 0;
         }
     }
+
     return Math.floor(accuracyPercentage * 100);
 }
 
@@ -1014,7 +1015,8 @@ function restoreProgress() {
     }
 
     // Retain our ability to calculate accuracy
-    currentPuzzle.foundNonWords = localStorage.getItem(getNonWordStorageKey()) || 0;
+    const nonWordStoredValue = localStorage.getItem(getNonWordStorageKey()) || '0';
+    currentPuzzle.foundNonWords = Number.parseInt(nonWordStoredValue);
 
     // Infer completed state
     currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
