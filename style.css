@@ -76,6 +76,9 @@ body {
     font-family: Verdana, Arial, sans-serif;
     margin: 0px;
     padding: 20px;
+
+    /* Disables overscroll behavior */
+    overscroll-behavior: none;
 }
 
 /* Navbar */
