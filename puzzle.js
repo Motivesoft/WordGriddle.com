@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 }
             })
             .catch(async error => {
+                console.error("Failed to load puzzle", error);
                 await openMessageBox(`Failed to load puzzle '${puzzleFile}'.`, 'error');
             });
     } else {
@@ -193,8 +194,8 @@ function scaleGrid() {
     gridElement.style.width = maxDimension;
     gridElement.style.height = maxDimension;
 
-    document.documentElement.style.setProperty('--grid-cell-gap', gap );
-    document.documentElement.style.setProperty('--grid-cell-font-size', fontSize );
+    document.documentElement.style.setProperty('--grid-cell-gap', gap);
+    document.documentElement.style.setProperty('--grid-cell-font-size', fontSize);
 }
 
 // Trail stuff
@@ -368,7 +369,7 @@ async function endDragGesture() {
             }
         } else {
             updateOutcomeDisplay(`Not a recognised word: ${selectedWordUpper}`);
-            
+
             // Stop counting non-words when the puzzle is finished so that the accuracy stays fixed
             // to completing the main word search
             if (!currentPuzzle.completed) {
@@ -542,36 +543,36 @@ function attachEventListeners() {
 
     document.getElementById("shareResultsBtn").addEventListener('click', () => {
         shareProgress();
-      });
+    });
 
     // Resize and device orientation changes
     window.addEventListener('resize', () => {
         scaleGrid();
     });
-    
+
     screen.orientation.addEventListener('change', () => {
         scaleGrid();
     });
 }
 
 function shareProgress() {
-        const accuracyText = ``;
+    const accuracyText = ``;
 
-        let shareText = '';
-        shareText += `I have been playing WordGriddle '${currentPuzzle.puzzle.title}'\n`;
-        shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} key words found, with ${getAccuracy()}% accuracy.\n`;
-        shareText += `${currentPuzzle.foundExtraWords.size}/${currentPuzzle.puzzle.extraWords.length} extra words found.\n`;
-        shareText += `Play this puzzle: ${window.location.href}`;
+    let shareText = '';
+    shareText += `I have been playing WordGriddle '${currentPuzzle.puzzle.title}'\n`;
+    shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} key words found, with ${getAccuracy()}% accuracy.\n`;
+    shareText += `${currentPuzzle.foundExtraWords.size}/${currentPuzzle.puzzle.extraWords.length} extra words found.\n`;
+    shareText += `Play this puzzle: ${window.location.href}`;
 
-        // Copy to clipboard
-        navigator.clipboard
-          .writeText(shareText)
-          .then(async () => {
+    // Copy to clipboard
+    navigator.clipboard
+        .writeText(shareText)
+        .then(async () => {
             await openMessageBox('Puzzle progress copied to the clipboard.', 'info');
-          })
-          .catch(async (err) => {
+        })
+        .catch(async (err) => {
             await openMessageBox('Failed to copy progress information to the clipboard.', 'info');
-          });
+        });
 }
 
 // Mouse handlers
@@ -707,7 +708,7 @@ function updateWordsFound() {
         wordsFoundElement.innerHTML = `<div class="no-words-message">No words found</div>`;
         return;
     }
-    
+
     wordsFoundElement.innerHTML = buildWordListHtml(currentPuzzle.foundKeyWords);
 }
 
@@ -724,7 +725,7 @@ function updateExtraWordsFound() {
         wordsFoundElement.innerHTML = `<div class="no-words-message">No extra words found</div>`;
         return;
     }
-    
+
     wordsFoundElement.innerHTML = buildWordListHtml(currentPuzzle.foundExtraWords);
 }
 
@@ -760,7 +761,7 @@ function buildWordListHtml(foundWords) {
             });
             break;
     }
-    
+
     let html = `<div class="found-word-list">`;
 
     wordList.forEach((word) => {
@@ -810,7 +811,7 @@ function getAccuracy() {
     let accuracyPercentage = 1;
     if (currentPuzzle.foundNonWords) {
         if (currentPuzzle.foundKeyWords.size) {
-            accuracyPercentage = (currentPuzzle.foundKeyWords.size/(currentPuzzle.foundNonWords+currentPuzzle.foundKeyWords.size));
+            accuracyPercentage = (currentPuzzle.foundKeyWords.size / (currentPuzzle.foundNonWords + currentPuzzle.foundKeyWords.size));
         } else {
             accuracyPercentage = 0;
         }
@@ -878,36 +879,127 @@ function getNonWordStorageKey() {
     return PuzzleLocalStorageKeys.NON_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
 }
 
+function indexFromWord(wordList, searchWord) {
+    // Return the index of 'searchWord' in 'wordList' where that is an [word,_] array
+    for( let i = 0; i < wordList.length; i++ ) {
+        const [word, _] = wordList[i];
+        if (searchWord === word) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function wordListToIndexList(wordList, foundWords) {
+    // Make a list of the index value of each found word, retaining its found order
+    let list = [];
+    foundWords.forEach((foundWord) => {
+        let index = indexFromWord(wordList, foundWord);
+        if (index > -1) {
+            list.push(index);
+        } else {
+            console.warn(`Could not determine index for word: ${foundWord}`);
+        }
+    })
+
+    // Iterate though the puzzle's word list and record the index into that list of each word that has been found
+    // let list = [];
+    // let index = 0;
+    // wordList.forEach(([word, path]) => {
+    //     if (foundWords.has(word)) {
+    //         list.push(index);
+    //     }
+
+    //     index++;
+    // });
+
+    return list;
+}
+
+function indexListToWordList(indexList, wordList) {
+    // Iterate over all items in the index list and reconstitute it into a words list
+    let list = [];
+    indexList.forEach((index) => {
+        const [word, _] = wordList[index];
+        list.push(word);
+    })
+
+    return list;
+}
+
 function storeProgress() {
-    localStorage.setItem(getKeyWordStorageKey(), Array.from(currentPuzzle.foundKeyWords).join(','));
-    localStorage.setItem(getExtraWordStorageKey(), Array.from(currentPuzzle.foundExtraWords).join(','));
+    const keyWordIndexList = wordListToIndexList(currentPuzzle.puzzle.keyWords, currentPuzzle.foundKeyWords);
+    const extraWordIndexList = wordListToIndexList(currentPuzzle.puzzle.extraWords, currentPuzzle.foundExtraWords);
+
+    // Instead of storing found words directly, we store the index number of the found words within the overall word
+    // lists (key word and extra word).
+    //
+    // This is intended to save a little space, where we are storing a 1-4 digit number for each word, rather than the
+    // word itself. Casual experimentation on a typical grid suggests about 50% space saving - or the ability to store
+    // twice as many before we encounter any space limitations.
+    //
+    // Worst case, the saving is less than that if the word length average is small, but it will never be as small as 
+    // storing the index values, so we can't lose here and the processing isn't that more complex and we can still retain
+    // found order.
+    //
+    // I did consider storing only a boolean if the puzzle got complete, but we might still want the found order for 
+    // post-puzzle discussions.
+    // 
+    // The following two statements display what we are storing and not storing so we can check accuracy and efficiency.
+    //
+    // console.log(`>${Array.from(currentPuzzle.foundKeyWords).join(',')} cf ${JSON.stringify(keyWordIndexList)}`);
+    // console.log(`>${Array.from(currentPuzzle.foundKeyWords).join(',').length} cf ${JSON.stringify(keyWordIndexList).length}`);
+
+    localStorage.setItem(getKeyWordStorageKey(), JSON.stringify(keyWordIndexList));
+    localStorage.setItem(getExtraWordStorageKey(), JSON.stringify(extraWordIndexList));
     localStorage.setItem(getNonWordStorageKey(), currentPuzzle.foundNonWords);
 }
 
 function restoreProgress() {
-    const progressKeyWords = localStorage.getItem(getKeyWordStorageKey());
-    if (progressKeyWords) {
-        const words = progressKeyWords.split(',');
-        words.forEach((word) => {
-            currentPuzzle.foundKeyWords.add(word);
-        });
-    }
+    const keyWordIndexJson = localStorage.getItem(getKeyWordStorageKey());
+    if (keyWordIndexJson) {
+        try {
+            const indexList = JSON.parse(keyWordIndexJson);
 
-    const progressExtraWords = localStorage.getItem(getExtraWordStorageKey());
-    if (progressExtraWords) {
-        const words = progressExtraWords.split(',');
-        words.forEach((word) => {
-            currentPuzzle.foundExtraWords.add(word);
-        });
-    }
-
-    // Adjust the red/grey with these restored finds
-    currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
-        if (currentPuzzle.foundKeyWords.has(word)) {
-            decrementRedGrey(word);
+            const wordList = indexListToWordList(indexList, currentPuzzle.puzzle.keyWords);
+            if (wordList) {
+                wordList.forEach((word) => {
+                    currentPuzzle.foundKeyWords.add(word);
+                })
+            }
+            
+            // Adjust the red/grey numbers with these restored finds
+            currentPuzzle.foundKeyWords.forEach((word) => {
+                decrementRedGrey(word);
+            });
+            // currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
+            //     if (currentPuzzle.foundKeyWords.has(word)) {
+            //         decrementRedGrey(word);
+            //     }
+            // });
+        } catch (error) {
+            console.warn("Failed to restore key words from local storage", error);            
         }
-    });
+    }
 
+    const extraWordIndexJson = localStorage.getItem(getExtraWordStorageKey());
+    if( extraWordIndexJson) {
+        try {
+            const extraWordIndexList = JSON.parse(localStorage.getItem(getExtraWordStorageKey()));
+        
+            const progressExtraWords = indexListToWordList(extraWordIndexList, currentPuzzle.puzzle.extraWords);
+            if (progressExtraWords) {
+                progressExtraWords.forEach((word) => {
+                    currentPuzzle.foundExtraWords.add(word);
+                })
+            }
+        } catch(error) {
+            console.warn("Failed to restore extra words from local storage", error);            
+        }
+    }
+
+    // Retain our ability to calculate accuracy
     currentPuzzle.foundNonWords = localStorage.getItem(getNonWordStorageKey()) || 0;
 
     // Infer completed state
@@ -916,13 +1008,13 @@ function restoreProgress() {
 
 async function resetProgress() {
     const userConfirmed = await openConfirmationDialog('This will delete all progress for this puzzle.<br/><br/>Do you want to proceed?');
-    
+
     if (userConfirmed) {
         // Clear stored information
         localStorage.removeItem(getKeyWordStorageKey());
         localStorage.removeItem(getExtraWordStorageKey());
         localStorage.removeItem(getNonWordStorageKey());
-        
+
         // Reload everything
         openPuzzle(currentPuzzle.puzzle);
     }
