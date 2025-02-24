@@ -651,14 +651,28 @@ function getExtraWordsFoundElement() {
 
 function updateSelectedLettersDisplay() {
     if (currentPuzzle.selectedLetters?.length) {
-        document.getElementById('outcome-message').innerHTML = currentPuzzle.selectedLetters.map((item) => item.letter).join('');
+        updateOutcomeMessage(currentPuzzle.selectedLetters.map((item) => item.letter).join(''), true);
     } else {
-        document.getElementById('outcome-message').innerHTML = '&nbsp;';
+        updateOutcomeMessage();
     }
 }
 
 function updateOutcomeDisplay(message) {
-    document.getElementById('outcome-message').innerHTML = message || '&nbsp;';
+    updateOutcomeMessage(message || '');
+}
+
+// Function to update the content
+function updateOutcomeMessage(message, isStyled = false) {
+    const container = document.getElementById("outcome-message");
+
+    container.textContent = message || '';
+
+    // Apply or remove the styledText class
+    if (isStyled) {
+        container.classList.add("styledText");
+    } else {
+        container.classList.remove("styledText");
+    }
 }
 
 function decrementRedGrey(foundWord) {
@@ -881,7 +895,7 @@ function getNonWordStorageKey() {
 
 function indexFromWord(wordList, searchWord) {
     // Return the index of 'searchWord' in 'wordList' where that is an [word,_] array
-    for( let i = 0; i < wordList.length; i++ ) {
+    for (let i = 0; i < wordList.length; i++) {
         const [word, _] = wordList[i];
         if (searchWord === word) {
             return i;
@@ -968,7 +982,7 @@ function restoreProgress() {
                     currentPuzzle.foundKeyWords.add(word);
                 })
             }
-            
+
             // Adjust the red/grey numbers with these restored finds
             currentPuzzle.foundKeyWords.forEach((word) => {
                 decrementRedGrey(word);
@@ -979,23 +993,23 @@ function restoreProgress() {
             //     }
             // });
         } catch (error) {
-            console.warn("Failed to restore key words from local storage", error);            
+            console.warn("Failed to restore key words from local storage", error);
         }
     }
 
     const extraWordIndexJson = localStorage.getItem(getExtraWordStorageKey());
-    if( extraWordIndexJson) {
+    if (extraWordIndexJson) {
         try {
             const extraWordIndexList = JSON.parse(localStorage.getItem(getExtraWordStorageKey()));
-        
+
             const progressExtraWords = indexListToWordList(extraWordIndexList, currentPuzzle.puzzle.extraWords);
             if (progressExtraWords) {
                 progressExtraWords.forEach((word) => {
                     currentPuzzle.foundExtraWords.add(word);
                 })
             }
-        } catch(error) {
-            console.warn("Failed to restore extra words from local storage", error);            
+        } catch (error) {
+            console.warn("Failed to restore extra words from local storage", error);
         }
     }
 
