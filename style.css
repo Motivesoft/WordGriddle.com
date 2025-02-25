@@ -18,6 +18,8 @@
     --icon-error-color: #dc3545;
     --icon-info-color: #007bff;
     --icon-warning-color: #ffc107;
+    --icon-fill-color: none;
+    --icon-stroke-color: #000000;
     --list-background: #f8f9fa;
     --list-border: #e9ecef;
     --navbar-border: #ccc;
@@ -53,6 +55,8 @@
     --icon-error-color: #ef5350;
     --icon-info-color: #64b5f6;
     --icon-warning-color: #ffca28;
+    --icon-fill-color: none;
+    --icon-stroke-color: #ffffff;
     --list-background: #1e1e1e;
     --list-border: #333;
     --navbar-background: #1e1e1e;
@@ -135,16 +139,6 @@ body {
 }
 
 /* Toolbar button styles */
-
-:root {
-    --icon-stroke-color: #000000;
-    --icon-fill-color: none;
-}
-
-[data-theme="dark"] {
-    --icon-stroke-color: #ffffff;
-    --icon-fill-color: none;
-}
 
 .toolbar-button {
     background-color: transparent;
