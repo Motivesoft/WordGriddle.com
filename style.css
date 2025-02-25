@@ -134,7 +134,8 @@ body {
     padding-right: 4px;
 }
 
-/* Button Styles */
+/* Toolbar button styles */
+
 :root {
     --icon-stroke-color: #000000;
     --icon-fill-color: none;
@@ -170,29 +171,6 @@ body {
 
 .toolbar-button-icon:hover {
     stroke: var(--navbar-link-hover-background);
-}
-
-.tooltip {
-    visibility: hidden;
-    width: 120px;
-    background-color: var(--control-background);
-    border: 1px solid var(--control-border);
-    color: var(--text-color);
-    text-align: center;
-    border-radius: 4px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    top: 125%;
-    left: 50%;
-    margin-left: -60px;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.toolbar-button:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
 }
 
 /* Links */
