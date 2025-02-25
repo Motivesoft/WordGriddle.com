@@ -11,6 +11,9 @@ const FoundMoveSortOrder = Object.freeze({
 const PuzzleLocalStorageKeys = Object.freeze({
     FOUND_WORD_ORDERING: "foundWordOrdering",
     SHOW_EXTRA_WORDS: "showExtraWords",
+    PROGRESS_STORAGE: "puzzle-%id.progress",
+
+    // TODO delete these three when finally obsolete
     KEY_WORD_STORAGE: "puzzle-%id.keyWords",
     EXTRA_WORD_STORAGE: "puzzle-%id.extraWords",
     NON_WORD_STORAGE: "puzzle-%id.nonWords",
@@ -349,6 +352,7 @@ async function endDragGesture() {
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
                 updateRedGreyDisplay();
                 updateWordsFound();
+                updateProgress();
 
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
                     currentPuzzle.completed = true;
@@ -366,6 +370,7 @@ async function endDragGesture() {
 
                 updateOutcomeDisplay(`Extra word found: ${selectedWordUpper}`);
                 updateExtraWordsFound();
+                updateProgress();
             }
         } else {
             updateOutcomeDisplay(`Not a recognised word: ${selectedWordUpper}`);
@@ -374,11 +379,10 @@ async function endDragGesture() {
             // to completing the main word search
             if (!currentPuzzle.completed) {
                 currentPuzzle.foundNonWords++;
+
+                updateProgress();
             }
         }
-
-        // TODO do this after every word, even though this will sometimes be redundant
-        storeProgress();
 
         // Clear any selection decorations
         clearTrail();
@@ -882,14 +886,21 @@ function updatePuzzleProgressMessage() {
 
 // Progress storage
 
+function getProgressStorageKey() {
+    return PuzzleLocalStorageKeys.PROGRESS_STORAGE.replace("%id", currentPuzzle.puzzle.id);
+}
+
+// TODO delete when finally obsolete
 function getKeyWordStorageKey() {
     return PuzzleLocalStorageKeys.KEY_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
 }
 
+// TODO delete when finally obsolete
 function getExtraWordStorageKey() {
     return PuzzleLocalStorageKeys.EXTRA_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
 }
 
+// TODO delete when finally obsolete
 function getNonWordStorageKey() {
     return PuzzleLocalStorageKeys.NON_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
 }
@@ -918,17 +929,6 @@ function wordListToIndexList(wordList, foundWords) {
         }
     })
 
-    // Iterate though the puzzle's word list and record the index into that list of each word that has been found
-    // let list = [];
-    // let index = 0;
-    // wordList.forEach(([word, path]) => {
-    //     if (foundWords.has(word)) {
-    //         list.push(index);
-    //     }
-
-    //     index++;
-    // });
-
     return list;
 }
 
@@ -943,7 +943,7 @@ function indexListToWordList(indexList, wordList) {
     return list;
 }
 
-function storeProgress() {
+function updateProgress() {
     const keyWordIndexList = wordListToIndexList(currentPuzzle.puzzle.keyWords, currentPuzzle.foundKeyWords);
     const extraWordIndexList = wordListToIndexList(currentPuzzle.puzzle.extraWords, currentPuzzle.foundExtraWords);
 
@@ -960,66 +960,54 @@ function storeProgress() {
     //
     // I did consider storing only a boolean if the puzzle got complete, but we might still want the found order for 
     // post-puzzle discussions.
-    // 
-    // The following two statements display what we are storing and not storing so we can check accuracy and efficiency.
     //
-    // console.log(`>${Array.from(currentPuzzle.foundKeyWords).join(',')} cf ${JSON.stringify(keyWordIndexList)}`);
-    // console.log(`>${Array.from(currentPuzzle.foundKeyWords).join(',').length} cf ${JSON.stringify(keyWordIndexList).length}`);
+    // Store all the progress data in a single JSON object
 
-    localStorage.setItem(getKeyWordStorageKey(), JSON.stringify(keyWordIndexList));
-    localStorage.setItem(getExtraWordStorageKey(), JSON.stringify(extraWordIndexList));
-    localStorage.setItem(getNonWordStorageKey(), currentPuzzle.foundNonWords);
+    const storedValue = JSON.stringify({
+        keyWords: keyWordIndexList,
+        extraWords: extraWordIndexList,
+        nonWordCount: currentPuzzle.foundNonWords
+    });
+
+    localStorage.setItem(getProgressStorageKey(), storedValue);
 }
 
 function restoreProgress() {
-    const keyWordIndexJson = localStorage.getItem(getKeyWordStorageKey());
-    if (keyWordIndexJson) {
+    const storedValue = localStorage.getItem(getProgressStorageKey());
+    if (storedValue) {
         try {
-            const indexList = JSON.parse(keyWordIndexJson);
+            const progressData = JSON.parse(storedValue);
 
-            const wordList = indexListToWordList(indexList, currentPuzzle.puzzle.keyWords);
+            // Unpack the keyWord, extraWord and nonWord values 
+
+            // keyWords
+            let wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);
             if (wordList) {
                 wordList.forEach((word) => {
                     currentPuzzle.foundKeyWords.add(word);
+
+                    // Adjust the red/grey numbers for each restored word
+                    decrementRedGrey(word);
                 })
             }
 
-            // Adjust the red/grey numbers with these restored finds
-            currentPuzzle.foundKeyWords.forEach((word) => {
-                decrementRedGrey(word);
-            });
-            // currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
-            //     if (currentPuzzle.foundKeyWords.has(word)) {
-            //         decrementRedGrey(word);
-            //     }
-            // });
-        } catch (error) {
-            console.warn("Failed to restore key words from local storage", error);
-        }
-    }
-
-    const extraWordIndexJson = localStorage.getItem(getExtraWordStorageKey());
-    if (extraWordIndexJson) {
-        try {
-            const extraWordIndexList = JSON.parse(localStorage.getItem(getExtraWordStorageKey()));
-
-            const progressExtraWords = indexListToWordList(extraWordIndexList, currentPuzzle.puzzle.extraWords);
-            if (progressExtraWords) {
-                progressExtraWords.forEach((word) => {
+            // extraWords
+            wordList = indexListToWordList(progressData.extraWords, currentPuzzle.puzzle.extraWords);
+            if (wordList) {
+                wordList.forEach((word) => {
                     currentPuzzle.foundExtraWords.add(word);
                 })
             }
+
+            // nonWords - Retain our ability to calculate accuracy
+            currentPuzzle.foundNonWords = progressData.nonWordCount;
+
+            // Infer completed state
+            currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
         } catch (error) {
-            console.warn("Failed to restore extra words from local storage", error);
+            console.error("Failed to restore progress", error);
         }
     }
-
-    // Retain our ability to calculate accuracy
-    const nonWordStoredValue = localStorage.getItem(getNonWordStorageKey()) || '0';
-    currentPuzzle.foundNonWords = Number.parseInt(nonWordStoredValue);
-
-    // Infer completed state
-    currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
 }
 
 async function resetProgress() {
@@ -1027,6 +1015,9 @@ async function resetProgress() {
 
     if (userConfirmed) {
         // Clear stored information
+        localStorage.removeItem(getProgressStorageKey());
+
+        // TODO delete these redundant lines at some point when they will have finished cleaning the alpha tester's storage
         localStorage.removeItem(getKeyWordStorageKey());
         localStorage.removeItem(getExtraWordStorageKey());
         localStorage.removeItem(getNonWordStorageKey());
