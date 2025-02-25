@@ -13,7 +13,12 @@
             "type": "image/png"
         }
     ],
+    "display": "standalone",
     "theme_color": "#9030B0",
     "background_color": "#ffffff",
-    "display": "standalone"
+    "description": "WordGriddle is a word search puzzle game. Find all possible words by swiping letters on the grid",
+    "lang": "en",
+    "scope": "/",
+    "start_url": "/index.html",
+    "id": "/index.html"
 }
