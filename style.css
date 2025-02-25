@@ -73,7 +73,7 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: Verdana, Arial, sans-serif;
+    font-family: "Roboto", "Arial", "Helvetica", "Verdana", sans-serif;;
     margin: 0px;
     padding: 20px;
 
@@ -86,67 +86,44 @@ body {
 .navbar {
     background-color: var(--navbar-background);
     height: 48px;
-    /* Fixed height for the navbar */
     display: flex;
     align-items: center;
-    /* Vertically center items */
     justify-content: flex-end;
-    /* Align items to the right */
     padding: 0px;
-    /* 20px margin on the sides */
     position: relative;
-    /* Needed for absolute positioning of the product icon */
-    /* margin: 20px; */
-    /* 20px margin around the navbar */
 }
 
 /* Product container (icon and name) */
 .product-container {
     display: flex;
     align-items: center;
-    /* Vertically center the icon and name */
     text-decoration: none;
-    /* Remove underline from link */
     color: white;
-    /* Text color */
     position: absolute;
-    /* Position the container absolutely */
     left: 8px;
-    /* Align to the left margin */
     top: -8px;
-    /* Protrude 4px above the navbar */
 }
 
 /* Product icon */
 .product-icon {
     width: 64px;
-    /* Size of the icon */
     height: 64px;
-    /* Size of the icon */
     background-color: #555;
-    /* Background color of the icon */
     display: flex;
     align-items: center;
-    /* Center the icon vertically */
     justify-content: center;
-    /* Center the icon horizontally */
     border-radius: 5px;
-    /* Slightly rounded corners */
 }
 
 .product-icon i {
     font-size: 1.5em;
-    /* Size of the icon */
 }
 
 /* Product name label */
 .product-name {
     font-size: 1.2em;
-    /* Size of the product name */
     font-weight: bold;
-    /* Make the name stand out */
     margin-left: 10px;
-    /* Space between icon and name */
     color: var(--brand-color);
 }
 
@@ -155,22 +132,17 @@ body {
     display: flex;
     gap: 4px;
     padding-right: 4px;
-    /* Space between buttons */
 }
 
 /* Button Styles */
 :root {
     --icon-stroke-color: #000000;
-    /* Default stroke color (light theme) */
     --icon-fill-color: none;
-    /* Default fill color (light theme) */
 }
 
 [data-theme="dark"] {
     --icon-stroke-color: #ffffff;
-    /* Stroke color for dark theme */
     --icon-fill-color: none;
-    /* Fill color for dark theme */
 }
 
 .toolbar-button {
@@ -287,7 +259,6 @@ a:active {
     gap: 20px;
     box-sizing: border-box;
 
-    /* Full height minus navbar and title */
     height: calc(100vh - 120px);
 }
 
@@ -497,14 +468,8 @@ dialog button[type="button"] {
     color: var(--icon-error-color);
 }
 
-/* CSS rules for mobile devices go here */
-@media only screen and (max-width: 480px) {
-    body {
-        font-family: 'Roboto', 'Open Sans', Verdana, sans-serif;
-    }
-}
-
 /* Media query for portrait mode */
+
 @media (orientation: portrait) {
     .panel {
         flex-direction: column;
@@ -513,8 +478,6 @@ dialog button[type="button"] {
 
     .inner-panel {
         max-width: 100%;
-        /* Allow items to take full width in portrait */
         flex: none;
-        /* Prevent flex-grow/shrink */
     }
 }
