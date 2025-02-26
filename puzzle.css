@@ -25,7 +25,7 @@
 [data-theme="dark"] {
     --grid-cell-background: #343434;
     --grid-cell-border: #646464;
-    --grid-cell-completed-background: #1e1e1e;
+    --grid-cell-completed-background: #343434;
     --grid-cell-completed-color: #deb93d;
     --grid-cell-completed-zerozero: #646464;
     --grid-item-background: #edeff1;
