@@ -87,12 +87,13 @@ function openAboutBox() {
         <p class="aboutBoxVersion"></p>
         `;
 
-    // <object class="aboutBoxSocialMediaText">Join our Discord Server</object>
-    // <object class="aboutBoxSocialMediaText">Visit our Reddit channel</object>
     displayVersion('aboutBoxVersion');
 
     // Show the dialog
     dialog.showModal();
+
+    // Force focus onto the OK button
+    okBtn.focus();
 
     // Return a promise that resolves when the user clicks OK
     return new Promise((resolve) => {

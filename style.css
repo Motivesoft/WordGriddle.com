@@ -420,6 +420,11 @@ dialog button[type="button"] {
     padding-top: 40px;
 }
 
+.aboutBoxSocialMediaLinks a {
+    display: inline-block;
+    height: 34px;
+}
+
 .aboutBoxSocialMediaIcon {
     width: 32px;
     height: 32px;
