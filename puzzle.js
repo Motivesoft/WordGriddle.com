@@ -1057,7 +1057,7 @@ const tickerTapeColors = [
 ]
 
 function createParticle(x, y) {
-    const randomColor = tickerTapeColors[ Math.floor(Math.random()*tickerTapeColors.length) ];
+    const randomColor = tickerTapeColors[Math.floor(Math.random() * tickerTapeColors.length)];
 
     const particle = document.createElement('div');
     particle.className = 'particle';
@@ -1100,7 +1100,7 @@ async function explode(elementId) {
         const rect = document.getElementById(elementId).getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
-        
+
         for (let j = 0; j < 20; j++) {
             // Introduce a random start point (around the centre) for each burst
             const xJitter = (Math.random() * (rect.width / 3)) - (rect.width / 6);
