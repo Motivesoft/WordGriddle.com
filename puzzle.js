@@ -548,7 +548,7 @@ function attachEventListeners() {
 
     // Share
 
-    document.getElementById("shareResultsBtn").addEventListener('click', () => {
+    document.getElementById("shareResultsButton").addEventListener('click', () => {
         shareProgress();
     });
 

@@ -7,7 +7,7 @@ function openMessageBox(message, type = 'info') {
     const dialog = document.getElementById('messageBoxDialog');
     const messageBoxText = document.getElementById('messageBoxText');
     const icon = dialog.querySelector('.icon div');
-    const okBtn = document.getElementById('messageBoxOkBtn');
+    const okButton = document.getElementById('messageBoxOkButton');
 
     // Set the message
     messageBoxText.innerHTML = message;
@@ -34,9 +34,12 @@ function openMessageBox(message, type = 'info') {
     // Show the dialog
     dialog.showModal();
 
+    // Force focus onto the OK button
+    okButton.focus();
+    
     // Return a promise that resolves when the user clicks OK
     return new Promise((resolve) => {
-        okBtn.addEventListener('click', function () {
+        okButton.addEventListener('click', function () {
             dialog.close();
             resolve();
         }, { once: true });
@@ -47,7 +50,7 @@ function openMessageBox(message, type = 'info') {
 function openConfirmationDialog(message) {
     const dialog = document.getElementById('confirmationDialog');
     const dialogMessage = document.getElementById('dialogMessage');
-    const noBtn = document.getElementById('noBtn');
+    const noButton = document.getElementById('noButton');
 
     // Set the dialog message
     dialogMessage.innerHTML = message;
@@ -62,7 +65,7 @@ function openConfirmationDialog(message) {
         }, { once: true });
 
         // Handle No button click
-        noBtn.addEventListener('click', function () {
+        noButton.addEventListener('click', function () {
             dialog.close('no');
         }, { once: true });
     });
@@ -71,7 +74,7 @@ function openConfirmationDialog(message) {
 function openAboutBox() {
     const dialog = document.getElementById('aboutBoxDialog');
     const aboutBoxText = document.getElementById('aboutBoxText');
-    const okBtn = document.getElementById('aboutBoxOkBtn');
+    const okButton = document.getElementById('aboutBoxOkButton');
 
     // Set the message
     aboutBoxText.innerHTML = `
@@ -93,11 +96,11 @@ function openAboutBox() {
     dialog.showModal();
 
     // Force focus onto the OK button
-    okBtn.focus();
+    okButton.focus();
 
     // Return a promise that resolves when the user clicks OK
     return new Promise((resolve) => {
-        okBtn.addEventListener('click', function () {
+        okButton.addEventListener('click', function () {
             dialog.close();
             resolve();
         }, { once: true });
@@ -107,9 +110,9 @@ function openAboutBox() {
 // Listen on the page load completing to do any final setup steps
 document.addEventListener("DOMContentLoaded", async () => {
     // About Box logic for a UI control
-    const aboutBoxBtn = document.getElementById('aboutBoxBtn');
-    if (aboutBoxBtn) {
-        aboutBoxBtn.addEventListener('click', async function () {
+    const aboutBoxButton = document.getElementById('aboutBoxButton');
+    if (aboutBoxButton) {
+        aboutBoxButton.addEventListener('click', async function () {
             await openAboutBox();
         });
     }

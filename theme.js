@@ -67,10 +67,10 @@ if (window.matchMedia) {
 // Listen on the page load completing to do any final setup steps
 document.addEventListener("DOMContentLoaded", async () => {
     // Theme toggle logic for a UI control
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeToggleButton = document.getElementById('themeToggleButton');
 
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', function () {
+    if (themeToggleButton) {
+        themeToggleButton.addEventListener('click', function () {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             if (currentTheme === 'dark') {
                 setTheme('light');
