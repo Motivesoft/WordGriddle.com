@@ -376,12 +376,12 @@ dialog {
     color: var(--text-color);
 
     /* Leave this hardcoded */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 dialog::backdrop {
     /* Leave this hardcoded */
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.25);
 }
 
 dialog p {
@@ -397,6 +397,8 @@ dialog button {
     background-color: var(--button-background);
     color: var(--button-text-color);
     font-size: 16px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 dialog button[type="submit"] {

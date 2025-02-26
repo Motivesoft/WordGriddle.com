@@ -1049,13 +1049,23 @@ function showGridAsComplete() {
 
 // Ticker tape
 
+const tickerTapeColors = [
+    'rgb(255, 0, 0)',
+    'rgb(255, 145, 0)',
+    'rgb( 255, 255, 0)',
+    'rgb(204, 102, 207)',
+]
+
 function createParticle(x, y) {
+    const randomColor = tickerTapeColors[ Math.floor(Math.random()*tickerTapeColors.length) ];
+
     const particle = document.createElement('div');
     particle.className = 'particle';
     particle.style.left = `${x}px`;
     particle.style.top = `${y}px`;
     particle.style.width = `${Math.random() * 10 + 5}px`;
     particle.style.height = particle.style.width;
+    particle.style.backgroundColor = randomColor;
     document.body.appendChild(particle);
 
     const angle = Math.random() * Math.PI * 2;
@@ -1093,8 +1103,8 @@ async function explode(elementId) {
         
         for (let j = 0; j < 20; j++) {
             // Introduce a random start point (around the centre) for each burst
-            const xJitter = (Math.random() * (rect.width / 2)) - (rect.width / 4);
-            const yJitter = (Math.random() * (rect.height / 2)) - (rect.height / 4);
+            const xJitter = (Math.random() * (rect.width / 3)) - (rect.width / 6);
+            const yJitter = (Math.random() * (rect.height / 3)) - (rect.height / 6);
             for (let i = 0; i < 50; i++) {
                 createParticle(x + xJitter, y + yJitter);
             }
