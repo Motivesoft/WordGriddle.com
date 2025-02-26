@@ -1,0 +1,14 @@
+{
+    "puzzle": {
+        "id": 0,
+        "title": "puzzle name #000",
+        "author": 2,
+        "size": 3,
+        "origin": 1,
+        "letters": "UPPERCASE.LETTERS.AND.DOTS",
+        "keyWords": [
+        ],
+        "extraWords": [
+        ]
+    }
+}
