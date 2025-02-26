@@ -30,6 +30,7 @@
     --navbar-link-hover-background: #f664b4;
     --panel-background: #e9ecef;
     --panel-border: #ccc;
+    --product-container-color: #ffffff;
     --tab-active-background: #ffffff;
     --tab-background: #f1f1f1;
     --tab-border: #ccc;
@@ -67,6 +68,7 @@
     --navbar-link-hover-background: #f664b4;
     --panel-background: #1e1e1e;
     --panel-border: #333;
+    --product-container-color: #ffffff;
     --tab-active-background: #1e1e1e;
     --tab-background: #2c2c2c;
     --tab-border: #444;
@@ -102,7 +104,7 @@ body {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: white;
+    color: var(--product-container-color);
     position: absolute;
     left: 8px;
     top: -8px;
@@ -112,7 +114,6 @@ body {
 .product-icon {
     width: 64px;
     height: 64px;
-    background-color: #555;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -369,13 +370,16 @@ dialog {
     padding: 20px;
     border: 1px solid var(--dialog-border);
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     background-color: var(--dialog-background);
     color: var(--text-color);
+
+    /* Leave this hardcoded */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 dialog::backdrop {
+    /* Leave this hardcoded */
     background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -395,13 +399,13 @@ dialog button {
 }
 
 dialog button[type="submit"] {
-    background-color: #28a745;
-    color: white;
+    background-color: var(--button-background);
+    color: var(--button-text-color);
 }
 
 dialog button[type="button"] {
-    background-color: #dc3545;
-    color: white;
+    background-color: var(--button-background);
+    color: var(--button-text-color);
 }
 
 /* About Box */
