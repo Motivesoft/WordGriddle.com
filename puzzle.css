@@ -14,8 +14,12 @@
     --grid-cell-completed-background: #cccccc;
     --grid-cell-completed-color: #c55155;
     --grid-cell-completed-zerozero: #ccc;
+    --grid-item-background: #edeff1;
+    --grid-item-selected-background: #e9ba3a;
     --trail-color: #800000;
     --trail-transparency: 0.2;
+    --word-starts-color: #e03030;
+    --word-contains-color: #666;
 }
 
 [data-theme="dark"] {
@@ -24,8 +28,12 @@
     --grid-cell-completed-background: #1e1e1e;
     --grid-cell-completed-color: #deb93d;
     --grid-cell-completed-zerozero: #646464;
+    --grid-item-background: #edeff1;
+    --grid-item-selected-background: #e9ba3a;
     --trail-color: #400000;
     --trail-transparency: 0.3;
+    --word-starts-color: #e03030;
+    --word-contains-color: #666;
 }
 
 /* Outcome message */
@@ -143,7 +151,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-color: #edeff1;
+    background-color: var(--grid-item-background);
     color: var(--text-color);
     font-weight: var(--grid-cell-font-weight);
     cursor: pointer;
@@ -154,7 +162,7 @@
 
 /* The user is currently clicking or dragging through this cell */
 .grid-item.selected {
-    background-color: #e9ba3a;
+    background-color: var(--grid-item-selected-background);
 }
 
 /* This cell is empty (e.g. as in a waffle grid)*/
@@ -186,13 +194,13 @@
 .grid-item::before {
     content: attr(red-counter);
     left: 2px;
-    color: #e03030;
+    color: var(--word-starts-color);
 }
 
 .grid-item::after {
     content: attr(grey-counter);
     right: 2px;
-    color: #666;
+    color: var(--word-contains-color);
 }
 
 canvas {
