@@ -22,7 +22,9 @@
 </head>
 
 <body>
-    <!--
+    <div id="ticker-container">
+
+        <!--
         This page expects to be launched with a puzzle.
 
         TODO Make sure this holds together as a web page (albeit useless) even if called without a puzzle 
@@ -30,81 +32,83 @@
         obliterated by successfully loading an actual puzzle
      -->
 
-     <nav class="navbar">
-        <!-- Product icon and name (protruding above and below the navbar) -->
-        <a href="/" class="product-container">
-            <div class="product-icon">
-                <img src="/assets/icon-64-purple.png" width="64" height="64" alt="WordGriddle" class="top-left-icon">
+        <nav class="navbar">
+            <!-- Product icon and name (protruding above and below the navbar) -->
+            <a href="/" class="product-container">
+                <div class="product-icon">
+                    <img src="/assets/icon-64-purple.png" width="64" height="64" alt="WordGriddle"
+                        class="top-left-icon">
+                </div>
+                <span class="product-name">WordGriddle</span>
+            </a>
+
+            <div class="navbar-right">
+                <button class="toolbar-button" id="aboutBoxButton">
+                    <!-- https://eldicons.com/create?path=M12_3A9_9_0_0_1_12_21A9_9_0_0_1_12_3M12_10L12_17M12_7L12_7 -->
+                    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
+                        class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
+                        stroke-linecap='round' stroke-linejoin='round'>
+                        <path d='M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3M12 10L12 17M12 7L12 7' />
+                    </svg>
+                </button>
+                <button class="toolbar-button" id="shareResultsButton">
+                    <!--https://eldicons.com/create?path=M18_9A2_2_0_0_1_20_11V19A2_2_0_0_1_18_21M6_21A2_2_0_0_1_4_19V11A2_2_0_0_1_6_9M12_15L12_3L15_5M12_3L9_5M6_21L18_21-->
+                    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
+                        class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
+                        stroke-linecap='round' stroke-linejoin='round'>
+                        <path
+                            d='M18 9A2 2 0 0 1 20 11V19A2 2 0 0 1 18 21M6 21A2 2 0 0 1 4 19V11A2 2 0 0 1 6 9M12 15L12 3L15 5M12 3L9 5M6 21L18 21' />
+                    </svg>
+                </button>
+                <button class="toolbar-button" id="themeToggleButton">
+                    <!--https://eldicons.com/create?path=M3_12H4M12_3V4M21_12H20M12_21V20M5.63_5.63L6.343_6.343M18.364_18.364L17.65_17.65M18.364_5.6L17.65_6.343M5.6_18.364L6.343_17.65M12_8A4_4_0_0_1_12_16A4_4_0_0_1_12_8-->
+                    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
+                        class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
+                        stroke-linecap='round' stroke-linejoin='round'>
+                        <path
+                            d='M3 12H4M12 3V4M21 12H20M12 21V20M5.63 5.63L6.343 6.343M18.364 18.364L17.65 17.65M18.364 5.6L17.65 6.343M5.6 18.364L6.343 17.65M12 8A4 4 0 0 1 12 16A4 4 0 0 1 12 8' />
+                    </svg>
+                </button>
             </div>
-            <span class="product-name">WordGriddle</span>
-        </a>
+        </nav>
 
-        <div class="navbar-right">
-            <button class="toolbar-button" id="aboutBoxButton">
-                <!-- https://eldicons.com/create?path=M12_3A9_9_0_0_1_12_21A9_9_0_0_1_12_3M12_10L12_17M12_7L12_7 -->
-                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
-                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
-                    stroke-linecap='round' stroke-linejoin='round'>
-                    <path d='M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3M12 10L12 17M12 7L12 7' />
-                </svg>
-            </button>
-            <button class="toolbar-button" id="shareResultsButton">
-                <!--https://eldicons.com/create?path=M18_9A2_2_0_0_1_20_11V19A2_2_0_0_1_18_21M6_21A2_2_0_0_1_4_19V11A2_2_0_0_1_6_9M12_15L12_3L15_5M12_3L9_5M6_21L18_21-->
-                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
-                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
-                    stroke-linecap='round' stroke-linejoin='round'>
-                    <path
-                        d='M18 9A2 2 0 0 1 20 11V19A2 2 0 0 1 18 21M6 21A2 2 0 0 1 4 19V11A2 2 0 0 1 6 9M12 15L12 3L15 5M12 3L9 5M6 21L18 21' />
-                </svg>
-            </button>
-            <button class="toolbar-button" id="themeToggleButton">
-                <!--https://eldicons.com/create?path=M3_12H4M12_3V4M21_12H20M12_21V20M5.63_5.63L6.343_6.343M18.364_18.364L17.65_17.65M18.364_5.6L17.65_6.343M5.6_18.364L6.343_17.65M12_8A4_4_0_0_1_12_16A4_4_0_0_1_12_8-->
-                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
-                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
-                    stroke-linecap='round' stroke-linejoin='round'>
-                    <path
-                        d='M3 12H4M12 3V4M21 12H20M12 21V20M5.63 5.63L6.343 6.343M18.364 18.364L17.65 17.65M18.364 5.6L17.65 6.343M5.6 18.364L6.343 17.65M12 8A4 4 0 0 1 12 16A4 4 0 0 1 12 8' />
-                </svg>
-            </button>
-        </div>
-    </nav>
+        <div class="container">
+            <div class="left-side">
+                <h3 id="puzzle-title"></h3>
 
-    <div class="container" id="ticker-container">
-        <div class="left-side">
-            <h3 id="puzzle-title"></h3>
+                <!-- Messages -->
+                <div id="outcome-message"></div>
 
-            <!-- Messages -->
-            <div id="outcome-message"></div>
-
-            <canvas id="trail-canvas"></canvas>
-            <div class="grid-container" id="puzzle-grid">
+                <canvas id="trail-canvas"></canvas>
+                <div class="grid-container" id="puzzle-grid">
+                </div>
             </div>
-        </div>
 
-        <div class="right-side">
-            <h3>Instructions</h3>
-            <p>Swipe through the letters in the grid to find all of the words!</p>
-            <h3>Puzzle Details</h3>
-            <div id="progress-message"></div>
-            <button type="button" class="button" onclick="resetProgress()">Restart Puzzle</button>
-            <h3>Words Remaining</h3>
-            <div id="counts-message"></div>
-            <h3>Words Found</h3>
-            <div>Sort by:
-                <select class="combobox" id="found-order-selection">
-                    <option value="FOUND_ORDER">Found Order</option>
-                    <option value="ALPHABETICAL">Alphabetically</option>
-                    <option value="WORD_LENGTH">Word Length</option>
-                </select>
+            <div class="right-side">
+                <h3>Instructions</h3>
+                <p>Swipe through the letters in the grid to find all of the words!</p>
+                <h3>Puzzle Details</h3>
+                <div id="progress-message"></div>
+                <button type="button" class="button" onclick="resetProgress()">Restart Puzzle</button>
+                <h3>Words Remaining</h3>
+                <div id="counts-message"></div>
+                <h3>Words Found</h3>
+                <div>Sort by:
+                    <select class="combobox" id="found-order-selection">
+                        <option value="FOUND_ORDER">Found Order</option>
+                        <option value="ALPHABETICAL">Alphabetically</option>
+                        <option value="WORD_LENGTH">Word Length</option>
+                    </select>
+                </div>
+                <div id="words-found"></div>
+                <!-- <h3>Extra Words</h3> -->
+                <label class="checkbox-container">
+                    <input type="checkbox" id="show-extra-words">
+                    <span class="checkmark"></span>
+                    Show extra words
+                </label>
+                <div id="extra-words-found"></div>
             </div>
-            <div id="words-found"></div>
-            <!-- <h3>Extra Words</h3> -->
-            <label class="checkbox-container">
-                <input type="checkbox" id="show-extra-words">
-                <span class="checkmark"></span>
-                Show extra words
-              </label>
-            <div id="extra-words-found"></div>
         </div>
     </div>
 

@@ -1101,13 +1101,17 @@ async function explode(elementId) {
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
 
-        for (let j = 0; j < 20; j++) {
-            // Introduce a random start point (around the centre) for each burst
-            const xJitter = (Math.random() * (rect.width / 3)) - (rect.width / 6);
-            const yJitter = (Math.random() * (rect.height / 3)) - (rect.height / 6);
+        // Introduce a random start point (around the centre) for each burst
+        const distanceFromCenter = 0.25;
+        const distanceOverall = distanceFromCenter * 2;
+
+        for (let j = 0; j < 25; j++) {
+            const xJitter = (Math.random() * (rect.width * distanceOverall)) - (rect.width * distanceFromCenter);
+            const yJitter = (Math.random() * (rect.height * distanceOverall)) - (rect.height * distanceFromCenter);
             for (let i = 0; i < 50; i++) {
                 createParticle(x + xJitter, y + yJitter);
             }
+
             await sleep(500);
         }
     }
