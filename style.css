@@ -162,6 +162,7 @@ body {
     stroke: var(--icon-stroke-color);
     fill: var(--icon-fill-color);
     transition: stroke 0.3s, fill 0.3s;
+    cursor: pointer;
 }
 
 .toolbar-button-icon:hover {

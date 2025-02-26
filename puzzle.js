@@ -1066,9 +1066,9 @@ function showGridAsComplete() {
 
 const tickerTapeColors = [
     'rgb(255, 0, 0)',
-    'rgb(255, 145, 0)',
-    'rgb( 255, 255, 0)',
-    'rgb(204, 102, 207)',
+    'rgb(255, 128, 0)',
+    'rgb(255, 255, 0)',
+    'rgb(204, 0, 204)',
 ]
 
 function createParticle(x, y) {
