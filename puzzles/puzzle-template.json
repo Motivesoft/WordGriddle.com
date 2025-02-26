@@ -2,6 +2,7 @@
     "puzzle": {
         "id": 0,
         "title": "puzzle name #000",
+        "locked": false,
         "author": 2,
         "size": 3,
         "origin": 1,

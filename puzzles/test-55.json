@@ -2,6 +2,7 @@
     "puzzle": {
         "id": 999998,
         "title": "Test #999998",
+        "locked": false,
         "author": 1,
         "size": 5,
         "origin": 1,

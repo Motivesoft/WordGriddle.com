@@ -2,6 +2,7 @@
     "puzzle": {
         "id": 2,
         "title": "Demo Puzzle #2",
+        "locked": false,
         "author": 2,
         "size": 6,
         "origin": 10,

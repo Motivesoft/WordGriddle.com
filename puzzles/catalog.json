@@ -27,6 +27,10 @@
         {
             "title": "Test 5x5",
             "name": "test-55"
+        },
+        {
+            "title": "Test 1 Word",
+            "name": "test-1-word"
         }
     ]
 }
