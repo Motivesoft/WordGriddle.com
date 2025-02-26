@@ -21,7 +21,7 @@
 
             if (puzzleRepo) {
                 // If using a provided repo, pass that to the puzzle page, too
-                repoCatalog = `/${puzzleRepo}/catalog.json`;
+                repoCatalog = `/${decodeURIComponent(puzzleRepo)}/catalog.json`;
                 repoUrlLink = `puzzle.html?puzzle=%name&repo=%repo`;
             }
 
@@ -43,7 +43,7 @@
                         puzzleSelector.addEventListener('click', function () {
                             window.location.href = repoUrlLink.
                                 replace("%name", encodeURIComponent(puzzle.name)).
-                                replace("%repo", encodeURIComponent(puzzleRepo));
+                                replace("%repo", puzzleRepo);
                         });
 
                         puzzleListElement.appendChild(puzzleSelector);

@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Assuming we have a file, load it and populate the page
     if (puzzleFile) {
-        fetch(`/${puzzleRepo}/${puzzleFile}.json`)
+        fetch(`/${decodeURIComponent(puzzleRepo)}/${decodeURIComponent(puzzleFile)}.json`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error status: ${response.status}`);
