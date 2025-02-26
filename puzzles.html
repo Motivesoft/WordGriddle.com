@@ -34,7 +34,6 @@
                     return response.json();
                 })
                 .then(data => {
-                    const puzzleListElement = document.getElementById('puzzle-list');
                     data.puzzles.forEach(puzzle => {
                         const puzzleSelector = document.createElement('button');
                         puzzleSelector.classList.add('button');
@@ -46,7 +45,11 @@
                                 replace("%repo", puzzleRepo);
                         });
 
-                        puzzleListElement.appendChild(puzzleSelector);
+                        const listElementId = puzzle.locked ? 'puzzle-list-locked' : 'puzzle-list-unlocked';
+                        const puzzleListElement = document.getElementById(listElementId);
+                        if (puzzleListElement) {
+                            puzzleListElement.appendChild(puzzleSelector);
+                        }
                     });
                 })
                 .catch(async error => {
@@ -104,8 +107,12 @@
 
     <div class="panel">
         <div class="inner-panel">
-            <h3>Select a puzzle</h3>
-            <div id="puzzle-list"></div>
+            <h3>Select a puzzle for testing</h3>
+            <div id="puzzle-list-unlocked"></div>
+        </div>
+        <div class="inner-panel">
+            <h3>Select a puzzle to play!</h3>
+            <div id="puzzle-list-locked"></div>
         </div>
     </div>
 

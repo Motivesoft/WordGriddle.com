@@ -5,8 +5,9 @@
             "name": "puzzle-0"
         },
         {
-            "title": "Puzzle #1",
-            "name": "puzzle-1"
+            "title": "4x4 #1",
+            "name": "puzzle-1",
+            "locked": "true"
         },
         {
             "title": "Puzzle #2",
@@ -17,8 +18,9 @@
             "name": "puzzle-3"
         },
         {
-            "title": "Puzzle #4",
-            "name": "puzzle-4"
+            "title": "8x8 #4",
+            "name": "puzzle-4",
+            "locked": "true"
         },
         {
             "title": "Test 10x10",

@@ -70,18 +70,32 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 function openPuzzle(puzzle) {
-    // TODO initialise some internals
     currentPuzzle.puzzle = puzzle;
 
-    getPuzzleTitleElement().innerHTML = puzzle.title;
+    // Display a meaningful title
+    let titleText = puzzle.title;
 
+    if (!puzzle.locked) {
+        titleText += ' (unlocked)';
+    }
+
+    titleText += ' by ';
+    if (puzzle.author === 1) {
+        titleText += 'Ian';
+    } else if (puzzle.author === 2) {
+        titleText += 'Catherine';
+    } else {
+        titleText += 'unknown';
+    }
+
+    getPuzzleTitleElement().innerHTML = titleText;
+    
     // Transient variables
     currentPuzzle.isDrawing = false;
     currentPuzzle.selectedLetters = [];
     currentPuzzle.currentTrail = [];
     currentPuzzle.mostRecentCell = null;
 
-    // TODO other setup/state stuff
     currentPuzzle.foundKeyWords.clear();
     currentPuzzle.foundExtraWords.clear();
     currentPuzzle.foundNonWords = 0;
@@ -104,16 +118,15 @@ function openPuzzle(puzzle) {
 function initialiseGrid() {
     const gridElement = getGridElement();
 
-    const size = currentPuzzle.puzzle.size;
-
     // Set grid dimensions
     gridElement.innerHTML = '';
-    gridElement.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-    gridElement.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+    gridElement.style.gridTemplateColumns = `repeat(${currentPuzzle.puzzle.size}, 1fr)`;
+    gridElement.style.gridTemplateRows = `repeat(${currentPuzzle.puzzle.size}, 1fr)`;
 
     // Test for a gap (empty cell, a hole) in the puzzle
     const isEmptyCell = (char) => char === ' ' || char === '-' || char === '.';
 
+    // Build the cells in the grid
     const letterArray = Array.from(currentPuzzle.puzzle.letters)
     letterArray.forEach((letter, index) => {
         const cell = document.createElement('div');
@@ -153,6 +166,7 @@ function initialiseGrid() {
     // This can be done whenever it seems like a useful idea 
     prepareCanvas();
 
+    // Make it fit the required display area
     scaleGrid();
 }
 
