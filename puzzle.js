@@ -846,7 +846,11 @@ function updatePuzzleProgressMessage() {
     const countsMessageElement = document.getElementById('counts-message');
 
     if (currentPuzzle.puzzle) {
-        progressMessageElement.innerHTML = `You have found ${currentPuzzle.foundKeyWords.size} of ${currentPuzzle.puzzle.keyWords.length} words with ${getAccuracy()}% accuracy.`;
+        if (currentPuzzle.foundKeyWords.size === 0) {
+            progressMessageElement.innerHTML = `You have found ${currentPuzzle.foundKeyWords.size} of ${currentPuzzle.puzzle.keyWords.length} words.`;
+        } else {
+            progressMessageElement.innerHTML = `You have found ${currentPuzzle.foundKeyWords.size} of ${currentPuzzle.puzzle.keyWords.length} words with ${getAccuracy()}% accuracy.`;
+        }
 
         // Work out count of words at each word length
         const counts = new Map();
