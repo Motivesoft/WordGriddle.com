@@ -11,21 +11,6 @@
     <script src="script.js" defer></script>
 
     <script>
-        const buttons = {
-            button0: { fileUrl: "puzzle-0" },
-            button1: { fileUrl: "puzzle-1" },
-            button2: { fileUrl: "puzzle-2" },
-            button3: { fileUrl: "puzzle-3" }
-        };
-
-        function parseDate(dateString) {
-            if (!dateString) {
-                return "";
-            }
-            const [year, month, day] = dateString.split('-');
-            return new Date(year, month - 1, day);
-        }
-
         document.addEventListener('DOMContentLoaded', function () {
             fetch('/puzzles/catalog.json')
                 .then(response => response.json())
