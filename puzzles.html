@@ -15,10 +15,12 @@
             const urlParams = new URLSearchParams(window.location.search);
             const puzzleRepo = urlParams.get(`repo`);
 
-            // Assume we're loading from the default repo - but use a provided one if supplied
+            // Assume we're loading from the default repo - but allow a provided one
             let repoCatalog = `/puzzles/catalog.json`;
             let repoUrlLink = `puzzle.html?puzzle=%name`;
+
             if (puzzleRepo) {
+                // If using a provided repo, pass that to the puzzle page, too
                 repoCatalog = `/${puzzleRepo}/catalog.json`;
                 repoUrlLink = `puzzle.html?puzzle=%name&repo=%repo`;
             }
