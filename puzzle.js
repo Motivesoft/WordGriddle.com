@@ -43,10 +43,11 @@ const currentPuzzle = {
 document.addEventListener('DOMContentLoaded', async function () {
     const urlParams = new URLSearchParams(window.location.search);
     const puzzleFile = urlParams.get('puzzle');
+    const puzzleRepo = urlParams.get(`repo`) || `puzzles`;
 
     // Assuming we have a file, load it and populate the page
     if (puzzleFile) {
-        fetch(`/puzzles/${puzzleFile}.json`)
+        fetch(`/${puzzleRepo}/${puzzleFile}.json`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error status: ${response.status}`);
@@ -357,7 +358,9 @@ async function endDragGesture() {
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
                     currentPuzzle.completed = true;
 
+                    // Tidy up before showing the finished message
                     updatePuzzleProgressMessage();
+                    clearTrail();
 
                     await openMessageBox(`Congratulations. You have found all of the key words!<br/><br/>You achieved a ${getAccuracy()}% accuracy`, 'info');
                 }
