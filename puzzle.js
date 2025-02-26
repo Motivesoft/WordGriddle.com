@@ -362,6 +362,8 @@ async function endDragGesture() {
                     updatePuzzleProgressMessage();
                     clearTrail();
 
+                    explode("ticker-container");
+
                     await openMessageBox(`Congratulations. You have found all of the key words!<br/><br/>You achieved a ${getAccuracy()}% accuracy`, 'info');
                 }
             }
@@ -1041,6 +1043,62 @@ function showGridAsComplete() {
         if (!cell.classList.contains('hidden')) {
             cell.classList.remove('zerozero');
             cell.classList.add('completed');
+        }
+    }
+}
+
+// Ticker tape
+
+function createParticle(x, y) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = `${x}px`;
+    particle.style.top = `${y}px`;
+    particle.style.width = `${Math.random() * 10 + 5}px`;
+    particle.style.height = particle.style.width;
+    document.body.appendChild(particle);
+
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = Math.random() * 5 + 2;
+    const vx = Math.cos(angle) * velocity;
+    const vy = Math.sin(angle) * velocity;
+
+    let opacity = 1;
+
+    function animateParticle() {
+        particle.style.left = `${parseFloat(particle.style.left) + vx}px`;
+        particle.style.top = `${parseFloat(particle.style.top) + vy}px`;
+        opacity -= 0.02;
+        particle.style.opacity = opacity;
+
+        if (opacity > 0) {
+            requestAnimationFrame(animateParticle);
+        } else {
+            particle.remove();
+        }
+    }
+
+    requestAnimationFrame(animateParticle);
+}
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function explode(elementId) {
+    // Take the element ID to use as the background area for the ticker tape explosion
+    const tickerContainerElement = document.getElementById(elementId);
+    if (tickerContainerElement) {
+        const rect = document.getElementById(elementId).getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        
+        for (let j = 0; j < 20; j++) {
+            // Introduce a random start point (around the centre) for each burst
+            const xJitter = (Math.random() * (rect.width / 2)) - (rect.width / 4);
+            const yJitter = (Math.random() * (rect.height / 2)) - (rect.height / 4);
+            for (let i = 0; i < 50; i++) {
+                createParticle(x + xJitter, y + yJitter);
+            }
+            await sleep(500);
         }
     }
 }
