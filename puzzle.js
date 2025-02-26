@@ -22,8 +22,6 @@ const PuzzleLocalStorageKeys = Object.freeze({
 // State
 const currentPuzzle = {
     puzzle: null,
-    letterArray: [],
-    size: 0,
 
     // Transient state variables
     isDrawing: false,
@@ -74,8 +72,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 function openPuzzle(puzzle) {
     // TODO initialise some internals
     currentPuzzle.puzzle = puzzle;
-    currentPuzzle.letterArray = Array.from(puzzle.letters);
-    currentPuzzle.size = puzzle.size;
 
     getPuzzleTitleElement().innerHTML = puzzle.title;
 
@@ -108,15 +104,18 @@ function openPuzzle(puzzle) {
 function initialiseGrid() {
     const gridElement = getGridElement();
 
+    const size = currentPuzzle.puzzle.size;
+
     // Set grid dimensions
     gridElement.innerHTML = '';
-    gridElement.style.gridTemplateColumns = `repeat(${currentPuzzle.size}, 1fr)`;
-    gridElement.style.gridTemplateRows = `repeat(${currentPuzzle.size}, 1fr)`;
+    gridElement.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    gridElement.style.gridTemplateRows = `repeat(${size}, 1fr)`;
 
     // Test for a gap (empty cell, a hole) in the puzzle
     const isEmptyCell = (char) => char === ' ' || char === '-' || char === '.';
 
-    currentPuzzle.letterArray.forEach((letter, index) => {
+    const letterArray = Array.from(currentPuzzle.puzzle.letters)
+    letterArray.forEach((letter, index) => {
         const cell = document.createElement('div');
         cell.className = 'grid-item';
         cell.textContent = letter;
@@ -159,7 +158,7 @@ function initialiseGrid() {
 
 function scaleGrid() {
     // Work out screen size and orientation and set things like grid gap and font size
-    const size = currentPuzzle.size;
+    const size = currentPuzzle.puzzle.size;
 
     // Get a rough idea of what type of device we are on
     const smallLandscape = window.matchMedia("(orientation: landscape) and (max-width: 1023px)");
@@ -242,6 +241,8 @@ function continueDragGesture(cell, clientX, clientY) {
         return;
     }
 
+    const size = currentPuzzle.puzzle.size;
+
     // If we're on a cell in the grid and have moved from the previous cell, treat this as a drag gesture
     // unless the cell contains a space, intended to mean a gap in the layout that the user may not select
     if (cell.classList.contains('grid-item') && !cell.classList.contains('hidden') && cell !== currentPuzzle.mostRecentCell) {
@@ -261,13 +262,13 @@ function continueDragGesture(cell, clientX, clientY) {
 
         // Where are we?
         const cellIndex = parseInt(cell.dataset.index);
-        const cellCol = cellIndex % currentPuzzle.size;
-        const cellRow = (cellIndex - cellCol) / currentPuzzle.size;
+        const cellCol = cellIndex % size;
+        const cellRow = (cellIndex - cellCol) / size;
 
         // Where have we come from?
         const prevIndex = currentPuzzle.selectedLetters[currentPuzzle.selectedLetters.length - 1].index;
-        const prevCol = prevIndex % currentPuzzle.size;
-        const prevRow = (prevIndex - prevCol) / currentPuzzle.size;
+        const prevCol = prevIndex % size;
+        const prevRow = (prevIndex - prevCol) / size;
 
         // What will help us work out if this is a valid move - valid being -1 and 1 respectively
         const lastSelectedIndex = currentPuzzle.selectedLetters.findIndex(item => item.index === cellIndex);
