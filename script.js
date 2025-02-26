@@ -105,19 +105,14 @@ function openAboutBox() {
 
 // Listen on the page load completing to do any final setup steps
 document.addEventListener("DOMContentLoaded", async () => {
-    await finalSetup();
-});
-
-// Perform final setup tasks
-async function finalSetup() {
-    // Theme toggle logic for a UI control wanting
+    // About Box logic for a UI control
     const aboutBoxBtn = document.getElementById('aboutBoxBtn');
     if (aboutBoxBtn) {
         aboutBoxBtn.addEventListener('click', async function () {
             await openAboutBox();
         });
     }
-}
+});
 
 // Asynchronously populate an element with version information
 async function displayVersion(elementId) {
@@ -130,6 +125,3 @@ async function displayVersion(elementId) {
             }
         });
 }
-
-// Initialise the current theme
-loadTheme();

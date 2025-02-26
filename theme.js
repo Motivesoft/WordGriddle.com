@@ -66,13 +66,9 @@ if (window.matchMedia) {
 
 // Listen on the page load completing to do any final setup steps
 document.addEventListener("DOMContentLoaded", async () => {
-    await finalSetup();
-});
-
-// Perform final setup tasks
-async function finalSetup() {
-    // Theme toggle logic for a UI control wanting
+    // Theme toggle logic for a UI control
     const themeToggleBtn = document.getElementById('themeToggleBtn');
+
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', function () {
             const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -83,7 +79,7 @@ async function finalSetup() {
             }
         });
     }
-}
+});
 
 // Initialise the current theme
 loadTheme();
