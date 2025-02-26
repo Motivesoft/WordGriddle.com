@@ -36,7 +36,7 @@ function openMessageBox(message, type = 'info') {
 
     // Force focus onto the OK button
     okButton.focus();
-    
+
     // Return a promise that resolves when the user clicks OK
     return new Promise((resolve) => {
         okButton.addEventListener('click', function () {
@@ -87,7 +87,7 @@ function openAboutBox() {
                 <img src="assets/Reddit_Icon_2Color.svg" alt="WordGriddle channel on Reddit" class="aboutBoxSocialMediaIcon">
             </a>
         </div>
-        <p class="aboutBoxVersion"></p>
+        <p id="aboutBoxVersion"></p>
         `;
 
     displayVersion('aboutBoxVersion');

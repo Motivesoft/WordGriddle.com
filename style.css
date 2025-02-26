@@ -413,7 +413,7 @@ dialog button[type="button"] {
 
 /* About Box */
 
-.aboutBoxVersion {
+#aboutBoxVersion {
     font-size: 12px;
 }
 
