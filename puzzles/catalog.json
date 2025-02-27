@@ -41,6 +41,26 @@
             "locked": false
         },
         {
+            "title": "4x4 #8",
+            "name": "puzzle-8",
+            "locked": false
+        },
+        {
+            "title": "4x4 #12",
+            "name": "puzzle-12",
+            "locked": false
+        },
+        {
+            "title": "4x4 #13",
+            "name": "puzzle-13",
+            "locked": false
+        },
+        {
+            "title": "4x4 #14",
+            "name": "puzzle-14",
+            "locked": false
+        },
+        {
             "title": "Test 10x10",
             "name": "test-1010",
             "locked": false
