@@ -23,6 +23,16 @@
             "locked": "true"
         },
         {
+            "title": "7x7 #5",
+            "name": "puzzle-5",
+            "locked": "false"
+        },
+        {
+            "title": "4x4 #6",
+            "name": "puzzle-6",
+            "locked": "false"
+        },
+        {
             "title": "Test 10x10",
             "name": "test-1010"
         },
