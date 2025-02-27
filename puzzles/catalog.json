@@ -3,52 +3,57 @@
         {
             "title": "Puzzle #0",
             "name": "puzzle-0",
-            "locked": "true"
+            "locked": true
         },
         {
             "title": "4x4 #1",
             "name": "puzzle-1",
-            "locked": "true"
+            "locked": true
         },
         {
             "title": "Puzzle #2",
-            "name": "puzzle-2"
+            "name": "puzzle-2",
+            "locked": false
         },
         {
             "title": "Puzzle #3",
-            "name": "puzzle-3"
+            "name": "puzzle-3",
+            "locked": false
         },
         {
             "title": "8x8 #4",
             "name": "puzzle-4",
-            "locked": "true"
+            "locked": true
         },
         {
             "title": "7x7 #5",
             "name": "puzzle-5",
-            "locked": "false"
+            "locked": false
         },
         {
             "title": "4x4 #6",
             "name": "puzzle-6",
-            "locked": "false"
+            "locked": false
         },
         {
             "title": "3x3 #7",
             "name": "puzzle-7",
-            "locked": "false"
+            "locked": false
         },
         {
             "title": "Test 10x10",
-            "name": "test-1010"
+            "name": "test-1010",
+            "locked": false
         },
         {
             "title": "Test 5x5",
-            "name": "test-55"
+            "name": "test-55",
+            "locked": false
         },
         {
             "title": "Test 1 Word",
-            "name": "test-1-word"
+            "name": "test-1-word",
+            "locked": false
         }
     ]
 }
