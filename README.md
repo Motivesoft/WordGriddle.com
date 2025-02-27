@@ -77,7 +77,7 @@ git tag -a v1.2.3 -m "Release version 1.2.3"
 git push origin --tags
 ```
 
-Merge changes into Staging when planning a release:
+Merge changes into Staging when planning a release (this will cause a merge commit):
 ```shell
 git checkout Staging
 git merge main --no-ff
@@ -99,7 +99,7 @@ git checkout Staging
 
 Test. If fixes required, develop the fix, merge to main and then merge main into Staging again.
 
-When ready, merge Staging into Production:
+When ready, merge Staging into Production (this will cause a merge commit):
 ```shell
 git checkout Production
 git merge Staging --no-ff
