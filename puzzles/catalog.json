@@ -8,22 +8,22 @@
         {
             "title": "7x7 #3",
             "name": "puzzle-3",
-            "locked": false
+            "locked": true
         },
         {
             "title": "3x3 #4",
             "name": "puzzle-4",
-            "locked": false
+            "locked": true
         },
         {
             "title": "3x3 #5",
             "name": "puzzle-5",
-            "locked": false
+            "locked": true
         },
         {
             "title": "4x4 #6",
             "name": "puzzle-6",
-            "locked": false
+            "locked": true
         },
         {
             "title": "4x4 #8",
