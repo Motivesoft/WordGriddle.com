@@ -1,32 +1,22 @@
 {
     "puzzles": [
         {
-            "title": "Puzzle #0",
-            "name": "puzzle-0",
-            "locked": true
-        },
-        {
-            "title": "4x4 #1",
-            "name": "puzzle-1",
-            "locked": true
-        },
-        {
             "title": "Puzzle #2",
             "name": "puzzle-2",
+            "locked": true
+        },
+        {
+            "title": "7x7 #3",
+            "name": "puzzle-3",
             "locked": false
         },
         {
-            "title": "Puzzle #3",
-            "name": "puzzle-3",
-            "locked": true
-        },
-        {
-            "title": "8x8 #4",
+            "title": "3x3 #4",
             "name": "puzzle-4",
-            "locked": true
+            "locked": false
         },
         {
-            "title": "7x7 #5",
+            "title": "3x3 #5",
             "name": "puzzle-5",
             "locked": false
         },
@@ -36,14 +26,24 @@
             "locked": false
         },
         {
-            "title": "3x3 #7",
-            "name": "puzzle-7",
-            "locked": false
-        },
-        {
             "title": "4x4 #8",
             "name": "puzzle-8",
             "locked": false
+        },
+        {
+            "title": "4x4 #9",
+            "name": "puzzle-9",
+            "locked": true
+        },
+        {
+            "title": "Puzzle #10",
+            "name": "puzzle-10",
+            "locked": false
+        },
+        {
+            "title": "Puzzle #11",
+            "name": "puzzle-11",
+            "locked": true
         },
         {
             "title": "4x4 #12",
@@ -56,8 +56,28 @@
             "locked": false
         },
         {
-            "title": "4x4 #14",
+            "title": "5x5 #14",
             "name": "puzzle-14",
+            "locked": false
+        },
+        {
+            "title": "8x8 #15",
+            "name": "puzzle-15",
+            "locked": true
+        },
+        {
+            "title": "4x4 #20",
+            "name": "puzzle-20",
+            "locked": false
+        },
+        {
+            "title": "4x4 #21",
+            "name": "puzzle-21",
+            "locked": false
+        },
+        {
+            "title": "4x4 #22",
+            "name": "puzzle-22",
             "locked": false
         },
         {
