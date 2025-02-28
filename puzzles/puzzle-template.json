@@ -1,7 +1,7 @@
 {
     "puzzle": {
         "id": 0,
-        "title": "puzzle name #000",
+        "title": "WordGriddle #00 YYYY-MM-DD",
         "locked": false,
         "author": 2,
         "size": 3,

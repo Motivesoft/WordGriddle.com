@@ -1,8 +1,8 @@
 {
     "puzzle": {
         "id": 5,
-        "title": "wordgriddle #5 - 2025-02-08",
-        "locked": false,
+        "title": "WordGriddle #5 - 2025-02-08",
+        "locked": true,
         "author": 2,
         "size": 3,
         "origin": 5,
@@ -18,11 +18,11 @@
             ],
             [
                 "core",
-                "[0][4][1][3]"
+                "[0][4][1][2]"
             ],
             [
                 "goer",
-                "[6][4][2][1]"
+                "[6][4][3][1]"
             ],
             [
                 "gone",

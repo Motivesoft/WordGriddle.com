@@ -1,8 +1,8 @@
 {
     "puzzle": {
         "id": 2,
-        "title": "Demo Puzzle #2",
-        "locked": false,
+        "title": "WordGriddle #2 - 2025-02-07",
+        "locked": true,
         "author": 1,
         "size": 3,
         "origin": 2,
