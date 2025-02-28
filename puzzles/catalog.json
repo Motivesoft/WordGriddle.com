@@ -1,7 +1,7 @@
 {
     "puzzles": [
         {
-            "title": "Puzzle #2",
+            "title": "3x3 #2",
             "name": "puzzle-2",
             "locked": true
         },
@@ -36,12 +36,12 @@
             "locked": true
         },
         {
-            "title": "Puzzle #10",
+            "title": "6x6 #10",
             "name": "puzzle-10",
             "locked": false
         },
         {
-            "title": "Puzzle #11",
+            "title": "4x4 #11",
             "name": "puzzle-11",
             "locked": true
         },
@@ -78,21 +78,6 @@
         {
             "title": "4x4 #22",
             "name": "puzzle-22",
-            "locked": false
-        },
-        {
-            "title": "Test 10x10",
-            "name": "test-1010",
-            "locked": false
-        },
-        {
-            "title": "Test 5x5",
-            "name": "test-55",
-            "locked": false
-        },
-        {
-            "title": "Test 1 Word",
-            "name": "test-1-word",
             "locked": false
         }
     ]
