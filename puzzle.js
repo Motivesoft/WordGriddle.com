@@ -1112,7 +1112,7 @@ async function explode(elementId) {
     // Take the element ID to use as the background area for the ticker tape explosion
     const tickerContainerElement = document.getElementById(elementId);
     if (tickerContainerElement) {
-        const rect = document.getElementById(elementId).getBoundingClientRect();
+        const rect = {left:document.documentElement.scrollLeft, top:document.documentElement.scrollTop, width: window.innerWidth, height: window.innerHeight};//document.getElementById(elementId).getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
 
