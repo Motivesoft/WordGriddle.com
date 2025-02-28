@@ -7,6 +7,15 @@
     <title>WordGriddle</title>
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 10px;
+            width: 100%;
+        }
+    </style>
     <script src="theme.js"></script>
     <script src="script.js" defer></script>
 
@@ -108,11 +117,11 @@
     <div class="panel">
         <div class="inner-panel">
             <h3>Select a puzzle for testing</h3>
-            <div id="puzzle-list-unlocked"></div>
+            <div id="puzzle-list-unlocked" class="button-container"></div>
         </div>
         <div class="inner-panel">
             <h3>Select a puzzle to play!</h3>
-            <div id="puzzle-list-locked"></div>
+            <div id="puzzle-list-locked" class="button-container"></div>
         </div>
     </div>
 
