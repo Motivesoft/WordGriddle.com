@@ -57,13 +57,24 @@
     padding: 0px 10px 0px 10px;
 }
 
+#counts-message {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+#found-order-selection {
+    margin-left: 60px;
+    height: 30px;
+}
+
 /* Trail canvas */
 #trail-canvas {
     background: transparent
 }
 
 .no-words-message {
-    padding: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
     font-style: italic;
 }
 
@@ -84,14 +95,35 @@
     flex-wrap: wrap;
 }
 
+/* Specialised container for title and word counter */
+
+.h3-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Ensure full width */
+}
+
+.h3-container h3 {
+    margin: 0;
+    text-align: left;
+    flex-shrink: 0; /* Prevents h3 from shrinking */
+}
+
+.h3-container .right-aligned {
+    font-size: 1.5em;
+    margin-left: auto; /* Pushes this element to the right */
+}
+
+/* Left and right side main panels */
+
 .left-side,
 .right-side {
     border: 1px solid var(--panel-border);
     border-radius: 8px;
     background-color: var(--panel-background);
 
-    padding-top: 0px;
-    padding-bottom: 20px;
+    padding: 20px;
 
     min-width: 0;
     min-height: 0;
@@ -99,8 +131,14 @@
 
 .left-side h3,
 .right-side h3 {
-    margin-top: 0px;
-    padding-top: 20px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.left-side h4,
+.right-side h4 {
+    margin: 0px;
+    padding: 0px;
 }
 
 /* Left Side (Grid and Controls) */
