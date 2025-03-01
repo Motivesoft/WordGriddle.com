@@ -8,7 +8,7 @@
         {
             "title": "4x4 #2",
             "name": "puzzle-2",
-            "locked": false
+            "locked": true
         },
         {
             "title": "7x7 #3",
@@ -29,6 +29,11 @@
             "title": "4x4 #6",
             "name": "puzzle-6",
             "locked": true
+        },
+        {
+            "title": "4x4 #8",
+            "name": "puzzle-7",
+            "locked": false
         },
         {
             "title": "4x4 #8",
@@ -71,6 +76,26 @@
             "locked": true
         },
         {
+            "title": "8x8 #16",
+            "name": "puzzle-16",
+            "locked": false
+        },
+        {
+            "title": "8x8 #17",
+            "name": "puzzle-17",
+            "locked": false
+        },
+        {
+            "title": "8x8 #18",
+            "name": "puzzle-18",
+            "locked": false
+        },
+        {
+            "title": "8x8 #19",
+            "name": "puzzle-19",
+            "locked": false
+        },
+        {
             "title": "4x4 #20",
             "name": "puzzle-20",
             "locked": false
@@ -88,7 +113,7 @@
         {
             "title": "3x3 #23",
             "name": "puzzle-23",
-            "locked": false
+            "locked": true
         },
         {
             "title": "4x4 #24",
