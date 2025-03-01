@@ -62,10 +62,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             })
             .catch(async error => {
                 console.error("Failed to load puzzle", error);
-                await openMessageBox(`Failed to load puzzle '${puzzleFile}'.`, 'error');
+                await openMessageBox(`Failed to load puzzle '${puzzleFile}'.`, MessageBoxType.ERROR);
             });
     } else {
-        await openMessageBox('This page needs to be launched from the puzzles catalog page.', 'error');
+        await openMessageBox('This page needs to be launched from the puzzles catalog page.', MessageBoxType.ERROR);
     }
 });
 
@@ -380,7 +380,7 @@ async function endDragGesture() {
 
                     explode("ticker-container");
 
-                    await openMessageBox(`Congratulations. You have found all of the key words!<br/><br/>You achieved a ${getAccuracy()}% accuracy`, 'info');
+                    await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved a ${getAccuracy()}% accuracy`);
                 }
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
@@ -593,10 +593,10 @@ function shareProgress() {
     navigator.clipboard
         .writeText(shareText)
         .then(async () => {
-            await openMessageBox('Puzzle progress copied to the clipboard.', 'info');
+            await openMessageBox('Puzzle progress copied to the clipboard.', MessageBoxType.INFO);
         })
         .catch(async (err) => {
-            await openMessageBox('Failed to copy progress information to the clipboard.', 'info');
+            await openMessageBox('Failed to copy progress information to the clipboard.', MessageBoxType.ERROR);
         });
 }
 
