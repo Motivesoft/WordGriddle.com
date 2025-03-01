@@ -80,7 +80,7 @@ function openPuzzle(puzzle) {
         titleText += ' (unlocked)';
     }
 
-    getPuzzleTitleElement().innerHTML = `WordGriddle #${currentPuzzle.puzzle.id}`;
+    getPuzzleTitleElement().innerHTML = currentPuzzle.puzzle.title;
 
     if (puzzle.author === 1) {
         getAuthorElement().innerHTML = `Puzzle by Ian`;
