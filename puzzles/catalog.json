@@ -8,7 +8,7 @@
         {
             "title": "4x4 #2",
             "name": "puzzle-2",
-            "locked": false
+            "locked": true
         },
         {
             "title": "7x7 #3",
