@@ -1,9 +1,15 @@
 // Scripting applicable to all pages
 
 // ** MESSAGE DISPlAY
+const MessageBoxType = Object.freeze({
+    PLAIN: 0,
+    INFO: 1,
+    WARNING: 2,
+    ERROR: 3
+});
 
 // Function to open the message box with an icon
-function openMessageBox(message, type = 'info') {
+function openMessageBox(message, type = MessageBoxType.PLAIN) {
     const dialog = document.getElementById('messageBoxDialog');
     const messageBoxText = document.getElementById('messageBoxText');
     const icon = dialog.querySelector('.icon div');
@@ -15,20 +21,26 @@ function openMessageBox(message, type = 'info') {
     // Set the icon and dialog class based on the message type
     dialog.className = type; // Apply the type-specific class
     switch (type) {
-        case 'info':
+        default:
+        case MessageBoxType.PLAIN:
+            icon.innerHTML = '';
+            icon.className = 'no-icon';
+            break;
+
+        case MessageBoxType.INFO:
             icon.innerHTML = '&#x2139';
             icon.className = 'info-icon';
             break;
-        case 'warning':
+        
+        case MessageBoxType.WARNING:
             icon.innerHTML = '&#x26a0';
             icon.className = 'warning-icon';
             break;
-        case 'error':
+                
+        case MessageBoxType.ERROR:
             icon.innerHTML = '&#x2716';
             icon.className = 'error-icon';
             break;
-        default:
-            icon.className = 'info-icon';
     }
 
     // Show the dialog

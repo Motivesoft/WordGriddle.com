@@ -79,6 +79,26 @@
             "title": "4x4 #22",
             "name": "puzzle-22",
             "locked": false
+        },
+        {
+            "title": "3x3 #23",
+            "name": "puzzle-23",
+            "locked": false
+        },
+        {
+            "title": "4x4 #24",
+            "name": "puzzle-24",
+            "locked": false
+        },
+        {
+            "title": "4x4 #25",
+            "name": "puzzle-25",
+            "locked": false
+        },
+        {
+            "title": "5x5 #26",
+            "name": "puzzle-26",
+            "locked": false
         }
     ]
 }

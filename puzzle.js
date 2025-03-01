@@ -62,10 +62,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             })
             .catch(async error => {
                 console.error("Failed to load puzzle", error);
-                await openMessageBox(`Failed to load puzzle '${puzzleFile}'.`, 'error');
+                await openMessageBox(`Failed to load puzzle '${puzzleFile}'.`, MessageBoxType.ERROR);
             });
     } else {
-        await openMessageBox('This page needs to be launched from the puzzles catalog page.', 'error');
+        await openMessageBox('This page needs to be launched from the puzzles catalog page.', MessageBoxType.ERROR);
     }
 });
 
@@ -75,21 +75,19 @@ function openPuzzle(puzzle) {
     // Display a meaningful title
     let titleText = puzzle.title;
 
+    // Build some display elements
     if (!puzzle.locked) {
         titleText += ' (unlocked)';
     }
 
-    titleText += ' by ';
+    getPuzzleTitleElement().innerHTML = `WordGriddle #${currentPuzzle.puzzle.id}`;
+
     if (puzzle.author === 1) {
-        titleText += 'Ian';
+        getAuthorElement().innerHTML = `Puzzle by Ian`;
     } else if (puzzle.author === 2) {
-        titleText += 'Catherine';
-    } else {
-        titleText += 'unknown';
+        getAuthorElement().innerHTML = `Puzzle by Catherine`;
     }
 
-    getPuzzleTitleElement().innerHTML = titleText;
-    
     // Transient variables
     currentPuzzle.isDrawing = false;
     currentPuzzle.selectedLetters = [];
@@ -100,6 +98,9 @@ function openPuzzle(puzzle) {
     currentPuzzle.foundExtraWords.clear();
     currentPuzzle.foundNonWords = 0;
     currentPuzzle.completed = false;
+
+    const progressCardElement = getProgressCardElement();
+    progressCardElement.innerHTML = `0/${currentPuzzle.puzzle.keyWords.length}`;
 
     // Initiate things using our 'currentPuzzle' state object
     initialiseGrid();
@@ -379,7 +380,7 @@ async function endDragGesture() {
 
                     explode("ticker-container");
 
-                    await openMessageBox(`Congratulations. You have found all of the key words!<br/><br/>You achieved a ${getAccuracy()}% accuracy`, 'info');
+                    await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved a ${getAccuracy()}% accuracy`);
                 }
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
@@ -592,10 +593,10 @@ function shareProgress() {
     navigator.clipboard
         .writeText(shareText)
         .then(async () => {
-            await openMessageBox('Puzzle progress copied to the clipboard.', 'info');
+            await openMessageBox('Puzzle progress copied to the clipboard.', MessageBoxType.INFO);
         })
         .catch(async (err) => {
-            await openMessageBox('Failed to copy progress information to the clipboard.', 'info');
+            await openMessageBox('Failed to copy progress information to the clipboard.', MessageBoxType.ERROR);
         });
 }
 
@@ -659,6 +660,14 @@ function getTrailCanvas() {
 
 function getPuzzleTitleElement() {
     return document.getElementById('puzzle-title');
+}
+
+function getAuthorElement() {
+    return document.getElementById('author');
+}
+
+function getProgressCardElement() {
+    return document.getElementById('progress-card');
 }
 
 function getWordsFoundElement() {
@@ -743,11 +752,16 @@ function decrementRedGrey(foundWord) {
 function updateWordsFound() {
     const wordsFoundElement = getWordsFoundElement();
     if (currentPuzzle.foundKeyWords.size == 0) {
-        wordsFoundElement.innerHTML = `<div class="no-words-message">No words found</div>`;
+        wordsFoundElement.innerHTML = `<p><div class="no-words-message">No words found</div></p>`;
         return;
     }
 
-    wordsFoundElement.innerHTML = buildWordListHtml(currentPuzzle.foundKeyWords);
+    wordsFoundElement.innerHTML =
+        `<p><div class="no-words-message">${currentPuzzle.foundKeyWords.size} out of ${currentPuzzle.puzzle.keyWords.length} words found.</div></p>` +
+        buildWordListHtml(currentPuzzle.foundKeyWords);
+
+    const progressCardElement = getProgressCardElement();
+    progressCardElement.innerHTML = `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length}`;
 }
 
 function updateExtraWordsFound() {
@@ -760,11 +774,13 @@ function updateExtraWordsFound() {
     }
 
     if (currentPuzzle.foundExtraWords.size == 0) {
-        wordsFoundElement.innerHTML = `<div class="no-words-message">No extra words found</div>`;
+        wordsFoundElement.innerHTML = `<p><div class="no-words-message">No extra words found</div></p>`;
         return;
     }
 
-    wordsFoundElement.innerHTML = buildWordListHtml(currentPuzzle.foundExtraWords);
+    wordsFoundElement.innerHTML =
+        `<p><div class="no-words-message">${currentPuzzle.foundExtraWords.size} out of ${currentPuzzle.puzzle.extraWords.length} extra words found.</div></p>` +
+        buildWordListHtml(currentPuzzle.foundExtraWords);
 }
 
 // Given a word collection, return it as a columnar list in HTML 
@@ -777,6 +793,8 @@ function buildWordListHtml(foundWords) {
         wordList.push(word);
     });
 
+    let lineBreakFunction;
+    let leaderFunction;
     switch (foundWordOrdering) {
         default:
         case FoundMoveSortOrder.FOUND_ORDER:
@@ -787,6 +805,9 @@ function buildWordListHtml(foundWords) {
         case FoundMoveSortOrder.ALPHABETICAL:
             // Alphabetically
             wordList.sort();
+
+            lineBreakFunction = (word, prevWord) => word[0] !== prevWord[0];
+            leaderFunction = (word) => `${word.toUpperCase()[0]}:`;
             break;
 
         case FoundMoveSortOrder.WORD_LENGTH:
@@ -797,15 +818,48 @@ function buildWordListHtml(foundWords) {
                 }
                 return a.length - b.length;
             });
+
+            lineBreakFunction = (word, prevWord) => word.length !== prevWord.length;
+            leaderFunction = (word) => `${word.length}-letter words:`;
             break;
     }
 
-    let html = `<div class="found-word-list">`;
+    // Start building the word list
+    let previousWord;
+    let html = `<div style="padding: 0px 20px 20px 20px">`;
 
+    // Display a little message at the top of each group of found words
+    if (leaderFunction) {
+        html += `<div class="found-word-list-leader">${leaderFunction(wordList[0])}</div>`;
+    }
+
+    // Start a group of words
+    html += `<div class="found-word-list">`;
     wordList.forEach((word) => {
+        if (lineBreakFunction && previousWord && lineBreakFunction(word, previousWord)) {
+            // Close this group of words
+            html += `</div>`;
+
+            // Display a little message at the top of each group of found words
+            if (leaderFunction) {
+                html += `<div class="found-word-list-leader">${leaderFunction(word)}</div>`;
+            }
+
+            // Start a group of words
+            html += `<div class="found-word-list">`;
+        }
+
+        // Add the word to the list
         html += `<div>${word}</div>`;
+
+        // Remember it for the comparisons with the next word
+        previousWord = word;
     });
 
+    // Close this final group of words
+    html += `</div>`;
+
+    // Close the word list
     html += `</div>`;
 
     return html;
@@ -863,11 +917,17 @@ function updatePuzzleProgressMessage() {
     const countsMessageElement = document.getElementById('counts-message');
 
     if (currentPuzzle.puzzle) {
+        let progressTemplate;
         if (currentPuzzle.foundKeyWords.size === 0) {
-            progressMessageElement.innerHTML = `You have found ${currentPuzzle.foundKeyWords.size} of ${currentPuzzle.puzzle.keyWords.length} words.`;
+            progressTemplate = `<p>You have found %foundWords of %totalWords words.</p>`;
         } else {
-            progressMessageElement.innerHTML = `You have found ${currentPuzzle.foundKeyWords.size} of ${currentPuzzle.puzzle.keyWords.length} words with ${getAccuracy()}% accuracy.`;
+            progressTemplate = `<p>You have found %foundWords of %totalWords words with %accuracy% accuracy.</p>`;
         }
+
+        progressMessageElement.innerHTML = progressTemplate
+            .replace("%foundWords", currentPuzzle.foundKeyWords.size)
+            .replace("%totalWords", currentPuzzle.puzzle.keyWords.length)
+            .replace("%accuracy", getAccuracy());
 
         // Work out count of words at each word length
         const counts = new Map();
@@ -889,9 +949,10 @@ function updatePuzzleProgressMessage() {
             counts.set(word.length, counts.get(word.length) - 1);
         });
 
+        // Display the counts per word length - but don't display those with none left
         let countsTable = `<table class="word-count-table">`;
         for (let i = 1; i <= longestWordLength; i++) {
-            if (counts.has(i)) {
+            if (counts.has(i) && counts.get(i) > 0) {
                 countsTable += `<tr>`;
                 countsTable += `  <td class="word-count-word">${i}-letter words:</td>`;
                 countsTable += `  <td class="word-count-total">${counts.get(i)}</td>`;
@@ -1112,7 +1173,7 @@ async function explode(elementId) {
     // Take the element ID to use as the background area for the ticker tape explosion
     const tickerContainerElement = document.getElementById(elementId);
     if (tickerContainerElement) {
-        const rect = {left:document.documentElement.scrollLeft, top:document.documentElement.scrollTop, width: window.innerWidth, height: window.innerHeight};//document.getElementById(elementId).getBoundingClientRect();
+        const rect = { left: document.documentElement.scrollLeft, top: document.documentElement.scrollTop, width: window.innerWidth, height: window.innerHeight };//document.getElementById(elementId).getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
 

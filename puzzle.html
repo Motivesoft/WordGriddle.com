@@ -74,7 +74,11 @@
 
         <div class="container">
             <div class="left-side">
-                <h3 id="puzzle-title"></h3>
+                <!-- <h3 id="puzzle-title"></h3> -->
+                <div class="h3-container">
+                    <h3 class="main-content" id="puzzle-title"></h3>
+                    <span class="right-aligned" id="progress-card">0/0</span>
+                </div>
 
                 <!-- Messages -->
                 <div id="outcome-message"></div>
@@ -87,27 +91,30 @@
             <div class="right-side">
                 <h3>Instructions</h3>
                 <p>Swipe through the letters in the grid to find all of the words!</p>
-                <h3>Puzzle Details</h3>
+                <h3>Progress</h3>
                 <div id="progress-message"></div>
-                <button type="button" class="button" onclick="resetProgress()">Restart Puzzle</button>
-                <h3>Words Remaining</h3>
+                <h4>Words Remaining</h4>
                 <div id="counts-message"></div>
-                <h3>Words Found</h3>
-                <div>Sort by:
+                <hr>
+                <h4>Words Found
                     <select class="combobox" id="found-order-selection">
                         <option value="FOUND_ORDER">Found Order</option>
                         <option value="ALPHABETICAL">Alphabetically</option>
                         <option value="WORD_LENGTH">Word Length</option>
                     </select>
-                </div>
-                <div id="words-found"></div>
+                </h4>
+                <p><div id="words-found"></div></p>
                 <!-- <h3>Extra Words</h3> -->
-                <label class="checkbox-container">
+                <p><label class="checkbox-container">
                     <input type="checkbox" id="show-extra-words">
                     <span class="checkmark"></span>
                     Show extra words
                 </label>
-                <div id="extra-words-found"></div>
+                <p><div id="extra-words-found"></div></p>
+                </p>
+                <hr>
+                <p id="author"></p>
+                <button type="button" class="button" onclick="resetProgress()">Restart Puzzle</button>
             </div>
         </div>
     </div>

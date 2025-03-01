@@ -63,7 +63,7 @@
                 })
                 .catch(async error => {
                     console.error(`Failed to load puzzle list: '${repoCatalog}'`, error);
-                    await openMessageBox(`Failed to load puzzle list from '${puzzleRepo}'.`, 'error');
+                    await openMessageBox(`Failed to load puzzle list from '${puzzleRepo}'.`, MessageBoxType.ERROR);
 
                     // Go back to the home page
                     window.location.href = "/";
