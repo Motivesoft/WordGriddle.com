@@ -74,7 +74,7 @@ function openPuzzle(puzzle) {
 
     // Display a meaningful title
     let titleText = puzzle.title;
-    
+
     if (!puzzle.locked) {
         titleText += ' (test)';
     }
@@ -823,43 +823,51 @@ function buildWordListHtml(foundWords) {
             break;
     }
 
-    // Start building the word list
-    let previousWord;
-    let html = `<div style="padding: 0px 20px 20px 20px">`;
+    let html = '';
+    if (foundWordOrdering === FoundMoveSortOrder.FOUND_ORDER) {
+        // Nothing fancy, just a list
+        html += `<div class="found-word-list">`;
 
-    // Display a little message at the top of each group of found words
-    if (leaderFunction) {
-        html += `<div class="found-word-list-leader">${leaderFunction(wordList[0])}</div>`;
-    }
+        wordList.forEach((word) => {
+            html += `<div>${word}</div>`;
+        });
 
-    // Start a group of words
-    html += `<div class="found-word-list">`;
-    wordList.forEach((word) => {
-        if (lineBreakFunction && previousWord && lineBreakFunction(word, previousWord)) {
-            // Close this group of words
-            html += `</div>`;
-
-            // Display a little message at the top of each group of found words
-            if (leaderFunction) {
-                html += `<div class="found-word-list-leader">${leaderFunction(word)}</div>`;
-            }
-
-            // Start a group of words
-            html += `<div class="found-word-list">`;
+        html += `</div>`;
+    } else {
+        let previousWord;
+        
+        // Display a little message at the top of each group of found words
+        if (leaderFunction) {
+            html += `<div class="found-word-list-leader">${leaderFunction(wordList[0])}</div>`;
         }
 
-        // Add the word to the list
-        html += `<div>${word}</div>`;
+        // Start a group of words
+        html += `<div class="found-word-list">`;
+        wordList.forEach((word) => {
+            if (previousWord && lineBreakFunction && lineBreakFunction(word, previousWord)) {
+                console.log("xx");
+                // Close this group of words
+                html += `</div>`;
 
-        // Remember it for the comparisons with the next word
-        previousWord = word;
-    });
+                // Display a little message at the top of each group of found words
+                if (leaderFunction) {
+                    html += `<div class="found-word-list-leader">${leaderFunction(word)}</div>`;
+                }
 
-    // Close this final group of words
-    html += `</div>`;
+                // Start a group of words
+                html += `<div class="found-word-list">`;
+            }
 
-    // Close the word list
-    html += `</div>`;
+            // Add the word to the list
+            html += `<div>${word}</div>`;
+
+            // Remember it for the comparisons with the next word
+            previousWord = word;
+        });
+
+        // Close this final group of words
+        html += `</div>`;
+    }
 
     return html;
 }
