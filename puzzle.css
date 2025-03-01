@@ -80,8 +80,13 @@
 
 .found-word-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    padding: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 150px));
+    padding: 5px;
+}
+
+.found-word-list-leader {
+    font-weight: bold;
+    padding-top: 15px;
 }
 
 /* Container for the main content */

@@ -756,7 +756,7 @@ function updateWordsFound() {
         return;
     }
 
-    wordsFoundElement.innerHTML = 
+    wordsFoundElement.innerHTML =
         `<p><div class="no-words-message">${currentPuzzle.foundKeyWords.size} out of ${currentPuzzle.puzzle.keyWords.length} words found.</div></p>` +
         buildWordListHtml(currentPuzzle.foundKeyWords);
 
@@ -778,7 +778,7 @@ function updateExtraWordsFound() {
         return;
     }
 
-    wordsFoundElement.innerHTML = 
+    wordsFoundElement.innerHTML =
         `<p><div class="no-words-message">${currentPuzzle.foundExtraWords.size} out of ${currentPuzzle.puzzle.extraWords.length} extra words found.</div></p>` +
         buildWordListHtml(currentPuzzle.foundExtraWords);
 }
@@ -793,6 +793,8 @@ function buildWordListHtml(foundWords) {
         wordList.push(word);
     });
 
+    let lineBreakFunction;
+    let leaderFunction;
     switch (foundWordOrdering) {
         default:
         case FoundMoveSortOrder.FOUND_ORDER:
@@ -803,6 +805,9 @@ function buildWordListHtml(foundWords) {
         case FoundMoveSortOrder.ALPHABETICAL:
             // Alphabetically
             wordList.sort();
+
+            lineBreakFunction = (word, prevWord) => word[0] !== prevWord[0];
+            leaderFunction = (word) => `${word.toUpperCase()[0]}:`;
             break;
 
         case FoundMoveSortOrder.WORD_LENGTH:
@@ -813,15 +818,48 @@ function buildWordListHtml(foundWords) {
                 }
                 return a.length - b.length;
             });
+
+            lineBreakFunction = (word, prevWord) => word.length !== prevWord.length;
+            leaderFunction = (word) => `${word.length}-letter words:`;
             break;
     }
 
-    let html = `<div class="found-word-list">`;
+    // Start building the word list
+    let previousWord;
+    let html = `<div style="padding: 0px 20px 20px 20px">`;
 
+    // Display a little message at the top of each group of found words
+    if (leaderFunction) {
+        html += `<div class="found-word-list-leader">${leaderFunction(wordList[0])}</div>`;
+    }
+
+    // Start a group of words
+    html += `<div class="found-word-list">`;
     wordList.forEach((word) => {
+        if (lineBreakFunction && previousWord && lineBreakFunction(word, previousWord)) {
+            // Close this group of words
+            html += `</div>`;
+
+            // Display a little message at the top of each group of found words
+            if (leaderFunction) {
+                html += `<div class="found-word-list-leader">${leaderFunction(word)}</div>`;
+            }
+
+            // Start a group of words
+            html += `<div class="found-word-list">`;
+        }
+
+        // Add the word to the list
         html += `<div>${word}</div>`;
+
+        // Remember it for the comparisons with the next word
+        previousWord = word;
     });
 
+    // Close this final group of words
+    html += `</div>`;
+
+    // Close the word list
     html += `</div>`;
 
     return html;
@@ -887,10 +925,10 @@ function updatePuzzleProgressMessage() {
         }
 
         progressMessageElement.innerHTML = progressTemplate
-            .replace("%foundWords",currentPuzzle.foundKeyWords.size)
-            .replace("%totalWords",currentPuzzle.puzzle.keyWords.length)
+            .replace("%foundWords", currentPuzzle.foundKeyWords.size)
+            .replace("%totalWords", currentPuzzle.puzzle.keyWords.length)
             .replace("%accuracy", getAccuracy());
-        
+
         // Work out count of words at each word length
         const counts = new Map();
         let longestWordLength = 0;
@@ -1135,7 +1173,7 @@ async function explode(elementId) {
     // Take the element ID to use as the background area for the ticker tape explosion
     const tickerContainerElement = document.getElementById(elementId);
     if (tickerContainerElement) {
-        const rect = {left:document.documentElement.scrollLeft, top:document.documentElement.scrollTop, width: window.innerWidth, height: window.innerHeight};//document.getElementById(elementId).getBoundingClientRect();
+        const rect = { left: document.documentElement.scrollLeft, top: document.documentElement.scrollTop, width: window.innerWidth, height: window.innerHeight };//document.getElementById(elementId).getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
 
