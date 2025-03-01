@@ -73,15 +73,13 @@
 }
 
 .no-words-message {
-    padding-left: 20px;
-    padding-right: 20px;
     font-style: italic;
 }
 
 .found-word-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 150px));
-    padding: 5px;
+    grid-template-columns: repeat(auto-fill, minmax(80px, max-content));
+    gap: 5px;
 }
 
 .found-word-list-leader {
