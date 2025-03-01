@@ -76,6 +76,26 @@
             "locked": true
         },
         {
+            "title": "8x8 #16",
+            "name": "puzzle-16",
+            "locked": false
+        },
+        {
+            "title": "8x8 #17",
+            "name": "puzzle-17",
+            "locked": false
+        },
+        {
+            "title": "8x8 #18",
+            "name": "puzzle-18",
+            "locked": false
+        },
+        {
+            "title": "8x8 #19",
+            "name": "puzzle-19",
+            "locked": false
+        },
+        {
             "title": "4x4 #20",
             "name": "puzzle-20",
             "locked": false
