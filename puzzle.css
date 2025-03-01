@@ -150,6 +150,7 @@
     justify-content: start;
     gap: 10px;
     height: min-content;
+    min-height: calc(80vh);
 }
 
 /* Right Side (Scrollable Content) */
