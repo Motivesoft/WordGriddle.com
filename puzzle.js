@@ -74,13 +74,12 @@ function openPuzzle(puzzle) {
 
     // Display a meaningful title
     let titleText = puzzle.title;
-
-    // Build some display elements
+    
     if (!puzzle.locked) {
-        titleText += ' (unlocked)';
+        titleText += ' (test)';
     }
 
-    getPuzzleTitleElement().innerHTML = currentPuzzle.puzzle.title;
+    getPuzzleTitleElement().innerHTML = titleText;
 
     if (puzzle.author === 1) {
         getAuthorElement().innerHTML = `Puzzle by Ian`;
