@@ -1,9 +1,14 @@
 {
     "puzzles": [
         {
-            "title": "3x3 #2",
-            "name": "puzzle-2",
+            "title": "3x3 #1",
+            "name": "puzzle-1",
             "locked": true
+        },
+        {
+            "title": "4x4 #2",
+            "name": "puzzle-2",
+            "locked": false
         },
         {
             "title": "7x7 #3",

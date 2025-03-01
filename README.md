@@ -79,10 +79,20 @@ git push origin --tags
 
 Merge changes into Staging when planning a release (this will cause a merge commit):
 ```shell
+git checkout main
+git pull
 git checkout Staging
 git merge main --no-ff
 git push origin Staging
 ```
+
+>Alternately, try this:
+>```shell
+>git fetch --all
+>git checkout Staging
+>git merge origin/main --no-ff
+>git push origin Staging
+>```
 
 Consider tagging this Staging release
 ```shell
@@ -101,6 +111,8 @@ Test. If fixes required, develop the fix, merge to main and then merge main into
 
 When ready, merge Staging into Production (this will cause a merge commit):
 ```shell
+git checkout Staging
+git pull
 git checkout Production
 git merge Staging --no-ff
 git push origin Production
