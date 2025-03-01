@@ -835,7 +835,7 @@ function buildWordListHtml(foundWords) {
         html += `</div>`;
     } else {
         let previousWord;
-        
+
         // Display a little message at the top of each group of found words
         if (leaderFunction) {
             html += `<div class="found-word-list-leader">${leaderFunction(wordList[0])}</div>`;
@@ -1158,9 +1158,22 @@ function createParticle(x, y) {
 
     let opacity = 1;
 
+    // Screen extents
+    const w = window.innerWidth - 20;
+    const h = window.innerHeight - 20;
+
     function animateParticle() {
-        particle.style.left = `${parseFloat(particle.style.left) + vx}px`;
-        particle.style.top = `${parseFloat(particle.style.top) + vy}px`;
+        const left = parseFloat(particle.style.left);
+        const top = parseFloat(particle.style.top);
+
+        // Don't go offscreen
+        if (left > w || top > h) {
+            particle.remove();
+            return;
+        }
+
+        particle.style.left = `${left + vx}px`;
+        particle.style.top = `${top + vy}px`;
         opacity -= 0.02;
         particle.style.opacity = opacity;
 
