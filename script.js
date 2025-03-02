@@ -141,7 +141,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .then(data => {
             if (data.roles) {
                 const navBarRight = document.getElementById('navbar-roles');
-                const backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--button-background');
 
                 if (navBarRight) {
                     data.roles.forEach((role) => {
@@ -150,7 +149,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         const roleButton = document.createElement('button');
                         roleButton.classList.add('button');
                         roleButton.setAttribute('type', 'button');
-                        roleButton.style.backgroundColor = backgroundColor;
                         roleButton.innerHTML = `${role.name}`;
                         roleButton.addEventListener('click', function () {
                             if (role.repo == '#') {
