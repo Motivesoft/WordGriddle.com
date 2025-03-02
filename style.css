@@ -139,6 +139,10 @@ body {
     padding-right: 4px;
 }
 
+#navbar-roles {
+    align-content: center;
+}
+
 /* Toolbar button styles */
 
 .toolbar-button {

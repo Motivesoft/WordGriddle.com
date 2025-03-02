@@ -1,7 +1,7 @@
 {
     "roles": [
         {
-            "name": "Testing",
+            "name": "Test Puzzles",
             "repo": "playtest"
         }
     ]
