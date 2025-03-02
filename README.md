@@ -137,3 +137,37 @@ Or against a specific commit, to avoid needing to switch branches:
 git tag -a v1.0.0-prod <commit-hash> -m "Production release 1.0.0"
 git push origin v1.0.0-prod
 ```
+
+# Release strategy
+## Alpha
+Friends and family.
+
+### Desired end result (1)
+- 'Alpha' branch
+- robots to disallow / on Alpha
+- GitHub default branch to Production
+- 'index' page with intro, demo puzzle, released puzzles
+- some version of 'puzzles' folder with only released puzzles
+- home link on any page goes back to 'index'
+- differences from current main are: 
+  - no links to test puzzles
+  - test puzzles not even present 
+  - no 'puzzles' page
+
+### Steps
+- Make Alpha branch from main
+- Make assets\puzzles folder and populate with released puzzles and a catalog file
+- Add links to index page to puzzles in assets, with special call out to demo puzzle
+- Delete puzzles page and puzzles folder from Alpha branch
+- Our testing and playing continues from main
+- To publish a new puzzle to Alpha, make it as 'released' in main as currently and then copy to assets/puzzles and add to its catalog
+  - We can always remove from main puzzles folder in future if we want
+- Update hosting to use Alpha branch 
+
+
+- Split puzzles into two repos, test and puzzles
+- Populate index page with puzzles - separating out our demo puzzle
+- Create test page from 'puzzles', but only for the test repo
+- 
+- Use an Alpha branch from main
+- 
