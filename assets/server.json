@@ -1,0 +1,8 @@
+{
+    "roles": [
+        {
+            "name": "Testing",
+            "repo": "playtest"
+        }
+    ]
+}

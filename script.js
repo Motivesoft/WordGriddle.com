@@ -128,6 +128,47 @@ document.addEventListener("DOMContentLoaded", async () => {
             await openAboutBox();
         });
     }
+
+    fetch('/assets/server.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error status: ${response.status}`);
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            if (data.roles) {
+                const navBarRight = document.getElementById('navbar-roles');
+                if (navBarRight) {
+                    data.roles.forEach((role) => {
+                        console.log(`Role: ${role.name}`);
+    
+                        const roleButton = document.createElement('button');
+                        roleButton.classList.add('button');
+                        roleButton.setAttribute('type', 'button');
+                        roleButton.innerHTML = `${role.name}`;
+                        roleButton.addEventListener('click', function () {
+                            window.location.href = `/puzzles.html?repo=${role.repo}`;
+                        });
+                        navBarRight.appendChild(roleButton);
+    
+                        const roleButton2 = `
+                            <button class="toolbar-button" id="server-role-${role}">
+                                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
+                                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
+                                    stroke-linecap='round' stroke-linejoin='round'>
+                                    <path d='M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3M12 10L12 17M12 7L12 7' />
+                                </svg>
+                            </button>
+                        `;
+                    });
+                }
+            } 
+        })
+        .catch(async error => {
+            console.error(`Failed to load site-roles:`, error);
+        });
 });
 
 // Asynchronously populate an element with version information
