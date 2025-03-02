@@ -100,6 +100,7 @@ function openAboutBox() {
             </a>
         </div>
         <p id="aboutBoxVersion"></p>
+        <p id="copyrightStatement">Copyright &copy; Ian Brown, 2025. All rights reserved.</p>
         `;
 
     displayVersion('aboutBoxVersion');
@@ -147,9 +148,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         console.log(`Role: ${role.name}`);
     
                         const roleButton = document.createElement('button');
-                        roleButton.classList.add('toolbar-button');
-                        roleButton.style.backgroundColor = backgroundColor;
+                        roleButton.classList.add('button');
                         roleButton.setAttribute('type', 'button');
+                        roleButton.style.backgroundColor = backgroundColor;
                         roleButton.innerHTML = `${role.name}`;
                         roleButton.addEventListener('click', function () {
                             if (role.repo == '#') {

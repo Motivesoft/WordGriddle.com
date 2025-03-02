@@ -188,6 +188,18 @@ body {
     width: 100%;
 }
 
+/* Row of buttons */
+
+.button-bar {
+    display: flex;
+    justify-content: left;
+    gap: 20px;
+}
+
+.button-bar .button {
+    min-width: 150px;
+}
+
 /* Links */
 
 a {
@@ -463,6 +475,10 @@ dialog button[type="button"] {
 /* About Box */
 
 #aboutBoxVersion {
+    font-size: 12px;
+}
+
+#copyrightStatement {
     font-size: 12px;
 }
 
