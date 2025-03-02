@@ -12,11 +12,6 @@ const PuzzleLocalStorageKeys = Object.freeze({
     FOUND_WORD_ORDERING: "foundWordOrdering",
     SHOW_EXTRA_WORDS: "showExtraWords",
     PROGRESS_STORAGE: "puzzle-%id.progress",
-
-    // TODO delete these three when finally obsolete
-    KEY_WORD_STORAGE: "puzzle-%id.keyWords",
-    EXTRA_WORD_STORAGE: "puzzle-%id.extraWords",
-    NON_WORD_STORAGE: "puzzle-%id.nonWords",
 });
 
 // State
@@ -343,9 +338,6 @@ async function endDragGesture() {
         const selectedWordUpper = currentPuzzle.selectedLetters.map(item => item.letter).join('').toUpperCase();
         const selectedWordLower = selectedWordUpper.toLowerCase();
 
-        // TODO Not needed right now: 
-        //   const selectedPath = currentPuzzle.selectedLetters.map(item => `[${item.index}]`).join('');
-
         // Check for the selected word being either:
         // - too short
         // - a key word (that may or may not have already been found)
@@ -461,7 +453,6 @@ function redrawTrail() {
 
 // Draw a line between cells to indicate the selection
 function canvasDrawLine(ctx, color, from, to) {
-    // TODO confirm whether we need this in the calculations below
     const gridElement = getGridElement();
 
     // Begin a new path
@@ -484,7 +475,6 @@ function canvasDrawLine(ctx, color, from, to) {
 
 // Draw a blob on the first cell of a selection
 function canvasDrawBlob(ctx, color, cell) {
-    // TODO confirm whether we need this in the calculations below
     const gridElement = getGridElement();
 
     // Begin a new path
@@ -982,21 +972,6 @@ function getProgressStorageKey() {
     return PuzzleLocalStorageKeys.PROGRESS_STORAGE.replace("%id", currentPuzzle.puzzle.id);
 }
 
-// TODO delete when finally obsolete
-function getKeyWordStorageKey() {
-    return PuzzleLocalStorageKeys.KEY_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
-}
-
-// TODO delete when finally obsolete
-function getExtraWordStorageKey() {
-    return PuzzleLocalStorageKeys.EXTRA_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
-}
-
-// TODO delete when finally obsolete
-function getNonWordStorageKey() {
-    return PuzzleLocalStorageKeys.NON_WORD_STORAGE.replace("%id", currentPuzzle.puzzle.id);
-}
-
 function indexFromWord(wordList, searchWord) {
     // Return the index of 'searchWord' in 'wordList' where that is an [word,_] array
     for (let i = 0; i < wordList.length; i++) {
@@ -1108,11 +1083,6 @@ async function resetProgress() {
     if (userConfirmed) {
         // Clear stored information
         localStorage.removeItem(getProgressStorageKey());
-
-        // TODO delete these redundant lines at some point when they will have finished cleaning the alpha tester's storage
-        localStorage.removeItem(getKeyWordStorageKey());
-        localStorage.removeItem(getExtraWordStorageKey());
-        localStorage.removeItem(getNonWordStorageKey());
 
         // Reload everything
         openPuzzle(currentPuzzle.puzzle);
