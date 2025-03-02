@@ -2,11 +2,6 @@
     "puzzles": [
         {
             "title": "4x4 #8",
-            "name": "puzzle-7",
-            "locked": false
-        },
-        {
-            "title": "4x4 #8",
             "name": "puzzle-8",
             "locked": false
         },
