@@ -91,7 +91,7 @@ body {
 
 .navbar {
     background-color: var(--navbar-background);
-    height: 48px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -106,8 +106,7 @@ body {
     text-decoration: none;
     color: var(--product-container-color);
     position: absolute;
-    left: 8px;
-    top: -8px;
+    left: 0px;
 }
 
 /* Product icon */
@@ -117,7 +116,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
 }
 
 .product-icon i {
@@ -137,6 +135,15 @@ body {
     display: flex;
     gap: 4px;
     padding-right: 4px;
+}
+
+#navbar-roles {
+    align-content: center;
+}
+
+#navbar-roles .toolbar-button {
+    align-content: center;
+    margin: 5px;
 }
 
 /* Toolbar button styles */
@@ -281,19 +288,19 @@ a:active {
 
 .note {
     margin-top: 20px;
-    border: 1px solid var(--icon-error-color);
-    border-radius: 10px;
-    padding: 20px;
+    border: 1px solid var(--icon-error-color); 
+    border-radius: 10px; 
+    padding: 20px; 
     width: 50%;
-}
+} 
 
 .info {
     margin-top: 20px;
-    border: 1px solid var(--icon-info-color);
-    border-radius: 10px;
-    padding: 20px;
+    border: 1px solid var(--icon-info-color); 
+    border-radius: 10px; 
+    padding: 20px; 
     width: 50%;
-}
+} 
 
 /* ComboBox*/
 
