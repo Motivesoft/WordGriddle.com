@@ -152,7 +152,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                         roleButton.setAttribute('type', 'button');
                         roleButton.innerHTML = `${role.name}`;
                         roleButton.addEventListener('click', function () {
-                            window.location.href = `/puzzles.html?repo=${role.repo}`;
+                            if (role.repo == '#') {
+                                // Special configuration setting to go to home page
+                                window.location.href = `/`;
+                            } else {
+                                // Open the puzzles page on this collection of puzzles
+                                window.location.href = `/puzzles.html?repo=${role.repo}`;
+                            }
                         });
                         navBarRight.appendChild(roleButton);
                     });
