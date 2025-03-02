@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Disallow: /media.html
 Disallow: /puzzles/
+Disallow: /puzzle.html
 
 Sitemap: https://wordgriddle.com/sitemap.xml
