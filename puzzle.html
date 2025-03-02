@@ -39,7 +39,6 @@
             </a>
 
             <div class="navbar-right">
-                <button class="toolbar-button" onclick="window.location.href='/'" style="border: 1px solid var(--control-border); background-color: var(--button-background);">Puzzle List</button>
                 <button class="toolbar-button" id="aboutBoxButton">
                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
                         class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
@@ -106,7 +105,12 @@
                 </p>
                 <hr>
                 <p id="author"></p>
-                <button type="button" class="button" onclick="resetProgress()">Restart Puzzle</button>
+                <div class="button-bar">
+                    <button type="button" class="button" onclick="resetProgress()">Restart Puzzle</button>
+                </div>
+                <div class="button-bar">
+                    <div id="navbar-roles"></div>
+                </div>
             </div>
         </div>
     </div>

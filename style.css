@@ -179,6 +179,18 @@ body {
     width: 100%;
 }
 
+/* Row of buttons */
+
+.button-bar {
+    display: flex;
+    justify-content: left;
+    gap: 20px;
+}
+
+.button-bar .button {
+    min-width: 150px;
+}
+
 /* Links */
 
 a {
@@ -208,9 +220,7 @@ a:active {
     color: var(--button-text-color);
     border: none;
     border-radius: 4px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
+    margin: 10px 0px 10px 0px;
     padding: 10px;
     font-size: 16px;
 }
@@ -271,19 +281,19 @@ a:active {
 
 .note {
     margin-top: 20px;
-    border: 1px solid var(--icon-error-color); 
-    border-radius: 10px; 
-    padding: 20px; 
+    border: 1px solid var(--icon-error-color);
+    border-radius: 10px;
+    padding: 20px;
     width: 50%;
-} 
+}
 
 .info {
     margin-top: 20px;
-    border: 1px solid var(--icon-info-color); 
-    border-radius: 10px; 
-    padding: 20px; 
+    border: 1px solid var(--icon-info-color);
+    border-radius: 10px;
+    padding: 20px;
     width: 50%;
-} 
+}
 
 /* ComboBox*/
 
@@ -454,6 +464,10 @@ dialog button[type="button"] {
 /* About Box */
 
 #aboutBoxVersion {
+    font-size: 12px;
+}
+
+#copyrightStatement {
     font-size: 12px;
 }
 

@@ -100,6 +100,7 @@ function openAboutBox() {
             </a>
         </div>
         <p id="aboutBoxVersion"></p>
+        <p id="copyrightStatement">Copyright &copy; Ian Brown, 2025. All rights reserved.</p>
         `;
 
     displayVersion('aboutBoxVersion');
@@ -128,6 +129,46 @@ document.addEventListener("DOMContentLoaded", async () => {
             await openAboutBox();
         });
     }
+
+    fetch('/assets/server.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error status: ${response.status}`);
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            if (data.roles) {
+                const navBarRight = document.getElementById('navbar-roles');
+                const backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--button-background');
+
+                if (navBarRight) {
+                    data.roles.forEach((role) => {
+                        console.log(`Role: ${role.name}`);
+    
+                        const roleButton = document.createElement('button');
+                        roleButton.classList.add('button');
+                        roleButton.setAttribute('type', 'button');
+                        roleButton.style.backgroundColor = backgroundColor;
+                        roleButton.innerHTML = `${role.name}`;
+                        roleButton.addEventListener('click', function () {
+                            if (role.repo == '#') {
+                                // Special configuration setting to go to home page
+                                window.location.href = `/`;
+                            } else {
+                                // Open the puzzles page on this collection of puzzles
+                                window.location.href = `/puzzles.html?repo=${role.repo}`;
+                            }
+                        });
+                        navBarRight.appendChild(roleButton);
+                    });
+                }
+            } 
+        })
+        .catch(async error => {
+            console.error(`Failed to load site-roles:`, error);
+        });
 });
 
 // Asynchronously populate an element with version information
