@@ -22,17 +22,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
-            const puzzleRepo = urlParams.get(`repo`);
+            const repository = urlParams.get(`repo`) || 'playtest';
 
             // Assume we're loading from the default repo - but allow a provided one
-            let repoCatalog = `/puzzles/catalog.json`;
-            let repoUrlLink = `puzzle.html?puzzle=%name`;
-
-            if (puzzleRepo) {
-                // If using a provided repo, pass that to the puzzle page, too
-                repoCatalog = `/${decodeURIComponent(puzzleRepo)}/catalog.json`;
-                repoUrlLink = `puzzle.html?puzzle=%name&repo=%repo`;
-            }
+            let repoCatalog = `/assets/${repository}/catalog.json`;
+            let repoUrlLink = `puzzle.html?puzzle=%name&repo=%repo`;
 
             fetch(repoCatalog)
                 .then(response => {
@@ -49,12 +43,12 @@
                         puzzleSelector.setAttribute('type', 'button');
                         puzzleSelector.textContent = puzzle.title;
                         puzzleSelector.addEventListener('click', function () {
-                            window.location.href = repoUrlLink.
-                                replace("%name", encodeURIComponent(puzzle.name)).
-                                replace("%repo", puzzleRepo);
+                            window.location.href = repoUrlLink
+                                .replace("%name", encodeURIComponent(puzzle.name))
+                                .replace("%repo", encodeURIComponent(repository));
                         });
 
-                        const listElementId = puzzle.locked ? 'puzzle-list-locked' : 'puzzle-list-unlocked';
+                        const listElementId = 'puzzle-list';
                         const puzzleListElement = document.getElementById(listElementId);
                         if (puzzleListElement) {
                             puzzleListElement.appendChild(puzzleSelector);
@@ -115,13 +109,9 @@
     </nav>
 
     <div class="panel">
-        <div class="inner-panel">
+        <div class="inner-panel" style="width: 60%;">
             <h3>Select a puzzle for testing</h3>
-            <div id="puzzle-list-unlocked" class="button-container"></div>
-        </div>
-        <div class="inner-panel">
-            <h3>Select a puzzle to play!</h3>
-            <div id="puzzle-list-locked" class="button-container"></div>
+            <div id="puzzle-list" class="button-container"></div>
         </div>
     </div>
 
