@@ -3,5 +3,6 @@ Allow: /
 
 Disallow: /puzzles/
 Disallow: /puzzle.html
+Disallow: /puzzles.html
 
 Sitemap: https://wordgriddle.com/sitemap.xml
