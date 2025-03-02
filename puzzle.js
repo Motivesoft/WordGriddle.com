@@ -40,12 +40,12 @@ const currentPuzzle = {
 // Load that puzzle and let the user play it
 document.addEventListener('DOMContentLoaded', async function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const puzzleFile = urlParams.get('puzzle');
+    const puzzleName = urlParams.get('puzzle');
     const puzzleRepo = urlParams.get(`repo`) || `puzzles`;
 
     // Assuming we have a file, load it and populate the page
-    if (puzzleFile) {
-        fetch(`/${decodeURIComponent(puzzleRepo)}/${decodeURIComponent(puzzleFile)}.json`)
+    if (puzzleName) {
+        fetch(`/assets/${decodeURIComponent(puzzleRepo)}/${decodeURIComponent(puzzleName)}.json`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error status: ${response.status}`);
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             })
             .catch(async error => {
                 console.error("Failed to load puzzle", error);
-                await openMessageBox(`Failed to load puzzle '${puzzleFile}'.`, MessageBoxType.ERROR);
+                await openMessageBox(`Failed to load puzzle '${puzzleName}'.`, MessageBoxType.ERROR);
             });
     } else {
         await openMessageBox('This page needs to be launched from the puzzles catalog page.', MessageBoxType.ERROR);
