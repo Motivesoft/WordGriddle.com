@@ -91,7 +91,7 @@ body {
 
 .navbar {
     background-color: var(--navbar-background);
-    height: 48px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -106,8 +106,7 @@ body {
     text-decoration: none;
     color: var(--product-container-color);
     position: absolute;
-    left: 8px;
-    top: -8px;
+    left: 0px;
 }
 
 /* Product icon */
@@ -117,7 +116,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
 }
 
 .product-icon i {
