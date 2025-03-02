@@ -276,7 +276,7 @@ canvas {
     width: 100%;
     overflow: hidden;
     background-color: transparent;
-    padding: 10px 0;
+    padding: 0px;
 }
 
 .particle {
