@@ -22,10 +22,10 @@
             document.addEventListener('DOMContentLoaded', function () {
                 const urlParams = new URLSearchParams(window.location.search);
 
-                // Assume we're loading from the default repo - but allow a provided one
-                let repository='puzzles';
-                let puzzleCatalog = `/assets/${repository}/catalog.json`;
-                let puzzleUrlLink = `puzzle.html?puzzle=%name&repo=%repo`;
+                // Assume we're loading from the default repo as this is the main page
+                let repository = 'puzzles';
+                let puzzleCatalog = `/assets/puzzles/catalog.json`;
+                let puzzleUrlLink = `puzzle.html?puzzle=%name`;
 
                 fetch(puzzleCatalog)
                     .then(response => {
@@ -36,6 +36,8 @@
                         return response.json();
                     })
                     .then(data => {
+                        const puzzleListElement = document.getElementById('puzzle-list');
+
                         data.puzzles.forEach(puzzle => {
                             const puzzleSelector = document.createElement('button');
                             puzzleSelector.classList.add('button');
@@ -43,15 +45,10 @@
                             puzzleSelector.textContent = puzzle.title;
                             puzzleSelector.addEventListener('click', function () {
                                 window.location.href = puzzleUrlLink
-                                    .replace("%name", encodeURIComponent(puzzle.name))
-                                    .replace("%repo", encodeURIComponent(repository));
+                                    .replace("%name", encodeURIComponent(puzzle.name));
                             });
 
-                            const listElementId = 'puzzle-list';
-                            const puzzleListElement = document.getElementById(listElementId);
-                            if (puzzleListElement) {
-                                puzzleListElement.appendChild(puzzleSelector);
-                            }
+                            puzzleListElement.appendChild(puzzleSelector);
                         });
                     })
                     .catch(async error => {
@@ -110,7 +107,7 @@
 
             <div class="panel" style="width: 100%; height: fit-content;">
                 <div class="inner-panel">
-                    <h3>Select a puzzle to play!</h3>
+                    <h3>Choose a puzzle to play!</h3>
                     <div id="puzzle-list" class="button-container"></div>
                 </div>
             </div>
@@ -122,7 +119,7 @@
                 stored might vary depending on the device on which you play the game.</p>
             <hr style="width: 100%;">
             <div class="button-bar">
-                <div id="navbar-roles"></div>
+                <div id="puzzle-categories"></div>
             </div>
         </div>
     </div>

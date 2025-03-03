@@ -31,7 +31,8 @@ const currentPuzzle = {
     completed: false,
 };
 
-// Assume we will be loaded with a 'file' parameter that points to a puzzle file on the server.
+// Assume we will be loaded with a 'puzzle' parameter that points to a puzzle file on the server
+// and a repo in which says where it can be found (defaulting to '/puzzles/')
 // Load that puzzle and let the user play it
 document.addEventListener('DOMContentLoaded', async function () {
     const urlParams = new URLSearchParams(window.location.search);

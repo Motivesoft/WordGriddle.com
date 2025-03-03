@@ -22,7 +22,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
-            const repository = urlParams.get(`repo`) || 'playtest';
+            const repository = decodeURIComponent(urlParams.get(`repo`) || 'puzzles');
 
             // Assume we're loading from the default repo - but allow a provided one
             let repoCatalog = `/assets/${repository}/catalog.json`;
@@ -37,6 +37,10 @@
                     return response.json();
                 })
                 .then(data => {
+                    const puzzleListTitleElement = document.getElementById('puzzle-list-title-message');
+                    puzzleListTitleElement.innerHTML = `<h3>${data.prompt}</h3>`;
+
+                    const puzzleListElement = document.getElementById('puzzle-list');
                     data.puzzles.forEach(puzzle => {
                         const puzzleSelector = document.createElement('button');
                         puzzleSelector.classList.add('button');
@@ -48,11 +52,7 @@
                                 .replace("%repo", encodeURIComponent(repository));
                         });
 
-                        const listElementId = 'puzzle-list';
-                        const puzzleListElement = document.getElementById(listElementId);
-                        if (puzzleListElement) {
-                            puzzleListElement.appendChild(puzzleSelector);
-                        }
+                        puzzleListElement.appendChild(puzzleSelector);
                     });
                 })
                 .catch(async error => {
@@ -85,17 +85,6 @@
                     <path d='M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3M12 10L12 17M12 7L12 7' />
                 </svg>
             </button>
-            <!-- No 'share' for the homepage
-            <button class="toolbar-button">
-                https://eldicons.com/create?path=M18_9A2_2_0_0_1_20_11V19A2_2_0_0_1_18_21M6_21A2_2_0_0_1_4_19V11A2_2_0_0_1_6_9M12_15L12_3L15_5M12_3L9_5M6_21L18_21
-                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
-                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
-                    stroke-linecap='round' stroke-linejoin='round'>
-                    <path
-                        d='M18 9A2 2 0 0 1 20 11V19A2 2 0 0 1 18 21M6 21A2 2 0 0 1 4 19V11A2 2 0 0 1 6 9M12 15L12 3L15 5M12 3L9 5M6 21L18 21' />
-                </svg>
-            </button>
-            -->
             <button class="toolbar-button" id="themeToggleButton">
                 <!--https://eldicons.com/create?path=M3_12H4M12_3V4M21_12H20M12_21V20M5.63_5.63L6.343_6.343M18.364_18.364L17.65_17.65M18.364_5.6L17.65_6.343M5.6_18.364L6.343_17.65M12_8A4_4_0_0_1_12_16A4_4_0_0_1_12_8-->
                 <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
@@ -110,11 +99,11 @@
 
     <div class="panel">
         <div class="inner-panel" style="width: 60%;">
-            <h3>Select a puzzle to play!</h3>
+            <h3 id="puzzle-list-title-message">Select a puzzle to play!</h3>
             <div id="puzzle-list" class="button-container"></div>
             <hr style="width: 100%;">
             <div class="button-bar">
-                <div id="navbar-roles"></div>
+                <div id="puzzle-categories"></div>
             </div>
         </div>
     </div>
@@ -123,7 +112,7 @@
         <div class="icon">
             <div class="info-icon"></div>
         </div>
-        <p id="messageBoxText">This is a message.</p>
+        <p id="messageBoxText"></p>
         <button type="button" id="messageBoxOkButton">OK</button>
     </dialog>
 
