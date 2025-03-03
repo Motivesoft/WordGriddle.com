@@ -527,6 +527,7 @@ dialog button[type="button"] {
     .panel {
         flex-direction: column;
         justify-content: start;
+        align-content: center;
     }
 
     .inner-panel {
