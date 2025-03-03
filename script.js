@@ -31,12 +31,12 @@ function openMessageBox(message, type = MessageBoxType.PLAIN) {
             icon.innerHTML = '&#x2139';
             icon.className = 'info-icon';
             break;
-        
+
         case MessageBoxType.WARNING:
             icon.innerHTML = '&#x26a0';
             icon.className = 'warning-icon';
             break;
-                
+
         case MessageBoxType.ERROR:
             icon.innerHTML = '&#x2716';
             icon.className = 'error-icon';
@@ -140,12 +140,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
         .then(data => {
             if (data.roles) {
-                const navBarRight = document.getElementById('navbar-roles');
+                const puzzleCategoriesElement = document.getElementById('puzzle-categories');
 
-                if (navBarRight) {
+                if (puzzleCategoriesElement) {
                     data.roles.forEach((role) => {
-                        console.log(`Role: ${role.name}`);
-    
                         const roleButton = document.createElement('button');
                         roleButton.classList.add('button');
                         roleButton.setAttribute('type', 'button');
@@ -156,13 +154,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 window.location.href = `/`;
                             } else {
                                 // Open the puzzles page on this collection of puzzles
-                                window.location.href = `/puzzles.html?repo=${role.repo}`;
+                                window.location.href = `/puzzles.html?repo=${encodeURIComponent(role.repo)}`;
                             }
                         });
-                        navBarRight.appendChild(roleButton);
+                        puzzleCategoriesElement.appendChild(roleButton);
                     });
                 }
-            } 
+            }
         })
         .catch(async error => {
             console.error(`Failed to load site-roles:`, error);
