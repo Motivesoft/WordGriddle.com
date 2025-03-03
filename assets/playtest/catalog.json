@@ -2,11 +2,6 @@
     "prompt": "Choose a puzzle to test",
     "puzzles": [
         {
-            "title": "4x4 #8",
-            "name": "puzzle-8",
-            "locked": false
-        },
-        {
             "title": "6x6 #10",
             "name": "puzzle-10",
             "locked": false
