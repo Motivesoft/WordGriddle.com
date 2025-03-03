@@ -23,7 +23,7 @@
     --list-background: #f8f9fa;
     --list-border: #e9ecef;
     --navbar-border: #ccc;
-    --navbar-background: #e9ecef;
+    --navbar-background: transparent
     --navbar-link-active-background: #007bff;
     --navbar-link-active-color: #ffffff;
     --navbar-link-color: #007bff;
@@ -60,7 +60,7 @@
     --icon-stroke-color: #ffffff;
     --list-background: #1e1e1e;
     --list-border: #333;
-    --navbar-background: #1e1e1e;
+    --navbar-background: transparent
     --navbar-border: #333;
     --navbar-link-active-background: #64b5f6;
     --navbar-link-active-color: #ffffff;
