@@ -23,7 +23,7 @@
     --list-background: #f8f9fa;
     --list-border: #e9ecef;
     --navbar-border: #ccc;
-    --navbar-background: #e9ecef;
+    --navbar-background: transparent;
     --navbar-link-active-background: #007bff;
     --navbar-link-active-color: #ffffff;
     --navbar-link-color: #007bff;
@@ -60,7 +60,7 @@
     --icon-stroke-color: #ffffff;
     --list-background: #1e1e1e;
     --list-border: #333;
-    --navbar-background: #1e1e1e;
+    --navbar-background: transparent;
     --navbar-border: #333;
     --navbar-link-active-background: #64b5f6;
     --navbar-link-active-color: #ffffff;
@@ -137,11 +137,11 @@ body {
     padding-right: 4px;
 }
 
-#navbar-roles {
+#puzzle-categories {
     align-content: center;
 }
 
-#navbar-roles .toolbar-button {
+#puzzle-categories .toolbar-button {
     align-content: center;
     margin: 5px;
 }
@@ -285,6 +285,10 @@ a:active {
     padding: 0px 20px 20px 20px;
 }
 
+.borderless {
+    border: none;
+}
+
 .paragraph {
     margin: 0px;
     padding: 20px 20px 0px 20px;
@@ -295,7 +299,7 @@ a:active {
     border: 1px solid var(--icon-error-color); 
     border-radius: 10px; 
     padding: 20px; 
-    width: 50%;
+    width: 80%;
 } 
 
 .info {
@@ -303,7 +307,7 @@ a:active {
     border: 1px solid var(--icon-info-color); 
     border-radius: 10px; 
     padding: 20px; 
-    width: 50%;
+    width: 80%;
 } 
 
 /* ComboBox*/
@@ -523,6 +527,7 @@ dialog button[type="button"] {
     .panel {
         flex-direction: column;
         justify-content: start;
+        align-content: center;
     }
 
     .inner-panel {

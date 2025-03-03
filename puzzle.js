@@ -31,7 +31,8 @@ const currentPuzzle = {
     completed: false,
 };
 
-// Assume we will be loaded with a 'file' parameter that points to a puzzle file on the server.
+// Assume we will be loaded with a 'puzzle' parameter that points to a puzzle file on the server
+// and a repo in which says where it can be found (defaulting to '/puzzles/')
 // Load that puzzle and let the user play it
 document.addEventListener('DOMContentLoaded', async function () {
     const urlParams = new URLSearchParams(window.location.search);
@@ -371,7 +372,7 @@ async function endDragGesture() {
 
                     explode("ticker-container");
 
-                    await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved a ${getAccuracy()}% accuracy`);
+                    await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
                 }
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
@@ -573,7 +574,8 @@ function shareProgress() {
     const accuracyText = ``;
 
     let shareText = '';
-    shareText += `I have been playing WordGriddle '${currentPuzzle.puzzle.title}'\n`;
+    shareText += `I have been playing WordGriddle!\n`;
+    shareText += `Puzzle: '${currentPuzzle.puzzle.title}'\n`;
     shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} key words found, with ${getAccuracy()}% accuracy.\n`;
     shareText += `${currentPuzzle.foundExtraWords.size}/${currentPuzzle.puzzle.extraWords.length} extra words found.\n`;
     shareText += `Play this puzzle: ${window.location.href}`;
