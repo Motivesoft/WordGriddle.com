@@ -372,7 +372,7 @@ async function endDragGesture() {
 
                     explode("ticker-container");
 
-                    await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved a ${getAccuracy()}% accuracy`);
+                    await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
                 }
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {

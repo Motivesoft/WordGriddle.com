@@ -38,7 +38,7 @@
                 })
                 .then(data => {
                     const puzzleListTitleElement = document.getElementById('puzzle-list-title-message');
-                    puzzleListTitleElement.innerHTML = `<h3>${data.prompt}</h3>`;
+                    puzzleListTitleElement.innerHTML = data.prompt;
 
                     const puzzleListElement = document.getElementById('puzzle-list');
                     data.puzzles.forEach(puzzle => {
@@ -98,7 +98,7 @@
     </nav>
 
     <div class="panel">
-        <div class="inner-panel" style="width: 60%;">
+        <div class="inner-panel">
             <h3 id="puzzle-list-title-message">Select a puzzle to play!</h3>
             <div id="puzzle-list" class="button-container"></div>
             <hr style="width: 100%;">
