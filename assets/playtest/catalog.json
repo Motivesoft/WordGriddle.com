@@ -2,72 +2,72 @@
     "prompt": "Choose a puzzle to test",
     "puzzles": [
         {
-            "title": "6x6 #10",
+            "title": "#10 (6x6)",
             "name": "puzzle-10",
             "locked": false
         },
         {
-            "title": "4x4 #12",
+            "title": "#12 (4x4)",
             "name": "puzzle-12",
             "locked": false
         },
         {
-            "title": "4x4 #13",
+            "title": "#13 (4x4)",
             "name": "puzzle-13",
             "locked": false
         },
         {
-            "title": "5x5 #14",
+            "title": "#14 (5x5)",
             "name": "puzzle-14",
             "locked": false
         },
         {
-            "title": "5x5 #16",
+            "title": "#16 (5x5)",
             "name": "puzzle-16",
             "locked": false
         },
         {
-            "title": "3x3 #17",
+            "title": "#17 (3x3)",
             "name": "puzzle-17",
             "locked": false
         },
         {
-            "title": "3x3 #18",
+            "title": "#18 (3x3)",
             "name": "puzzle-18",
             "locked": false
         },
         {
-            "title": "3x3 #19",
+            "title": "#19 (3x3)",
             "name": "puzzle-19",
             "locked": false
         },
         {
-            "title": "4x4 #20",
+            "title": "#20 (4x4)",
             "name": "puzzle-20",
             "locked": false
         },
         {
-            "title": "4x4 #21",
+            "title": "#21 (4x4)",
             "name": "puzzle-21",
             "locked": false
         },
         {
-            "title": "4x4 #22",
+            "title": "#22 (4x4)",
             "name": "puzzle-22",
             "locked": false
         },
         {
-            "title": "4x4 #24",
+            "title": "#24 (4x4)",
             "name": "puzzle-24",
             "locked": false
         },
         {
-            "title": "4x4 #25",
+            "title": "#25 (4x4)",
             "name": "puzzle-25",
             "locked": false
         },
         {
-            "title": "5x5 #26",
+            "title": "#26 (5x5)",
             "name": "puzzle-26",
             "locked": false
         }
