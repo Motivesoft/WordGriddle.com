@@ -70,6 +70,66 @@
             "title": "#26 (5x5)",
             "name": "puzzle-26",
             "locked": false
+        },
+        {
+            "title": "#27 (4x4)",
+            "name": "puzzle-27",
+            "locked": false
+        },
+        {
+            "title": "#28 (6x6)",
+            "name": "puzzle-28",
+            "locked": false
+        },
+        {
+            "title": "#29 (4x4)",
+            "name": "puzzle-29",
+            "locked": false
+        },
+        {
+            "title": "#30 (4x4)",
+            "name": "puzzle-30",
+            "locked": false
+        },
+        {
+            "title": "#31 (4x4)",
+            "name": "puzzle-31",
+            "locked": false
+        },
+        {
+            "title": "#32 (4x4)",
+            "name": "puzzle-32",
+            "locked": false
+        },
+        {
+            "title": "#33 (4x4)",
+            "name": "puzzle-33",
+            "locked": false
+        },
+        {
+            "title": "#34 (3x3)",
+            "name": "puzzle-34",
+            "locked": false
+        },
+        {
+            "title": "#35 (3x3)",
+            "name": "puzzle-35",
+            "locked": false
+        },
+        {
+            "title": "#36 (3x3)",
+            "name": "puzzle-36",
+            "locked": false
+        },
+        {
+            "title": "#37 (3x3)",
+            "name": "puzzle-37",
+            "locked": false
+        },
+        {
+            "title": "#38 (3x3)",
+            "name": "puzzle-38",
+            "locked": false
         }
     ]
 }
