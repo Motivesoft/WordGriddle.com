@@ -1,62 +1,63 @@
 {
+    "prompt": "Choose one of our puzzles to play!",
     "puzzles": [
         {
-            "title": "3x3 #1",
+            "title": "#1 (3x3)",
             "name": "puzzle-1",
             "locked": true
         },
         {
-            "title": "4x4 #2",
+            "title": "#2 (4x4)",
             "name": "puzzle-2",
             "locked": true
         },
         {
-            "title": "7x7 #3",
+            "title": "#3 (7x7)",
             "name": "puzzle-3",
             "locked": true
         },
         {
-            "title": "3x3 #4",
+            "title": "#4 (3x3)",
             "name": "puzzle-4",
             "locked": true
         },
         {
-            "title": "3x3 #5",
+            "title": "#5 (3x3)",
             "name": "puzzle-5",
             "locked": true
         },
         {
-            "title": "4x4 #6",
+            "title": "#6 (4x4)",
             "name": "puzzle-6",
             "locked": true
         },
         {
-            "title": "4x4 #7",
+            "title": "#7 (4x4)",
             "name": "puzzle-7",
             "locked": true
         },
         {
-            "title": "4x4 #8",
+            "title": "#8 (4x4)",
             "name": "puzzle-8",
             "locked": true
         },
         {
-            "title": "4x4 #9",
+            "title": "#9 (4x4)",
             "name": "puzzle-9",
             "locked": true
         },
         {
-            "title": "4x4 #11",
+            "title": "#11 (4x4)",
             "name": "puzzle-11",
             "locked": true
         },
         {
-            "title": "8x8 #15",
+            "title": "#15 (8x8)",
             "name": "puzzle-15",
             "locked": true
         },
         {
-            "title": "3x3 #23",
+            "title": "#23 (3x3)",
             "name": "puzzle-23",
             "locked": true
         }
