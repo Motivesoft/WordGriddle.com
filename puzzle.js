@@ -16,6 +16,7 @@ const PuzzleLocalStorageKeys = Object.freeze({
 
 // State
 const currentPuzzle = {
+    puzzleName: null,
     puzzle: null,
 
     // Transient state variables
@@ -36,8 +37,8 @@ const currentPuzzle = {
 // Load that puzzle and let the user play it
 document.addEventListener('DOMContentLoaded', async function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const puzzleName = urlParams.get('puzzle');
-    const puzzleRepo = urlParams.get(`repo`) || `puzzles`;
+    const puzzleName = urlParams.get('p');
+    const puzzleRepo = urlParams.get(`r`) || `puzzles`;
 
     // Assuming we have a file, load it and populate the page
     if (puzzleName) {
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             })
             .then(data => {
                 if (data.puzzle) {
-                    openPuzzle(data.puzzle);
+                    openPuzzle(puzzleName, data.puzzle);
                 } else {
                     throw new Error("Missing puzzle information");
                 }
@@ -65,7 +66,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 });
 
-function openPuzzle(puzzle) {
+function openPuzzle(puzzleName, puzzle) {
+    currentPuzzle.puzzleName = puzzleName;
     currentPuzzle.puzzle = puzzle;
 
     // Display a meaningful title
@@ -571,20 +573,18 @@ function attachEventListeners() {
 }
 
 function shareProgress() {
-    const accuracyText = ``;
-
     let shareText = '';
     shareText += `I have been playing WordGriddle!\n`;
-    shareText += `Puzzle: '${currentPuzzle.puzzle.title}'\n`;
+    shareText += `Puzzle: '${currentPuzzle.puzzle.title}' - ${window.location.origin}/?p=${currentPuzzle.puzzleName}\n`;
     shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} key words found, with ${getAccuracy()}% accuracy.\n`;
     shareText += `${currentPuzzle.foundExtraWords.size}/${currentPuzzle.puzzle.extraWords.length} extra words found.\n`;
-    shareText += `Play this puzzle: ${window.location.href}`;
+    shareText += `${window.location.origin}`;
 
     // Copy to clipboard
     navigator.clipboard
         .writeText(shareText)
         .then(async () => {
-            await openMessageBox('Puzzle progress copied to the clipboard.', MessageBoxType.INFO);
+            await openMessageBox('Puzzle progress copied to the clipboard.', MessageBoxType.PLAIN);
         })
         .catch(async (err) => {
             await openMessageBox('Failed to copy progress information to the clipboard.', MessageBoxType.ERROR);
@@ -1087,7 +1087,7 @@ async function resetProgress() {
         localStorage.removeItem(getProgressStorageKey());
 
         // Reload everything
-        openPuzzle(currentPuzzle.puzzle);
+        openPuzzle(currentPuzzle.puzzleName, currentPuzzle.puzzle);
     }
 }
 

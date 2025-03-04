@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 window.location.href = `/`;
                             } else {
                                 // Open the puzzles page on this collection of puzzles
-                                window.location.href = `/puzzles.html?repo=${encodeURIComponent(role.repo)}`;
+                                window.location.href = `/puzzles.html?r=${encodeURIComponent(role.repo)}`;
                             }
                         });
                         puzzleCategoriesElement.appendChild(roleButton);

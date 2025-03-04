@@ -20,12 +20,20 @@
     <scrip>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+                // As a URL shortening, look for a special request parameter
+                // e.g. https://wordgriddle.com/?p=puzzle-1
+                // If found, go straight to that puzzle - otherwise do the normal homepage thing
                 const urlParams = new URLSearchParams(window.location.search);
+                const puzzle = decodeURIComponent(urlParams.get(`p`) || '');
+                if (puzzle.length) {
+                    window.location.replace(`puzzle.html?p=${puzzle}`);
+                    return;
+                }
 
                 // Assume we're loading from the default repo as this is the main page
                 let repository = 'puzzles';
                 let puzzleCatalog = `/assets/puzzles/catalog.json`;
-                let puzzleUrlLink = `puzzle.html?puzzle=%name`;
+                let puzzleUrlLink = `puzzle.html?p=%name`;
 
                 fetch(puzzleCatalog)
                     .then(response => {
@@ -104,7 +112,7 @@
                     offers a classic word grid challenge, guaranteed to provide hours of brain-teasing fun.
                 </p>
                 <p class="paragraph">
-                    Start with our <a href="puzzle.html?puzzle=puzzle-1">demo puzzle</a>!
+                    Start with our <a href="puzzle.html?p=puzzle-1">demo puzzle</a>!
                 </p>
             </div>
 

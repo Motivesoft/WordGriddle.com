@@ -22,11 +22,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
-            const repository = decodeURIComponent(urlParams.get(`repo`) || 'puzzles');
+            const repository = decodeURIComponent(urlParams.get(`r`) || 'puzzles');
 
             // Assume we're loading from the default repo - but allow a provided one
             let repoCatalog = `/assets/${repository}/catalog.json`;
-            let repoUrlLink = `puzzle.html?puzzle=%name&repo=%repo`;
+            let repoUrlLink = `puzzle.html?p=%name&r=%repo`;
 
             fetch(repoCatalog)
                 .then(response => {
