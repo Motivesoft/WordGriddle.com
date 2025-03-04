@@ -363,18 +363,22 @@ async function endDragGesture() {
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
                 updateRedGreyDisplay();
                 updateWordsFound();
-                updateProgress();
-
+                
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
+                    // Done - set the 'completed' state and save progress 
                     currentPuzzle.completed = true;
+                    updateProgress();
 
                     // Tidy up before showing the finished message
                     updatePuzzleProgressMessage();
                     clearTrail();
 
                     explode("ticker-container");
-
+                    
                     await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
+                } else {
+                    // Simply save the current progress
+                    updateProgress();
                 }
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
@@ -1035,7 +1039,8 @@ function updateProgress() {
     const storedValue = JSON.stringify({
         keyWords: keyWordIndexList,
         extraWords: extraWordIndexList,
-        nonWordCount: currentPuzzle.foundNonWords
+        nonWordCount: currentPuzzle.foundNonWords,
+        completed: currentPuzzle.completed
     });
 
     localStorage.setItem(getProgressStorageKey(), storedValue);
@@ -1071,8 +1076,16 @@ function restoreProgress() {
             // nonWords - Retain our ability to calculate accuracy
             currentPuzzle.foundNonWords = progressData.nonWordCount;
 
-            // Infer completed state
-            currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
+            // Storing the 'completed' state was introduced during the Alpha program.
+            // Be sensitive to the fact that some users may have saved sessions without this flag
+            if ("completed" in progressData) {
+                console.log("completed in results");
+                currentPuzzle.completed = progressData.completed;
+            } else {
+                // Infer completed state
+                console.log("completed not in results");
+                currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
+            }
         } catch (error) {
             console.error("Failed to restore progress", error);
         }

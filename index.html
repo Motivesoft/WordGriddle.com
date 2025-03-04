@@ -17,58 +17,114 @@
     <link rel="canonical" href="https://wordgriddle.com" />
     <script src="theme.js"></script>
     <script src="script.js" defer></script>
-    <scrip>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                // As a URL shortening, look for a special request parameter
-                // e.g. https://wordgriddle.com/?p=puzzle-1
-                // If found, go straight to that puzzle - otherwise do the normal homepage thing
-                const urlParams = new URLSearchParams(window.location.search);
-                const puzzle = decodeURIComponent(urlParams.get(`p`) || '');
-                if (puzzle.length) {
-                    window.location.replace(`puzzle.html?p=${puzzle}`);
-                    return;
-                }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // As a URL shortening, look for a special request parameter
+            // e.g. https://wordgriddle.com/?p=puzzle-1
+            // If found, go straight to that puzzle - otherwise do the normal homepage thing
+            const urlParams = new URLSearchParams(window.location.search);
+            const puzzle = decodeURIComponent(urlParams.get(`p`) || '');
+            if (puzzle.length) {
+                window.location.replace(`puzzle.html?p=${puzzle}`);
+                return;
+            }
 
-                // Assume we're loading from the default repo as this is the main page
-                let repository = 'puzzles';
-                let puzzleCatalog = `/assets/puzzles/catalog.json`;
-                let puzzleUrlLink = `puzzle.html?p=%name`;
+            // Assume we're loading from the default repo as this is the main page
+            let repository = 'puzzles';
+            let puzzleCatalog = `/assets/puzzles/catalog.json`;
+            let puzzleUrlLink = `puzzle.html?p=%name`;
 
-                fetch(puzzleCatalog)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error status: ${response.status}`);
+            fetch(puzzleCatalog)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error status: ${response.status}`);
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    const puzzleListElement = document.getElementById('puzzle-list');
+
+                    data.puzzles.forEach(puzzle => {
+                        const puzzleSelector = document.createElement('button');
+                        puzzleSelector.classList.add('button');
+                        puzzleSelector.setAttribute('type', 'button');
+                        puzzleSelector.textContent = puzzle.title;
+
+                        // See if we have any stored progress for this puzzle
+                        // TODO push this into an external script
+                        const progressStorageKey = "%puzzleName.progress".replace("%puzzleName", puzzle.name);
+                        if (localStorage.getItem(progressStorageKey)) {
+                            puzzleSelector.classList.add('played');
+                        } else {
+                            puzzleSelector.classList.add('unplayed');
                         }
 
-                        return response.json();
-                    })
-                    .then(data => {
-                        const puzzleListElement = document.getElementById('puzzle-list');
+                        // puzzleSelector.addEventListener('click', function () {
+                        //     window.location.href = puzzleUrlLink
+                        //         .replace("%name", encodeURIComponent(puzzle.name));
+                        // });
 
-                        data.puzzles.forEach(puzzle => {
-                            const puzzleSelector = document.createElement('button');
-                            puzzleSelector.classList.add('button');
-                            puzzleSelector.setAttribute('type', 'button');
-                            puzzleSelector.textContent = puzzle.title;
-                            puzzleSelector.addEventListener('click', function () {
-                                window.location.href = puzzleUrlLink
-                                    .replace("%name", encodeURIComponent(puzzle.name));
-                            });
+                        //puzzleListElement.appendChild(puzzleSelector);
 
-                            puzzleListElement.appendChild(puzzleSelector);
+
+                        const pB = document.createElement('button');
+                        pB.setAttribute('class', 'puzzle-button');
+                        pB.setAttribute('type', 'button');
+                        const pS1 = document.createElement('span');
+                        pS1.setAttribute('class', 'left-text');
+                        pS1.textContent = puzzle.title.split(' ')[0];
+                        const pS2 = document.createElement('span');
+                        pS2.setAttribute('class', 'center-text');
+                        pS2.textContent = puzzle.title.split(' ')[1].replace(/[()]/g, '');
+                        const pS3 = document.createElement('svg');
+                        pS3.setAttribute('class', 'right-icon');
+
+
+                        const progress = localStorage.getItem(progressStorageKey);
+
+                        if (progress) {
+                            const details = JSON.parse(progress);
+                            if ("completed" in details && details.completed) {
+                                pS3.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M5 12L10 17L20 7'/></svg>`;
+                                pB.style.backgroundColor = 'var(--puzzle-button-played)';
+                                pB.style.color = 'var(--text-color)';
+                            } else {
+                                pS3.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M8 4H16A2 2 0 0 1 18 6V20L12 16L6 20V6A2 2 0 0 1 8 4'/></svg>`;
+                                pB.style.backgroundColor = 'var(--puzzle-button-playing)';
+                                pB.style.color = 'var(--text-color)';
+                            }
+                        } else {
+                            pS3.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M9 12H15M12 9V15M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3'/></svg>`;
+                            pB.style.backgroundColor = 'var(--puzzle-button-unplayed)';
+                            pB.style.color = 'var(--text-color)';
+                        }
+
+                        pB.appendChild(pS1);
+                        pB.appendChild(pS2);
+                        pB.appendChild(pS3);
+                        puzzleListElement.appendChild(pB);
+
+
+                        pB.addEventListener('click', function () {
+                            window.location.href = puzzleUrlLink
+                                .replace("%name", encodeURIComponent(puzzle.name));
                         });
-                    })
-                    .catch(async error => {
-                        console.error(`Failed to load puzzle list: '${puzzleCatalog}'`, error);
-                        await openMessageBox(`Failed to load puzzle list from '${puzzleRepo}'.`, MessageBoxType.ERROR);
 
-                        // Go back to the home page
-                        window.location.href = "/";
+
+
+
                     });
-            });
-        </script>
-    </scrip>
+                })
+                .catch(async error => {
+                    console.error(`Failed to load puzzle list: '${puzzleCatalog}'`, error);
+                    await openMessageBox(`Failed to load puzzle list from '${puzzleRepo}'.`, MessageBoxType.ERROR);
+
+                    // Go back to the home page
+                    window.location.href = "/";
+                });
+        });
+    </script>
 </head>
 
 <body>
@@ -127,7 +183,8 @@
                 <p class="paragraph">This is an early version of our game. It should work just fine, but please forgive
                     anything that goes wrong.</p>
                 <p class="paragraph">Have fun, and please give us feedback and ideas for your own puzzles!</p>
-                <p class="paragraph note info">Hint: Use the button at the top-right of the screen to switch between light
+                <p class="paragraph note info">Hint: Use the button at the top-right of the screen to switch between
+                    light
                     and dark mode.</p>
                 <p class="paragraph note caution">Note: The game will save your progress as you play each puzzle, but in
                     this version, how long your results are
