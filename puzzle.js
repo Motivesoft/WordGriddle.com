@@ -573,8 +573,6 @@ function attachEventListeners() {
 }
 
 function shareProgress() {
-    const accuracyText = ``;
-
     let shareText = '';
     shareText += `I have been playing WordGriddle!\n`;
     shareText += `Puzzle: '${currentPuzzle.puzzle.title}' - ${window.location.origin}/?p=${currentPuzzle.puzzleName}\n`;
