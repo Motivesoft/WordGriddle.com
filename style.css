@@ -31,7 +31,8 @@
     --panel-background: #e9ecef;
     --panel-border: #ccc;
     --product-container-color: #ffffff;
-    --puzzle-button-played: #53acff;
+    --puzzle-button-playing: #53acff;
+    --puzzle-button-played: #ff5e53;
     --puzzle-button-unplayed: #7decac;
     --tab-active-background: #ffffff;
     --tab-background: #f1f1f1;
@@ -71,7 +72,8 @@
     --panel-background: #1e1e1e;
     --panel-border: #333;
     --product-container-color: #ffffff;
-    --puzzle-button-played: #4a90e2;
+    --puzzle-button-playing: #4a90e2;
+    --puzzle-button-played: #e24a4a;
     --puzzle-button-unplayed: #108040;
     --tab-active-background: #1e1e1e;
     --tab-background: #2c2c2c;
@@ -286,7 +288,7 @@ a:active {
 
 .playing {
     color: var(--text-color);
-    background-color: var(--puzzle-button-played);
+    background-color: var(--puzzle-button-playing);
 }
 
 .played {
