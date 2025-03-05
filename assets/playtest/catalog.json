@@ -1,135 +1,130 @@
 {
-    "prompt": "Choose a puzzle to test",
-    "puzzles": [
-        {
-            "title": "#10 (6x6)",
-            "name": "puzzle-10",
-            "locked": false
-        },
-        {
-            "title": "#12 (4x4)",
-            "name": "puzzle-12",
-            "locked": false
-        },
-        {
-            "title": "#13 (4x4)",
-            "name": "puzzle-13",
-            "locked": false
-        },
-        {
-            "title": "#14 (5x5)",
-            "name": "puzzle-14",
-            "locked": false
-        },
-        {
-            "title": "#16 (5x5)",
-            "name": "puzzle-16",
-            "locked": false
-        },
-        {
-            "title": "#17 (3x3)",
-            "name": "puzzle-17",
-            "locked": false
-        },
-        {
-            "title": "#18 (3x3)",
-            "name": "puzzle-18",
-            "locked": false
-        },
-        {
-            "title": "#19 (3x3)",
-            "name": "puzzle-19",
-            "locked": false
-        },
-        {
-            "title": "#20 (4x4)",
-            "name": "puzzle-20",
-            "locked": false
-        },
-        {
-            "title": "#21 (4x4)",
-            "name": "puzzle-21",
-            "locked": false
-        },
-        {
-            "title": "#22 (4x4)",
-            "name": "puzzle-22",
-            "locked": false
-        },
-        {
-            "title": "#24 (4x4)",
-            "name": "puzzle-24",
-            "locked": false
-        },
-        {
-            "title": "#25 (4x4)",
-            "name": "puzzle-25",
-            "locked": false
-        },
-        {
-            "title": "#26 (5x5)",
-            "name": "puzzle-26",
-            "locked": false
-        },
-        {
-            "title": "#27 (4x4)",
-            "name": "puzzle-27",
-            "locked": false
-        },
-        {
-            "title": "#28 (6x6)",
-            "name": "puzzle-28",
-            "locked": false
-        },
-        {
-            "title": "#29 (4x4)",
-            "name": "puzzle-29",
-            "locked": false
-        },
-        {
-            "title": "#30 (4x4)",
-            "name": "puzzle-30",
-            "locked": false
-        },
-        {
-            "title": "#31 (4x4)",
-            "name": "puzzle-31",
-            "locked": false
-        },
-        {
-            "title": "#32 (4x4)",
-            "name": "puzzle-32",
-            "locked": false
-        },
-        {
-            "title": "#33 (4x4)",
-            "name": "puzzle-33",
-            "locked": false
-        },
-        {
-            "title": "#34 (3x3)",
-            "name": "puzzle-34",
-            "locked": false
-        },
-        {
-            "title": "#35 (3x3)",
-            "name": "puzzle-35",
-            "locked": false
-        },
-        {
-            "title": "#36 (3x3)",
-            "name": "puzzle-36",
-            "locked": false
-        },
-        {
-            "title": "#37 (3x3)",
-            "name": "puzzle-37",
-            "locked": false
-        },
-        {
-            "title": "#38 (3x3)",
-            "name": "puzzle-38",
-            "locked": false
-        }
-    ]
+  "prompt": "Choose a puzzle to test",
+  "puzzles": [
+    {
+      "id": 12,
+      "size": 4,
+      "name": "puzzle-12"
+    },
+    {
+      "id": 13,
+      "size": 4,
+      "name": "puzzle-13"
+    },
+    {
+      "id": 14,
+      "size": 5,
+      "name": "puzzle-14"
+    },
+    {
+      "id": 16,
+      "size": 5,
+      "name": "puzzle-16"
+    },
+    {
+      "id": 17,
+      "size": 3,
+      "name": "puzzle-17"
+    },
+    {
+      "id": 18,
+      "size": 3,
+      "name": "puzzle-18"
+    },
+    {
+      "id": 19,
+      "size": 3,
+      "name": "puzzle-19"
+    },
+    {
+      "id": 20,
+      "size": 4,
+      "name": "puzzle-20"
+    },
+    {
+      "id": 21,
+      "size": 4,
+      "name": "puzzle-21"
+    },
+    {
+      "id": 22,
+      "size": 4,
+      "name": "puzzle-22"
+    },
+    {
+      "id": 24,
+      "size": 4,
+      "name": "puzzle-24"
+    },
+    {
+      "id": 25,
+      "size": 4,
+      "name": "puzzle-25"
+    },
+    {
+      "id": 26,
+      "size": 5,
+      "name": "puzzle-26"
+    },
+    {
+      "id": 27,
+      "size": 4,
+      "name": "puzzle-27"
+    },
+    {
+      "id": 28,
+      "size": 6,
+      "name": "puzzle-28"
+    },
+    {
+      "id": 29,
+      "size": 4,
+      "name": "puzzle-29"
+    },
+    {
+      "id": 30,
+      "size": 4,
+      "name": "puzzle-30"
+    },
+    {
+      "id": 31,
+      "size": 4,
+      "name": "puzzle-31"
+    },
+    {
+      "id": 32,
+      "size": 4,
+      "name": "puzzle-32"
+    },
+    {
+      "id": 33,
+      "size": 4,
+      "name": "puzzle-33"
+    },
+    {
+      "id": 34,
+      "size": 3,
+      "name": "puzzle-34"
+    },
+    {
+      "id": 35,
+      "size": 3,
+      "name": "puzzle-35"
+    },
+    {
+      "id": 36,
+      "size": 3,
+      "name": "puzzle-36"
+    },
+    {
+      "id": 37,
+      "size": 3,
+      "name": "puzzle-37"
+    },
+    {
+      "id": 38,
+      "size": 3,
+      "name": "puzzle-38"
+    }
+  ]
 }

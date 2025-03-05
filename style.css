@@ -31,6 +31,9 @@
     --panel-background: #e9ecef;
     --panel-border: #ccc;
     --product-container-color: #ffffff;
+    --puzzle-button-playing: #53acff;
+    --puzzle-button-played: #ff5e53;
+    --puzzle-button-unplayed: #7decac;
     --tab-active-background: #ffffff;
     --tab-background: #f1f1f1;
     --tab-border: #ccc;
@@ -69,6 +72,9 @@
     --panel-background: #1e1e1e;
     --panel-border: #333;
     --product-container-color: #ffffff;
+    --puzzle-button-playing: #4a90e2;
+    --puzzle-button-played: #e24a4a;
+    --puzzle-button-unplayed: #108040;
     --tab-active-background: #1e1e1e;
     --tab-background: #2c2c2c;
     --tab-border: #444;
@@ -250,6 +256,50 @@ a:active {
 
 .button.active {
     background-color: var(--button-active-background);
+}
+
+
+/* Puzzle buttons */
+
+.puzzle-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    font-size: 16px;
+    border: 1px solid var(--control-border);
+    border-radius: 4px;
+}
+
+.puzzle-button .left-text {
+    text-align: left;
+    width: min-content;
+    flex: 1;
+}
+
+.puzzle-button .center-text {
+    transform: translateX(-50%);
+    font-size: smaller;
+}
+
+.puzzle-button .right-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.playing {
+    color: var(--text-color);
+    background-color: var(--puzzle-button-playing);
+}
+
+.played {
+    color: var(--text-color);
+    background-color: var(--puzzle-button-played);
+}
+
+.unplayed {
+    color: var(--text-color);
+    background-color: var(--puzzle-button-unplayed);
 }
 
 /* Panel */

@@ -42,15 +42,13 @@
 
                     const puzzleListElement = document.getElementById('puzzle-list');
                     data.puzzles.forEach(puzzle => {
-                        const puzzleSelector = document.createElement('button');
-                        puzzleSelector.classList.add('button');
-                        puzzleSelector.setAttribute('type', 'button');
-                        puzzleSelector.textContent = puzzle.title;
+                        const puzzleSelector = createPuzzleSelector(puzzle);
+                        
                         puzzleSelector.addEventListener('click', function () {
-                            window.location.href = repoUrlLink
+                            window.location.href = puzzleUrlLink
                                 .replace("%name", encodeURIComponent(puzzle.name))
                                 .replace("%repo", encodeURIComponent(repository));
-                        });
+                        });        
 
                         puzzleListElement.appendChild(puzzleSelector);
                     });
