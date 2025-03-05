@@ -46,40 +46,13 @@
                     const puzzleListElement = document.getElementById('puzzle-list');
 
                     data.puzzles.forEach(puzzle => {
-                        const puzzleSelector = document.createElement('button');
-                        puzzleSelector.setAttribute('class', 'puzzle-button');
-                        puzzleSelector.setAttribute('type', 'button');
-
-                        const puzzleSelectorName = document.createElement('span');
-                        puzzleSelectorName.setAttribute('class', 'left-text');
-                        puzzleSelectorName.textContent = puzzle.title;
-                        
-                        const puzzleSelectorIcon = document.createElement('svg');
-                        puzzleSelectorIcon.setAttribute('class', 'right-icon');
-
-                        // Get the status (played, unplayed, ...)
-                        const puzzleStatus = getPuzzleStatus(puzzle.name);
-                        if (puzzleStatus === PuzzleStatus.NONE) {
-                            // Unplayed or new puzzle
-                            puzzleSelector.classList.add('unplayed');
-                            puzzleSelectorIcon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M9 12H15M12 9V15M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3'/></svg>`;
-                        } else if (puzzleStatus === PuzzleStatus.COMPLETED) {
-                            // Completed puzzle
-                            puzzleSelector.classList.add('played');
-                            puzzleSelectorIcon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M5 12L10 17L20 7'/></svg>`;
-                        } else {
-                            // In progress puzzle
-                            puzzleSelector.classList.add('playing');
-                            puzzleSelectorIcon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M8 4H16A2 2 0 0 1 18 6V20L12 16L6 20V6A2 2 0 0 1 8 4'/></svg>`;
-                        }
+                        const puzzleSelector = createPuzzleSelector(puzzle.name, puzzle.title);
                         
                         puzzleSelector.addEventListener('click', function () {
                             window.location.href = puzzleUrlLink
                                 .replace("%name", encodeURIComponent(puzzle.name));
                         });        
 
-                        puzzleSelector.appendChild(puzzleSelectorName);
-                        puzzleSelector.appendChild(puzzleSelectorIcon);
                         puzzleListElement.appendChild(puzzleSelector);
                     });
                 })
