@@ -47,6 +47,11 @@
             "locked": true
         },
         {
+            "title": "#10 (6x6)",
+            "name": "puzzle-10",
+            "locked": true
+        },
+        {
             "title": "#11 (4x4)",
             "name": "puzzle-11",
             "locked": true
