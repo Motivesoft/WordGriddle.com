@@ -178,3 +178,34 @@ async function displayVersion(elementId) {
             }
         });
 }
+
+// Common puzzle status stuff
+
+// Some functions for general access to and management of puzzle collections
+
+const PuzzleStatus = Object.freeze({
+    NONE: "0",
+    STARTED: "1",
+    MIDWAY: "2",
+    NEARLY: "3",
+    COMPLETED: "4"
+});
+
+// Internal method
+function getPuzzleStatusKey(puzzleName) {
+    return `${puzzleName}.status`;
+}
+
+function getPuzzleStatus(puzzleName) {
+    const status = localStorage.getItem(getPuzzleStatusKey(puzzleName));
+    return status ? status : PuzzleStatus.NONE;
+}
+
+function setPuzzleStatus(puzzleName, puzzleStatus) {
+    localStorage.setItem(getPuzzleStatusKey(puzzleName), puzzleStatus);
+}    
+
+function clearPuzzleStatus(puzzleName) {
+    // We could set this to NONE, but I prefer reducing localStorage use where we can
+    return localStorage.clear(getPuzzleStatusKey(puzzleName));
+}

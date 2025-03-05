@@ -62,7 +62,10 @@ document.addEventListener('DOMContentLoaded', async function () {
                 await openMessageBox(`Failed to load puzzle '${puzzleName}'.`, MessageBoxType.ERROR);
             });
     } else {
-        await openMessageBox('This page needs to be launched from the puzzles catalog page.', MessageBoxType.ERROR);
+        await openMessageBox('This page needs to be launched by selecting a puzzle to play.', MessageBoxType.ERROR);
+
+        // Go to the home page
+        window.location.replace("/");
     }
 });
 
@@ -363,18 +366,23 @@ async function endDragGesture() {
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
                 updateRedGreyDisplay();
                 updateWordsFound();
-                updateProgress();
-
+                
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
                     currentPuzzle.completed = true;
+                    
+                    // We've just found a word and completed the puzzle. Store the progress update
+                    updateProgress();
 
                     // Tidy up before showing the finished message
                     updatePuzzleProgressMessage();
                     clearTrail();
-
+                    
                     explode("ticker-container");
-
+                    
                     await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
+                } else {
+                    // Puzzle not yet finished, but a word found nonetheless. Update the progress
+                    updateProgress();
                 }
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
@@ -1039,6 +1047,29 @@ function updateProgress() {
     });
 
     localStorage.setItem(getProgressStorageKey(), storedValue);
+
+    // Update the status value we'll use on the puzzles page to help users track the puzzles they're
+    // working on
+    let puzzleStatus = PuzzleStatus.COMPLETED;
+    if (!currentPuzzle.completed) {
+        const wordsFound = currentPuzzle.foundKeyWords.size;
+        const wordsTotal = currentPuzzle.puzzle.keyWords.length;
+        const percentComplete = Math.floor( 100 * wordsFound / wordsTotal );
+        
+        if (percentComplete < 33 ) {
+            // We are only in this method because the user did something with the puzzle,
+            // so even if it wasn't finding a key word, it still counts as having at least started
+    
+            puzzleStatus = PuzzleStatus.STARTED;
+        }
+        else if (percentComplete < 66 ) {
+            puzzleStatus = PuzzleStatus.MIDWAY;
+        } else {
+            puzzleStatus = PuzzleStatus.NEARLY;
+        }
+    }
+
+    setPuzzleStatus(currentPuzzle.puzzleName, puzzleStatus);
 }
 
 function restoreProgress() {
@@ -1085,6 +1116,9 @@ async function resetProgress() {
     if (userConfirmed) {
         // Clear stored information
         localStorage.removeItem(getProgressStorageKey());
+
+        // Reset this back to being an unplayed puzzle as far as the list of puzzles is concerned
+        clearPuzzleStatus(currentPuzzle.puzzleName);
 
         // Reload everything
         openPuzzle(currentPuzzle.puzzleName, currentPuzzle.puzzle);
