@@ -46,7 +46,7 @@
                     const puzzleListElement = document.getElementById('puzzle-list');
 
                     data.puzzles.forEach(puzzle => {
-                        const puzzleSelector = createPuzzleSelector(puzzle.name, puzzle.title);
+                        const puzzleSelector = createPuzzleSelector(puzzle);
                         
                         puzzleSelector.addEventListener('click', function () {
                             window.location.href = puzzleUrlLink

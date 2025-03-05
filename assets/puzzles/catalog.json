@@ -1,65 +1,65 @@
 {
-    "prompt": "Choose one of our puzzles to play!",
-    "puzzles": [
-        {
-            "title": "#1 (3x3)",
-            "name": "puzzle-1",
-            "locked": true
-        },
-        {
-            "title": "#2 (4x4)",
-            "name": "puzzle-2",
-            "locked": true
-        },
-        {
-            "title": "#3 (7x7)",
-            "name": "puzzle-3",
-            "locked": true
-        },
-        {
-            "title": "#4 (3x3)",
-            "name": "puzzle-4",
-            "locked": true
-        },
-        {
-            "title": "#5 (3x3)",
-            "name": "puzzle-5",
-            "locked": true
-        },
-        {
-            "title": "#6 (4x4)",
-            "name": "puzzle-6",
-            "locked": true
-        },
-        {
-            "title": "#7 (4x4)",
-            "name": "puzzle-7",
-            "locked": true
-        },
-        {
-            "title": "#8 (4x4)",
-            "name": "puzzle-8",
-            "locked": true
-        },
-        {
-            "title": "#9 (4x4)",
-            "name": "puzzle-9",
-            "locked": true
-        },
-        {
-            "title": "#11 (4x4)",
-            "name": "puzzle-11",
-            "locked": true
-        },
-        {
-            "title": "#15 (8x8)",
-            "name": "puzzle-15",
-            "locked": true
-        },
-        {
-            "title": "#23 (3x3)",
-            "name": "puzzle-23",
-            "locked": true
-        }
-    ]
+  "prompt": "Choose one of our puzzles to play!",
+  "puzzles": [
+    {
+      "id": 1,
+      "size": 3,
+      "name": "puzzle-1"
+    },
+    {
+      "id": 2,
+      "size": 4,
+      "name": "puzzle-2"
+    },
+    {
+      "id": 3,
+      "size": 7,
+      "name": "puzzle-3"
+    },
+    {
+      "id": 4,
+      "size": 3,
+      "name": "puzzle-4"
+    },
+    {
+      "id": 5,
+      "size": 3,
+      "name": "puzzle-5"
+    },
+    {
+      "id": 6,
+      "size": 4,
+      "name": "puzzle-6"
+    },
+    {
+      "id": 7,
+      "size": 4,
+      "name": "puzzle-7"
+    },
+    {
+      "id": 8,
+      "size": 4,
+      "name": "puzzle-8"
+    },
+    {
+      "id": 9,
+      "size": 4,
+      "name": "puzzle-9"
+    },
+    {
+      "id": 11,
+      "size": 4,
+      "name": "puzzle-11"
+    },
+    {
+      "id": 15,
+      "size": 8,
+      "name": "puzzle-15"
+    },
+    {
+      "id": 23,
+      "size": 3,
+      "name": "puzzle-23"
+    }
+  ]
 }

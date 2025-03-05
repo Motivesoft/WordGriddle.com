@@ -218,21 +218,31 @@ function clearPuzzleStatus(puzzleName, puzzleTitle) {
     return localStorage.clear(getPuzzleStatusKey(puzzleName));
 }
 
-function createPuzzleSelector(puzzleName, puzzleTitle) {
+function createPuzzleSelector(puzzle) {
+    // Get the status (played, unplayed, ...)
+    const puzzleStatus = getPuzzleStatus(puzzle.name);
+
+    // Build the button piece by piece
     const puzzleSelector = document.createElement('button');
     puzzleSelector.setAttribute('class', 'puzzle-button');
     puzzleSelector.setAttribute('type', 'button');
 
+    // Title text
     const puzzleSelectorName = document.createElement('span');
     puzzleSelectorName.setAttribute('class', 'left-text');
-    puzzleSelectorName.textContent = puzzleTitle;
+    puzzleSelectorName.textContent = `#${puzzle.id}`;
     
+    // Size
+    const puzzleSelectorSize = document.createElement('span');
+    puzzleSelectorSize.setAttribute('class', 'center-text');
+    puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
+    
+    // Icon for play status
     const puzzleSelectorIcon = document.createElement('svg');
     puzzleSelectorIcon.setAttribute('class', 'right-icon');
+    puzzleSelectorIcon.innerHTML = PuzzleSelectorIcons.get(puzzleStatus);
 
-    // Get the status (played, unplayed, ...)
-    const puzzleStatus = getPuzzleStatus(puzzleName);
-    
+    // Colouring
     if (puzzleStatus === PuzzleStatus.NONE) {
         // Unplayed or new puzzle
         puzzleSelector.classList.add('unplayed');
@@ -244,10 +254,11 @@ function createPuzzleSelector(puzzleName, puzzleTitle) {
         puzzleSelector.classList.add('playing');
     }
 
-    puzzleSelectorIcon.innerHTML = PuzzleSelectorIcons.get(puzzleStatus);
-    
+    // Assemble the parts
     puzzleSelector.appendChild(puzzleSelectorName);
+    puzzleSelector.appendChild(puzzleSelectorSize);
     puzzleSelector.appendChild(puzzleSelectorIcon);
 
+    // Return the button
     return puzzleSelector;
 }
