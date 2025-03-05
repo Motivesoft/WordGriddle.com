@@ -279,6 +279,7 @@ a:active {
 
 .puzzle-button .center-text {
     transform: translateX(-50%);
+    font-size: smaller;
 }
 
 .puzzle-button .right-icon {
