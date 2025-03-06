@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 window.location.href = `/`;
                             } else {
                                 // Open the puzzles page on this collection of puzzles
-                                window.location.href = `/puzzles.html?repo=${encodeURIComponent(role.repo)}`;
+                                window.location.href = `/puzzles.html?r=${encodeURIComponent(role.repo)}`;
                             }
                         });
                         puzzleCategoriesElement.appendChild(roleButton);
@@ -177,4 +177,88 @@ async function displayVersion(elementId) {
                 document.getElementById(elementId).textContent = `Version: ${version}`;
             }
         });
+}
+
+// Common puzzle status stuff
+
+const PuzzleStatus = Object.freeze({
+    NONE: "0",
+    STARTED: "1",
+    MIDWAY: "2",
+    NEARLY: "3",
+    COMPLETED: "4"
+});
+
+const PuzzleSelectorIcons = new Map([
+    //Empty battery: ["0", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9'/></svg>`],
+    ["0", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M7 4V20L20 12Z'/></svg>`],
+    ["1", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14'/></svg>`],
+    ["2", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14'/></svg>`],
+    ["3", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14M13 10V14'/></svg>`],
+    ["4", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M5 12L10 17L20 7'/></svg>`],
+    //Full battery: ["4", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14M13 10V14M16 10V14'/></svg>`],
+]);
+
+// Internal method
+function getPuzzleStatusKey(puzzleName) {
+    return `${puzzleName}.status`;
+}
+
+function getPuzzleStatus(puzzleName) {
+    const status = localStorage.getItem(getPuzzleStatusKey(puzzleName));
+    return status ? status : PuzzleStatus.NONE;
+}
+
+function setPuzzleStatus(puzzleName, puzzleStatus) {
+    localStorage.setItem(getPuzzleStatusKey(puzzleName), puzzleStatus);
+}    
+
+function clearPuzzleStatus(puzzleName, puzzleTitle) {
+    // We could set this to NONE, but I prefer reducing localStorage use where we can
+    return localStorage.clear(getPuzzleStatusKey(puzzleName));
+}
+
+function createPuzzleSelector(puzzle) {
+    // Get the status (played, unplayed, ...)
+    const puzzleStatus = getPuzzleStatus(puzzle.name);
+
+    // Build the button piece by piece
+    const puzzleSelector = document.createElement('button');
+    puzzleSelector.setAttribute('class', 'puzzle-button');
+    puzzleSelector.setAttribute('type', 'button');
+
+    // Title text
+    const puzzleSelectorName = document.createElement('span');
+    puzzleSelectorName.setAttribute('class', 'left-text');
+    puzzleSelectorName.textContent = `#${puzzle.id}`;
+    
+    // Size
+    const puzzleSelectorSize = document.createElement('span');
+    puzzleSelectorSize.setAttribute('class', 'center-text');
+    puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
+    
+    // Icon for play status
+    const puzzleSelectorIcon = document.createElement('svg');
+    puzzleSelectorIcon.setAttribute('class', 'right-icon');
+    puzzleSelectorIcon.innerHTML = PuzzleSelectorIcons.get(puzzleStatus);
+
+    // Colouring
+    if (puzzleStatus === PuzzleStatus.NONE) {
+        // Unplayed or new puzzle
+        puzzleSelector.classList.add('unplayed');
+    } else if (puzzleStatus === PuzzleStatus.COMPLETED) {
+        // Completed puzzle
+        puzzleSelector.classList.add('played');
+    } else {
+        // In progress puzzle
+        puzzleSelector.classList.add('playing');
+    }
+
+    // Assemble the parts
+    puzzleSelector.appendChild(puzzleSelectorName);
+    puzzleSelector.appendChild(puzzleSelectorSize);
+    puzzleSelector.appendChild(puzzleSelectorIcon);
+
+    // Return the button
+    return puzzleSelector;
 }
