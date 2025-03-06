@@ -57,6 +57,11 @@
       "name": "puzzle-11"
     },
     {
+      "id": 12,
+      "size": 4,
+      "name": "puzzle-12"
+    },
+    {
       "id": 15,
       "size": 8,
       "name": "puzzle-15"
