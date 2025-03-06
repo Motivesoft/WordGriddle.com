@@ -204,6 +204,11 @@ function getPuzzleStatusKey(puzzleName) {
     return `${puzzleName}.status`;
 }
 
+function hasPuzzleStatus(puzzleName) {
+    const status = localStorage.getItem(getPuzzleStatusKey(puzzleName));
+    return !(status === null || status === undefined);
+}
+
 function getPuzzleStatus(puzzleName) {
     const status = localStorage.getItem(getPuzzleStatusKey(puzzleName));
     return status ? status : PuzzleStatus.NONE;

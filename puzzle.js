@@ -845,7 +845,6 @@ function buildWordListHtml(foundWords) {
         html += `<div class="found-word-list">`;
         wordList.forEach((word) => {
             if (previousWord && lineBreakFunction && lineBreakFunction(word, previousWord)) {
-                console.log("xx");
                 // Close this group of words
                 html += `</div>`;
 
@@ -1048,6 +1047,10 @@ function updateProgress() {
 
     localStorage.setItem(getProgressStorageKey(), storedValue);
 
+    updatePuzzleStatus();
+}
+
+function updatePuzzleStatus() {
     // Update the status value we'll use on the puzzles page to help users track the puzzles they're
     // working on
     let puzzleStatus = PuzzleStatus.COMPLETED;
@@ -1059,7 +1062,7 @@ function updateProgress() {
         if (percentComplete < 33 ) {
             // We are only in this method because the user did something with the puzzle,
             // so even if it wasn't finding a key word, it still counts as having at least started
-    
+            
             puzzleStatus = PuzzleStatus.STARTED;
         }
         else if (percentComplete < 66 ) {
@@ -1068,7 +1071,7 @@ function updateProgress() {
             puzzleStatus = PuzzleStatus.NEARLY;
         }
     }
-
+    
     setPuzzleStatus(currentPuzzle.puzzleName, puzzleStatus);
 }
 
@@ -1104,6 +1107,13 @@ function restoreProgress() {
 
             // Infer completed state
             currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
+
+            // Alpha: if we have stored progress but no stored progress status, calculate the status now
+            // This will have happened because early Alpha versions didn't have this status 
+            // TODO remove this code once Alpha is over
+            if (!hasPuzzleStatus(currentPuzzle.puzzleName)) {
+                updatePuzzleStatus();
+            }
         } catch (error) {
             console.error("Failed to restore progress", error);
         }
