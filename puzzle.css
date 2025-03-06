@@ -16,6 +16,7 @@
     --grid-cell-completed-zerozero: #888;
     --grid-item-background: #edeff1;
     --grid-item-selected-background: #e9ba3a;
+    --score-flash-color: #e03030;
     --trail-color: #800000;
     --trail-transparency: 0.2;
     --word-starts-color: #e03030;
@@ -30,6 +31,7 @@
     --grid-cell-completed-zerozero: #646464;
     --grid-item-background: #edeff1;
     --grid-item-selected-background: #e9ba3a;
+    --score-flash-color: #e37a4d;
     --trail-color: #400000;
     --trail-transparency: 0.3;
     --word-starts-color: #e03030;
@@ -104,18 +106,25 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%; /* Ensure full width */
+    width: 100%;
 }
 
 .h3-container h3 {
     margin: 0;
     text-align: left;
-    flex-shrink: 0; /* Prevents h3 from shrinking */
+    flex-shrink: 0;
 }
 
 .h3-container .right-aligned {
     font-size: 1.5em;
-    margin-left: auto; /* Pushes this element to the right */
+    margin-left: auto;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Flash animation */
+.flash {
+    transform: scale(2.5);
+    color: var(--score-flash-color);
 }
 
 /* Left and right side main panels */
