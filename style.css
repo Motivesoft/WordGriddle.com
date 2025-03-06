@@ -31,6 +31,10 @@
     --panel-background: #e9ecef;
     --panel-border: #ccc;
     --product-container-color: #ffffff;
+    --puzzle-button-playing: #e37a4d;
+    --puzzle-button-played: #c4c4cc;
+    --puzzle-button-unplayed: #7fa1cf;
+    --puzzle-button-text: #333;
     --tab-active-background: #ffffff;
     --tab-background: #f1f1f1;
     --tab-border: #ccc;
@@ -69,6 +73,10 @@
     --panel-background: #1e1e1e;
     --panel-border: #333;
     --product-container-color: #ffffff;
+    --puzzle-button-playing: #e37a4d;
+    --puzzle-button-played: #c4c4cc;
+    --puzzle-button-unplayed: #7fa1cf;
+    --puzzle-button-text: #333;
     --tab-active-background: #1e1e1e;
     --tab-background: #2c2c2c;
     --tab-border: #444;
@@ -250,6 +258,50 @@ a:active {
 
 .button.active {
     background-color: var(--button-active-background);
+}
+
+
+/* Puzzle buttons */
+
+.puzzle-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    font-size: 18px;
+    border: 1px solid var(--control-border);
+    border-radius: 4px;
+}
+
+.puzzle-button .left-text {
+    text-align: left;
+    width: min-content;
+    flex: 1;
+}
+
+.puzzle-button .center-text {
+    transform: translateX(-50%);
+    font-size: smaller;
+}
+
+.puzzle-button .right-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.playing {
+    color: var(--puzzle-button-text);
+    background-color: var(--puzzle-button-playing);
+}
+
+.played {
+    color: var(--puzzle-button-text);
+    background-color: var(--puzzle-button-played);
+}
+
+.unplayed {
+    color: var(--puzzle-button-text);
+    background-color: var(--puzzle-button-unplayed);
 }
 
 /* Panel */

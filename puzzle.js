@@ -16,6 +16,7 @@ const PuzzleLocalStorageKeys = Object.freeze({
 
 // State
 const currentPuzzle = {
+    puzzleName: null,
     puzzle: null,
 
     // Transient state variables
@@ -36,8 +37,8 @@ const currentPuzzle = {
 // Load that puzzle and let the user play it
 document.addEventListener('DOMContentLoaded', async function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const puzzleName = urlParams.get('puzzle');
-    const puzzleRepo = urlParams.get(`repo`) || `puzzles`;
+    const puzzleName = urlParams.get('p');
+    const puzzleRepo = urlParams.get(`r`) || `puzzles`;
 
     // Assuming we have a file, load it and populate the page
     if (puzzleName) {
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             })
             .then(data => {
                 if (data.puzzle) {
-                    openPuzzle(data.puzzle);
+                    openPuzzle(puzzleName, data.puzzle);
                 } else {
                     throw new Error("Missing puzzle information");
                 }
@@ -61,11 +62,15 @@ document.addEventListener('DOMContentLoaded', async function () {
                 await openMessageBox(`Failed to load puzzle '${puzzleName}'.`, MessageBoxType.ERROR);
             });
     } else {
-        await openMessageBox('This page needs to be launched from the puzzles catalog page.', MessageBoxType.ERROR);
+        await openMessageBox('This page needs to be launched by selecting a puzzle to play.', MessageBoxType.ERROR);
+
+        // Go to the home page
+        window.location.replace("/");
     }
 });
 
-function openPuzzle(puzzle) {
+function openPuzzle(puzzleName, puzzle) {
+    currentPuzzle.puzzleName = puzzleName;
     currentPuzzle.puzzle = puzzle;
 
     // Display a meaningful title
@@ -361,18 +366,23 @@ async function endDragGesture() {
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
                 updateRedGreyDisplay();
                 updateWordsFound();
-                updateProgress();
-
+                
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
                     currentPuzzle.completed = true;
+                    
+                    // We've just found a word and completed the puzzle. Store the progress update
+                    updateProgress();
 
                     // Tidy up before showing the finished message
                     updatePuzzleProgressMessage();
                     clearTrail();
-
+                    
                     explode("ticker-container");
-
+                    
                     await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
+                } else {
+                    // Puzzle not yet finished, but a word found nonetheless. Update the progress
+                    updateProgress();
                 }
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
@@ -571,20 +581,18 @@ function attachEventListeners() {
 }
 
 function shareProgress() {
-    const accuracyText = ``;
-
     let shareText = '';
     shareText += `I have been playing WordGriddle!\n`;
-    shareText += `Puzzle: '${currentPuzzle.puzzle.title}'\n`;
+    shareText += `Puzzle: '${currentPuzzle.puzzle.title}' - ${window.location.origin}/?p=${currentPuzzle.puzzleName}\n`;
     shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} key words found, with ${getAccuracy()}% accuracy.\n`;
     shareText += `${currentPuzzle.foundExtraWords.size}/${currentPuzzle.puzzle.extraWords.length} extra words found.\n`;
-    shareText += `Play this puzzle: ${window.location.href}`;
+    shareText += `${window.location.origin}`;
 
     // Copy to clipboard
     navigator.clipboard
         .writeText(shareText)
         .then(async () => {
-            await openMessageBox('Puzzle progress copied to the clipboard.', MessageBoxType.INFO);
+            await openMessageBox('Puzzle progress copied to the clipboard.', MessageBoxType.PLAIN);
         })
         .catch(async (err) => {
             await openMessageBox('Failed to copy progress information to the clipboard.', MessageBoxType.ERROR);
@@ -837,7 +845,6 @@ function buildWordListHtml(foundWords) {
         html += `<div class="found-word-list">`;
         wordList.forEach((word) => {
             if (previousWord && lineBreakFunction && lineBreakFunction(word, previousWord)) {
-                console.log("xx");
                 // Close this group of words
                 html += `</div>`;
 
@@ -1039,6 +1046,33 @@ function updateProgress() {
     });
 
     localStorage.setItem(getProgressStorageKey(), storedValue);
+
+    updatePuzzleStatus();
+}
+
+function updatePuzzleStatus() {
+    // Update the status value we'll use on the puzzles page to help users track the puzzles they're
+    // working on
+    let puzzleStatus = PuzzleStatus.COMPLETED;
+    if (!currentPuzzle.completed) {
+        const wordsFound = currentPuzzle.foundKeyWords.size;
+        const wordsTotal = currentPuzzle.puzzle.keyWords.length;
+        const percentComplete = Math.floor( 100 * wordsFound / wordsTotal );
+        
+        if (percentComplete < 33 ) {
+            // We are only in this method because the user did something with the puzzle,
+            // so even if it wasn't finding a key word, it still counts as having at least started
+            
+            puzzleStatus = PuzzleStatus.STARTED;
+        }
+        else if (percentComplete < 66 ) {
+            puzzleStatus = PuzzleStatus.MIDWAY;
+        } else {
+            puzzleStatus = PuzzleStatus.NEARLY;
+        }
+    }
+    
+    setPuzzleStatus(currentPuzzle.puzzleName, puzzleStatus);
 }
 
 function restoreProgress() {
@@ -1073,6 +1107,13 @@ function restoreProgress() {
 
             // Infer completed state
             currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
+
+            // Alpha: if we have stored progress but no stored progress status, calculate the status now
+            // This will have happened because early Alpha versions didn't have this status 
+            // TODO remove this code once Alpha is over
+            if (!hasPuzzleStatus(currentPuzzle.puzzleName)) {
+                updatePuzzleStatus();
+            }
         } catch (error) {
             console.error("Failed to restore progress", error);
         }
@@ -1086,8 +1127,11 @@ async function resetProgress() {
         // Clear stored information
         localStorage.removeItem(getProgressStorageKey());
 
+        // Reset this back to being an unplayed puzzle as far as the list of puzzles is concerned
+        clearPuzzleStatus(currentPuzzle.puzzleName);
+
         // Reload everything
-        openPuzzle(currentPuzzle.puzzle);
+        openPuzzle(currentPuzzle.puzzleName, currentPuzzle.puzzle);
     }
 }
 

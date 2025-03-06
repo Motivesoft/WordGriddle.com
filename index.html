@@ -17,50 +17,54 @@
     <link rel="canonical" href="https://wordgriddle.com" />
     <script src="theme.js"></script>
     <script src="script.js" defer></script>
-    <scrip>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const urlParams = new URLSearchParams(window.location.search);
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // As a URL shortening, look for a special request parameter
+            // e.g. https://wordgriddle.com/?p=puzzle-1
+            // If found, go straight to that puzzle - otherwise do the normal homepage thing
+            const urlParams = new URLSearchParams(window.location.search);
+            const puzzle = decodeURIComponent(urlParams.get(`p`) || '');
+            if (puzzle.length) {
+                window.location.replace(`puzzle.html?p=${puzzle}`);
+                return;
+            }
 
-                // Assume we're loading from the default repo as this is the main page
-                let repository = 'puzzles';
-                let puzzleCatalog = `/assets/puzzles/catalog.json`;
-                let puzzleUrlLink = `puzzle.html?puzzle=%name`;
+            // Assume we're loading from the default repo as this is the main page
+            let repository = 'puzzles';
+            let puzzleCatalog = `/assets/puzzles/catalog.json`;
+            let puzzleUrlLink = `puzzle.html?p=%name`;
 
-                fetch(puzzleCatalog)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error status: ${response.status}`);
-                        }
+            fetch(puzzleCatalog)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error status: ${response.status}`);
+                    }
 
-                        return response.json();
-                    })
-                    .then(data => {
-                        const puzzleListElement = document.getElementById('puzzle-list');
+                    return response.json();
+                })
+                .then(data => {
+                    const puzzleListElement = document.getElementById('puzzle-list');
 
-                        data.puzzles.forEach(puzzle => {
-                            const puzzleSelector = document.createElement('button');
-                            puzzleSelector.classList.add('button');
-                            puzzleSelector.setAttribute('type', 'button');
-                            puzzleSelector.textContent = puzzle.title;
-                            puzzleSelector.addEventListener('click', function () {
-                                window.location.href = puzzleUrlLink
-                                    .replace("%name", encodeURIComponent(puzzle.name));
-                            });
+                    data.puzzles.forEach(puzzle => {
+                        const puzzleSelector = createPuzzleSelector(puzzle);
+                        
+                        puzzleSelector.addEventListener('click', function () {
+                            window.location.href = puzzleUrlLink
+                                .replace("%name", encodeURIComponent(puzzle.name));
+                        });        
 
-                            puzzleListElement.appendChild(puzzleSelector);
-                        });
-                    })
-                    .catch(async error => {
-                        console.error(`Failed to load puzzle list: '${puzzleCatalog}'`, error);
-                        await openMessageBox(`Failed to load puzzle list from '${puzzleRepo}'.`, MessageBoxType.ERROR);
-
-                        // Go back to the home page
-                        window.location.href = "/";
+                        puzzleListElement.appendChild(puzzleSelector);
                     });
-            });
-        </script>
-    </scrip>
+                })
+                .catch(async error => {
+                    console.error(`Failed to load puzzle list: '${puzzleCatalog}'`, error);
+                    await openMessageBox(`Failed to load puzzle list from '${puzzleRepo}'.`, MessageBoxType.ERROR);
+
+                    // Go back to the home page
+                    window.location.href = "/";
+                });
+        });
+    </script>
 </head>
 
 <body>
@@ -94,6 +98,7 @@
 
     <div class="panel">
         <div class="inner-panel">
+            <h1>Welcome to WordGriddle!</h1>
             <div class="inner-panel borderless">
                 <p class="paragraph">
                     Unleash your inner wordsmith with our captivating word search puzzle game!
@@ -104,7 +109,7 @@
                     offers a classic word grid challenge, guaranteed to provide hours of brain-teasing fun.
                 </p>
                 <p class="paragraph">
-                    Start with our <a href="puzzle.html?puzzle=puzzle-1">demo puzzle</a>!
+                    Start with our <a href="puzzle.html?p=puzzle-1">demo puzzle</a>!
                 </p>
             </div>
 
