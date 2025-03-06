@@ -45,7 +45,7 @@
                         const puzzleSelector = createPuzzleSelector(puzzle);
                         
                         puzzleSelector.addEventListener('click', function () {
-                            window.location.href = puzzleUrlLink
+                            window.location.href = repoUrlLink
                                 .replace("%name", encodeURIComponent(puzzle.name))
                                 .replace("%repo", encodeURIComponent(repository));
                         });        

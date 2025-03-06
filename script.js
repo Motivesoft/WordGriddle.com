@@ -190,11 +190,13 @@ const PuzzleStatus = Object.freeze({
 });
 
 const PuzzleSelectorIcons = new Map([
+    //Empty battery: ["0", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9'/></svg>`],
     ["0", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M5 4V20L19 12z'/></svg>`],
     ["1", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14'/></svg>`],
     ["2", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14'/></svg>`],
     ["3", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14M13 10V14'/></svg>`],
     ["4", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M6 14L9 17L19 7'/></svg>`],
+    //Full battery: ["4", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14M13 10V14M16 10V14'/></svg>`],
 ]);
 
 // Internal method
@@ -214,7 +216,7 @@ function getPuzzleStatus(puzzleName) {
 
 function setPuzzleStatus(puzzleName, puzzleStatus) {
     localStorage.setItem(getPuzzleStatusKey(puzzleName), puzzleStatus);
-}    
+}
 
 function clearPuzzleStatus(puzzleName, puzzleTitle) {
     // We could set this to NONE, but I prefer reducing localStorage use where we can
@@ -234,12 +236,12 @@ function createPuzzleSelector(puzzle) {
     const puzzleSelectorName = document.createElement('span');
     puzzleSelectorName.setAttribute('class', 'left-text');
     puzzleSelectorName.textContent = `#${puzzle.id}`;
-    
+
     // Size
     const puzzleSelectorSize = document.createElement('span');
     puzzleSelectorSize.setAttribute('class', 'center-text');
     puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
-    
+
     // Icon for play status
     const puzzleSelectorIcon = document.createElement('svg');
     puzzleSelectorIcon.setAttribute('class', 'right-icon');

@@ -1062,7 +1062,7 @@ function updatePuzzleStatus() {
         if (percentComplete < 33 ) {
             // We are only in this method because the user did something with the puzzle,
             // so even if it wasn't finding a key word, it still counts as having at least started
-            
+    
             puzzleStatus = PuzzleStatus.STARTED;
         }
         else if (percentComplete < 66 ) {
@@ -1071,7 +1071,7 @@ function updatePuzzleStatus() {
             puzzleStatus = PuzzleStatus.NEARLY;
         }
     }
-    
+
     setPuzzleStatus(currentPuzzle.puzzleName, puzzleStatus);
 }
 
@@ -1108,8 +1108,8 @@ function restoreProgress() {
             // Infer completed state
             currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
 
-            // Alpha: if we have stored progress but no stored progress status, calculate the status now
-            // This will have happened because early Alpha versions didn't have this status 
+            // For Alpha users: if we have stored progress but no stored progress status, calculate the status now
+            // This will have happened because early Alpha versions didn't have this status
             // TODO remove this code once Alpha is over
             if (!hasPuzzleStatus(currentPuzzle.puzzleName)) {
                 updatePuzzleStatus();
