@@ -760,7 +760,15 @@ function updateWordsFound() {
         buildWordListHtml(currentPuzzle.foundKeyWords);
 
     const progressCardElement = getProgressCardElement();
+    
+    progressCardElement.classList.add('flash');
     progressCardElement.innerHTML = `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length}`;
+                
+    // Remove the animation class after the animation ends
+    setTimeout(() => {
+        progressCardElement.classList.remove('flash');
+    }, 300); // Match the duration of the CSS transition
+
 }
 
 function updateExtraWordsFound() {
