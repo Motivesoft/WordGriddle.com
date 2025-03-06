@@ -204,6 +204,11 @@ function getPuzzleStatusKey(puzzleName) {
     return `${puzzleName}.status`;
 }
 
+function hasPuzzleStatus(puzzleName) {
+    const status = localStorage.getItem(getPuzzleStatusKey(puzzleName));
+    return !(status === null || status === undefined);
+}
+
 function getPuzzleStatus(puzzleName) {
     const status = localStorage.getItem(getPuzzleStatusKey(puzzleName));
     return status ? status : PuzzleStatus.NONE;
@@ -211,7 +216,7 @@ function getPuzzleStatus(puzzleName) {
 
 function setPuzzleStatus(puzzleName, puzzleStatus) {
     localStorage.setItem(getPuzzleStatusKey(puzzleName), puzzleStatus);
-}    
+}
 
 function clearPuzzleStatus(puzzleName, puzzleTitle) {
     // We could set this to NONE, but I prefer reducing localStorage use where we can
@@ -231,12 +236,12 @@ function createPuzzleSelector(puzzle) {
     const puzzleSelectorName = document.createElement('span');
     puzzleSelectorName.setAttribute('class', 'left-text');
     puzzleSelectorName.textContent = `#${puzzle.id}`;
-    
+
     // Size
     const puzzleSelectorSize = document.createElement('span');
     puzzleSelectorSize.setAttribute('class', 'center-text');
     puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
-    
+
     // Icon for play status
     const puzzleSelectorIcon = document.createElement('svg');
     puzzleSelectorIcon.setAttribute('class', 'right-icon');
