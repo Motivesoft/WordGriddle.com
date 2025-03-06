@@ -845,7 +845,6 @@ function buildWordListHtml(foundWords) {
         html += `<div class="found-word-list">`;
         wordList.forEach((word) => {
             if (previousWord && lineBreakFunction && lineBreakFunction(word, previousWord)) {
-                console.log("xx");
                 // Close this group of words
                 html += `</div>`;
 
@@ -1048,6 +1047,10 @@ function updateProgress() {
 
     localStorage.setItem(getProgressStorageKey(), storedValue);
 
+    updatePuzzleStatus();
+}
+
+function updatePuzzleStatus() {
     // Update the status value we'll use on the puzzles page to help users track the puzzles they're
     // working on
     let puzzleStatus = PuzzleStatus.COMPLETED;
@@ -1104,6 +1107,13 @@ function restoreProgress() {
 
             // Infer completed state
             currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
+
+            // For Alpha users: if we have stored progress but no stored progress status, calculate the status now
+            // This will have happened because early Alpha versions didn't have this status
+            // TODO remove this code once Alpha is over
+            if (!hasPuzzleStatus(currentPuzzle.puzzleName)) {
+                updatePuzzleStatus();
+            }
         } catch (error) {
             console.error("Failed to restore progress", error);
         }
