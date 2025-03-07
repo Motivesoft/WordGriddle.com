@@ -5,7 +5,8 @@ const MessageBoxType = Object.freeze({
     PLAIN: 0,
     INFO: 1,
     WARNING: 2,
-    ERROR: 3
+    ERROR: 3,
+    QUESTION: 4
 });
 
 // Function to open the message box with an icon
@@ -40,6 +41,11 @@ function openMessageBox(message, type = MessageBoxType.PLAIN) {
         case MessageBoxType.ERROR:
             icon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M8 8L16 16M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3M16 8L8 16'/></svg>`;
             icon.className = 'error-icon';
+            break;
+
+        case MessageBoxType.QUESTION:
+            icon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M12 19L12 19M12 16L12 12A4 4 0 1 0 12 4A4 4 0 0 0 9 5'/></svg>`;
+            icon.className = 'question-icon';
             break;
     }
 
