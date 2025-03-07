@@ -114,6 +114,10 @@ function openPuzzle(puzzleName, puzzle) {
     updateRedGreyDisplay();
     updateWordsFound();
     updateExtraWordsFound();
+
+    // Reset clues panel - clues off by default
+    const cluesCheckbox = getShowCluesElement();
+    cluesCheckbox.checked = false;
 }
 
 function initialiseGrid() {
@@ -554,14 +558,22 @@ function attachEventListeners() {
     // Show extra words
 
     // Load state from localStorage
-    const checkbox = getShowExtraWordsElement();
-    checkbox.checked = localStorage.getItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS) === 'true';
+    const extraWordCheckbox = getShowExtraWordsElement();
+    extraWordCheckbox.checked = localStorage.getItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS) === 'true';
 
     // Handle state changes
-    checkbox.addEventListener('change', function () {
+    extraWordCheckbox.addEventListener('change', function () {
         localStorage.setItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS, this.checked ? 'true' : 'false');
 
         updateExtraWordsFound();
+    });
+
+    // Clues
+    const cluesCheckbox = getShowCluesElement();
+
+    // Handle state changes
+    cluesCheckbox.addEventListener('change', function () {
+        updateClues();
     });
 
     // Share
@@ -675,6 +687,10 @@ function getWordsFoundElement() {
 
 function getShowExtraWordsElement() {
     return document.getElementById('show-extra-words');
+}
+
+function getShowCluesElement() {
+    return document.getElementById('show-clues');
 }
 
 function getExtraWordsFoundElement() {
