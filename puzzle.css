@@ -331,8 +331,4 @@ canvas {
         width: 100%;
         max-width: 400px;
     }
-
-    .flash {
-        transform: scale(1.5);
-    }
 }
