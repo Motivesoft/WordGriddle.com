@@ -828,18 +828,11 @@ function updateClues() {
 
     // Array should already be sorted alphabetically within word length
 
-    // wordArray = wordArray.sort((a, b) => {
-    //     if (a.length !== b.length) {
-    //       return a.length - b.length;
-    //     }
-    //     return Math.random() - 0.5;
-    //   });
-
     document.getElementById('clue-panel-1').innerHTML = buildWordListHtml(wordArray, FoundMoveSortOrder.WORD_LENGTH);
 }
 
 function wordToClue(word) {
-    const gapChar = '&#183';
+    const gapChar = '·';
 
     // Safety nets - don't run the code if a word is empty or has already
     // got gaps in it. 
