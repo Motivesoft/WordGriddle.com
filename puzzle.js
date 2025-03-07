@@ -886,7 +886,10 @@ function wordToClue(word) {
 
 // Given a word collection, return it as a columnar list in HTML 
 function buildWordListHtml(foundWords, foundWordOrdering = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING)) {
-//    const foundWordOrdering = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING);
+    // Handle being given an empty list
+    if (!foundWords || foundWords.length === 0) {
+        return '';
+    }
 
     // Copy the array so we can sort the copy and leave the original untouched
     const wordList = [];
