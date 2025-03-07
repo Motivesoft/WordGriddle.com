@@ -283,7 +283,7 @@ canvas {
 
 #ticker-container {
     width: 100%;
-    overflow: hidden;
+    /* overflow: hidden; -- reinstate if ticker tape has any problems*/
     background-color: transparent;
     padding: 0px;
 }
