@@ -5,7 +5,8 @@ const MessageBoxType = Object.freeze({
     PLAIN: 0,
     INFO: 1,
     WARNING: 2,
-    ERROR: 3
+    ERROR: 3,
+    QUESTION: 4
 });
 
 // Function to open the message box with an icon
@@ -28,18 +29,23 @@ function openMessageBox(message, type = MessageBoxType.PLAIN) {
             break;
 
         case MessageBoxType.INFO:
-            icon.innerHTML = '&#x2139';
+            icon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M3 20V8A3 3 0 0 1 6 5H18A3 3 0 0 1 21 8V14A3 3 0 0 1 18 17H6zM7 9L17 9M7 13L15 13'/></svg>`;
             icon.className = 'info-icon';
             break;
 
         case MessageBoxType.WARNING:
-            icon.innerHTML = '&#x26a0';
+            icon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M5 19A2 2 0 0 1 3.16 16.25L10.24 4A2 2 0 0 1 13.74 4L20.84 16.25A2 2 0 0 1 19 19zM12 10L12 16M12 7L12 7'/></svg>`;
             icon.className = 'warning-icon';
             break;
 
         case MessageBoxType.ERROR:
-            icon.innerHTML = '&#x2716';
+            icon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M8 8L16 16M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3M16 8L8 16'/></svg>`;
             icon.className = 'error-icon';
+            break;
+
+        case MessageBoxType.QUESTION:
+            icon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M12 19L12 19M12 16L12 12A4 4 0 1 0 12 4A4 4 0 0 0 9 5'/></svg>`;
+            icon.className = 'question-icon';
             break;
     }
 
