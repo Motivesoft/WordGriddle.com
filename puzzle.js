@@ -108,16 +108,17 @@ function openPuzzle(puzzleName, puzzle) {
     // We are using local storage for progress, so let's check
     restoreProgress();
 
+    // Reset clues panel - clues off by default
+    const cluesCheckbox = getShowCluesElement();
+    cluesCheckbox.checked = false;
+
     // Update the other parts of the display
     updatePuzzleProgressMessage();
     updateSelectedLettersDisplay();
     updateRedGreyDisplay();
     updateWordsFound();
+    updateClues();
     updateExtraWordsFound();
-
-    // Reset clues panel - clues off by default
-    const cluesCheckbox = getShowCluesElement();
-    cluesCheckbox.checked = false;
 }
 
 function initialiseGrid() {
@@ -370,19 +371,20 @@ async function endDragGesture() {
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
                 updateRedGreyDisplay();
                 updateWordsFound();
-                
+                updateClues();
+
                 if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
                     currentPuzzle.completed = true;
-                    
+
                     // We've just found a word and completed the puzzle. Store the progress update
                     updateProgress();
 
                     // Tidy up before showing the finished message
                     updatePuzzleProgressMessage();
                     clearTrail();
-                    
+
                     explode("ticker-container");
-                    
+
                     await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
                 } else {
                     // Puzzle not yet finished, but a word found nonetheless. Update the progress
@@ -776,10 +778,10 @@ function updateWordsFound() {
         buildWordListHtml(currentPuzzle.foundKeyWords);
 
     const progressCardElement = getProgressCardElement();
-    
+
     progressCardElement.classList.add('flash');
     progressCardElement.innerHTML = `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length}`;
-                
+
     // Remove the animation class after the animation ends
     setTimeout(() => {
         progressCardElement.classList.remove('flash');
@@ -806,9 +808,92 @@ function updateExtraWordsFound() {
         buildWordListHtml(currentPuzzle.foundExtraWords);
 }
 
+function updateClues() {
+    // Show or hide clues
+    const cluesCheckbox = getShowCluesElement();
+    if (!cluesCheckbox.checked) {
+        document.getElementById('clue-panel-1').innerHTML = '';
+        document.getElementById('clue-panel-2').innerHTML = '';
+        return;
+    }
+
+    let wordArray = [];
+
+    // Produce a clue version of each word
+    currentPuzzle.puzzle.keyWords.forEach(([word,_]) => {
+        if (!currentPuzzle.foundKeyWords.has(word)) {
+            wordArray.push(wordToClue(word));
+        }
+    });
+
+    // Array should already be sorted alphabetically within word length
+
+    // wordArray = wordArray.sort((a, b) => {
+    //     if (a.length !== b.length) {
+    //       return a.length - b.length;
+    //     }
+    //     return Math.random() - 0.5;
+    //   });
+
+    document.getElementById('clue-panel-1').innerHTML = buildWordListHtml(wordArray, FoundMoveSortOrder.WORD_LENGTH);
+}
+
+function wordToClue(word) {
+    const gapChar = '&#183';
+
+    // Safety nets - don't run the code if a word is empty or has already
+    // got gaps in it. 
+    if (!word || word.length === 0) {
+        return '';
+    }
+    
+    for (let i = 0; i < word.length; i++) {
+        if (word[i] === gapChar) {
+            return;
+        }
+    }
+
+    /*
+    1, 2, 3, 3, 3, 4, 4, 5 
+    */
+    let letterCount = 0;
+    let letterCountIncrements = [
+        4, 5, 6, 9, 11, 15, 18, 21
+    ];
+    
+    for (let i = 0; i < letterCountIncrements.length; i++) {
+        if (word.length >= letterCountIncrements[i]) {
+            letterCount++;
+        }
+    }
+
+    let letterIndexArray = [];
+    letterIndexArray.push(0);
+    for (let i = 1; i < letterCount; i++) {
+        const index = 1 + Math.floor((word.length-1) * Math.random());
+        if (letterIndexArray.includes(index)) {
+            i--;
+            continue;
+        }
+
+        letterIndexArray.push(index);
+    }
+
+    let newWord = '';
+    for( let i = 0; i < word.length; i++) {
+        if (letterIndexArray.includes(i)) {
+            newWord += word[i];
+        } else {
+            newWord += gapChar;
+        }
+    }
+
+    return newWord;
+}
+
 // Given a word collection, return it as a columnar list in HTML 
-function buildWordListHtml(foundWords) {
-    const foundWordOrdering = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING);
+function buildWordListHtml(foundWords, foundWordOrdering = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING)) {
+//    const foundWordOrdering = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING);
 
     // Copy the array so we can sort the copy and leave the original untouched
     const wordList = [];
@@ -1081,15 +1166,15 @@ function updatePuzzleStatus() {
     if (!currentPuzzle.completed) {
         const wordsFound = currentPuzzle.foundKeyWords.size;
         const wordsTotal = currentPuzzle.puzzle.keyWords.length;
-        const percentComplete = Math.floor( 100 * wordsFound / wordsTotal );
-        
-        if (percentComplete < 33 ) {
+        const percentComplete = Math.floor(100 * wordsFound / wordsTotal);
+
+        if (percentComplete < 33) {
             // We are only in this method because the user did something with the puzzle,
             // so even if it wasn't finding a key word, it still counts as having at least started
-    
+
             puzzleStatus = PuzzleStatus.STARTED;
         }
-        else if (percentComplete < 66 ) {
+        else if (percentComplete < 66) {
             puzzleStatus = PuzzleStatus.MIDWAY;
         } else {
             puzzleStatus = PuzzleStatus.NEARLY;
