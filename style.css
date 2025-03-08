@@ -92,13 +92,14 @@ body {
     font-family: var(--font-family);
     margin: 0px;
     padding: 20px;
-    
+
     /* Disables overscroll behavior */
     overscroll-behavior: none;
 }
 
 /* Make OS elements also use our font where we can */
-select, input {
+select,
+input {
     font-family: var(--font-family);
 }
 
@@ -175,6 +176,10 @@ select, input {
     align-items: center;
     position: relative;
     display: inline-block;
+}
+
+.toolbar-button:active {
+    transform: scale(0.9);
 }
 
 .toolbar-button-icon {
@@ -355,19 +360,19 @@ a:active {
 
 .note {
     margin-top: 20px;
-    border: 1px solid var(--icon-error-color); 
-    border-radius: 10px; 
-    padding: 20px; 
+    border: 1px solid var(--icon-error-color);
+    border-radius: 10px;
+    padding: 20px;
     width: 80%;
-} 
+}
 
 .info {
     margin-top: 20px;
-    border: 1px solid var(--icon-info-color); 
-    border-radius: 10px; 
-    padding: 20px; 
+    border: 1px solid var(--icon-info-color);
+    border-radius: 10px;
+    padding: 20px;
     width: 80%;
-} 
+}
 
 /* ComboBox*/
 
