@@ -1,4 +1,5 @@
-# WordGriddle.com
+![WordGriddle](./icon-64-purple.png)
+# WordGriddle
 Homepage for the upcoming WordGriddle game.
 
 ## Rationale
