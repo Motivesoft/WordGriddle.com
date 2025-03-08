@@ -229,7 +229,7 @@
     color: var(--grid-cell-completed-zerozero);
 }
 
-/* All words have been found (does not include bonus, just main words) */
+/* All key words have been found (i.e. does not include extra words) */
 .grid-item.completed {
     background-color: var(--grid-cell-completed-background);
     color: var(--grid-cell-completed-color);
