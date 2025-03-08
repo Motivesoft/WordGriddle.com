@@ -1,7 +1,5 @@
-# WordGriddle.com
-Homepage for the upcoming WordGriddle game.
+![WordGriddle](./icon-64-purple.png)
+# WordGriddle
+Homepage for the WordGriddle game.
 
-## Rationale
-- The URL exists, so it needs some content
-- The game is in development, and we'll need somewhere to showcase it
-- When the time is right, we will drop the game right here
+Open a puzzle and find all the words in the grid by using your mouse or touch screen to draw a line between letters in any direction.
