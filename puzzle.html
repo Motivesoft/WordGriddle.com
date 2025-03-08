@@ -98,21 +98,28 @@
                 </h4>
                 <div id="words-found"></div>
                 <p><label class="checkbox-container">
-                    <input type="checkbox" id="show-extra-words">
-                    <span class="checkmark"></span>
-                    Show extra words
-                </label>
+                        <input type="checkbox" id="show-extra-words">
+                        <span class="checkmark"></span>
+                        Show extra words
+                    </label>
                 <div id="extra-words-found"></div>
                 </p>
                 <hr>
-                <p><label class="checkbox-container">
+                <label class="checkbox-container" style="height: 40px;">
                     <input type="checkbox" id="show-clues">
                     <span class="checkmark"></span>
                     Show clues
+                    <button type="button" class="toolbar-button" id="refresh-clues" onclick="refreshClues()"
+                        style="margin-left: 20px; color: white; align-self: center; justify-self: center;">
+                        <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
+                            stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round'
+                            stroke-linejoin='round'>
+                            <path fill='none' stroke='none' d='M0 0h24v24H0z' />
+                            <path d='M4 4V9H9M4.5 9A8.1 8.1 0 0 1 20 11M15 15H20V20M19.5 15A8.1 8.1 0 0 1 4 13' />
+                        </svg>
+                    </button>
                 </label>
                 <div id="clue-panel-1"></div>
-                <div id="clue-panel-2"></div>
-                </p>
                 <hr>
                 <p id="author"></p>
                 <div class="button-bar">
