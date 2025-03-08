@@ -809,25 +809,28 @@ function updateExtraWordsFound() {
 }
 
 function updateClues() {
-    // Show or hide clues
+    // Show or hide clues controls
     const cluesCheckbox = getShowCluesElement();
-    if (!cluesCheckbox.checked) {
-        document.getElementById('clue-panel-1').innerHTML = '';
-        document.getElementById('clue-panel-2').innerHTML = '';
-        return;
-    }
+    
+    document.getElementById('refresh-clues').style.display = cluesCheckbox.checked ? '' : 'none';
+    document.getElementById('clue-panel-1').innerHTML = '';
 
+    if (cluesCheckbox.checked) {
+        refreshClues();
+    }
+}
+
+function refreshClues() {
     let wordArray = [];
 
-    // Produce a clue version of each word
-    currentPuzzle.puzzle.keyWords.forEach(([word,_]) => {
+    // Produce a clue version of each word yet to be found
+    currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
         if (!currentPuzzle.foundKeyWords.has(word)) {
             wordArray.push(wordToClue(word));
         }
     });
 
     // Array should already be sorted alphabetically within word length
-
     document.getElementById('clue-panel-1').innerHTML = buildWordListHtml(wordArray, FoundMoveSortOrder.WORD_LENGTH);
 }
 
