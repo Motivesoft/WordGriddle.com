@@ -110,6 +110,31 @@
       "id": 38,
       "size": 3,
       "name": "puzzle-38"
+    },
+    {
+      "id": 39,
+      "size": 3,
+      "name": "puzzle-39"
+    },
+    {
+      "id": 40,
+      "size": 3,
+      "name": "puzzle-40"
+    },
+    {
+      "id": 41,
+      "size": 3,
+      "name": "puzzle-41"
+    },
+    {
+      "id": 42,
+      "size": 3,
+      "name": "puzzle-42"
+    },
+    {
+      "id": 43,
+      "size": 3,
+      "name": "puzzle-43"
     }
   ]
 }
