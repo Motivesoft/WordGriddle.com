@@ -358,6 +358,10 @@ a:active {
     padding: 20px 20px 0px 20px;
 }
 
+code {
+    font-size: 16px;
+}
+
 .note {
     margin-top: 20px;
     border: 1px solid var(--icon-error-color);
