@@ -4,103 +4,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordGriddle</title>
     <meta name="description"
-    content="WordGriddle is a word search puzzle using a grid of letters and a list of words to find. Fun challenge.">
+        content="WordGriddle is a word search puzzle using a grid of letters and a list of words to find. Fun challenge.">
     <meta name="apple-mobile-web-app-title" content="WordGriddle">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="48x48">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" title="WordGriddle">
     <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="canonical" href="https://wordgriddle.com" />
     <script src="theme.js"></script>
-    <title>WordGriddle Privacy Policy</title>
+    <script src="script.js" defer></script>
 </head>
 
 <body>
-    <h1>Privacy Policy</h1>
+    <nav class="navbar">
+        <!-- Product icon and name (protruding above and below the navbar) -->
+        <a href="/" class="product-container">
+            <div class="product-icon">
+                <img src="/assets/icon-64-purple.png" width="64" height="64" alt="WordGriddle" class="top-left-icon">
+            </div>
+            <span class="product-name">WordGriddle</span>
+        </a>
 
-    <h2>Privacy Policy for WordGriddle</h2>
-    
-    <p>Last Updated: March 2025</p>
-    <p>Thank you for playing <strong>WordGriddle</strong>! This Privacy Policy explains how we handle your information when you use our 
-        game on our website. Please take a moment to read through this policy to understand our practices.</p>
-    
-    <hr>
-    
-    <h3>1. Information We Collect</h3>
-    
-    <p>When you play WordGriddle, we use your browser's <strong>localStorage</strong> feature to save your game progress locally on your device. 
-        This may include:</p>
-    <ul>
-        <li>Which puzzles you have completed or started.</li>
-        <li>Your current progress in individual puzzles.</li>
-        <li>Any in-game settings or preferences you have selected.</li>
-    </ul>
-    <p>We do not collect any personal information (such as your name, email address, or location) unless you explicitly provide it to us 
-        (e.g., through a contact form or newsletter sign-up).</p>
-    
-    <hr>
-    
-    <h3>2. How We Use Your Information</h3>
-    
-    <p>The information stored in <code>localStorage</code> is used solely to enhance your gaming experience by:</p>
-    <ul>
-        <li>Retaining your progress so you can continue where you left off.</li>
-        <li>Saving your preferences to personalize your gameplay.</li>
-        <li>Ensuring the game functions as intended.</li>
-    </ul>
-    <p>We do not share, sell, or transmit this information to third parties.</p>
-    
-    <hr>
-    
-    <h3>3. Storage and Security</h3>
-    
-    <p>All game progress and preferences are stored locally on your device using <code>localStorage</code>. This data remains on your 
-        device and is not transferred to our servers or any external systems.</p>
-    <p>Please note that:</p>
-    <ul>
-        <li>You can clear your <code>localStorage</code> data at any time through your browser settings. Doing so will reset your game progress.</li>
-        <li><code>localStorage</code> is subject to your browser's storage limits (typically around 5MB per domain).</li>
-    </ul>
-    
-    <hr>
-    
-    <h3>4. Your Choices</h3>
-    
-    <p>You have control over your data:</p>
-    <ul>
-        <li><strong>Clearing Data</strong>: You can delete your game progress at any time by clearing your browser's <code>localStorage</code> 
-            for our website.</li>
-        <li><strong>Disabling <code>localStorage</code></strong>: If you prefer not to use <code>localStorage</code>, you can disable it in 
-            your browser settings. However, this may prevent the game from saving your progress or preferences.</li>
-    </ul>
-    
-    <hr>
-    
-    <h3>5. Third-Party Services</h3>
-    
-    <p>Our game does not use third-party services that collect or process your data. However, if we add such services in the future 
-        (e.g., analytics or ads), we will update this Privacy Policy to reflect those changes.</p>
-    
-    <hr>
-    
-    <h3>6. Changes to This Privacy Policy</h3>
-    
-    <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last Updated" date. 
-        We encourage you to review this policy periodically to stay informed about how we handle your information.</p>
-    
-    <hr>
-    
-    <h3>7. Contact Us</h3>
-    
-    <p>If you have any questions or concerns about this Privacy Policy or how we handle your data, please contact us through the game's Discord or
-         Reddit presence or by using contact information given by us when you were provided access to this website.</p>
-    
-    <hr>
-    
-    <p>By using WordGriddle, you agree to the terms outlined in this Privacy Policy.</p>
+        <div class="navbar-right">
+            <button class="toolbar-button" id="aboutBoxButton">
+                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
+                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
+                    stroke-linecap='round' stroke-linejoin='round'>
+                    <path d='M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3M12 10L12 17M12 7L12 7' />
+                </svg>
+            </button>
+            <button class="toolbar-button" id="themeToggleButton">
+                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
+                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
+                    stroke-linecap='round' stroke-linejoin='round'>
+                    <path
+                        d='M3 12H4M12 3V4M21 12H20M12 21V20M5.63 5.63L6.343 6.343M18.364 18.364L17.65 17.65M18.364 5.6L17.65 6.343M5.6 18.364L6.343 17.65M12 8A4 4 0 0 1 12 16A4 4 0 0 1 12 8' />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <div class="panel">
+        <div class="left-aligned-panel">
+            <h1>Privacy Policy</h1>
+            <h2>Privacy Policy for WordGriddle</h2>
+
+            <p class="paragraph">Last Updated: March 2025</p>
+            <p class="paragraph">Thank you for playing <strong>WordGriddle</strong>! This Privacy Policy explains
+                how we handle your information when you use our
+                game on our website. Please take a moment to read through this policy to understand our practices.
+            </p>
+
+            <hr>
+            <h3>1. Information We Collect</h3>
+
+            <p class="paragraph">When you play WordGriddle, we use your browser's <strong>localStorage</strong>
+                feature to save your game progress locally on your device.
+                This may include:</p>
+            <ul>
+                <li>Which puzzles you have completed or started.</li>
+                <li>Your current progress in individual puzzles.</li>
+                <li>Any in-game settings or preferences you have selected.</li>
+            </ul>
+            <p class="paragraph">We do not collect any personal information (such as your name, email address, or
+                location) unless you explicitly provide it to us
+                (e.g., through a contact form or newsletter sign-up).</p>
+
+            <hr>
+
+            <h3>2. How We Use Your Information</h3>
+
+            <p class="paragraph">The information stored in <code>localStorage</code> is used solely to enhance your
+                gaming experience by:</p>
+            <ul>
+                <li>Retaining your progress so you can continue where you left off.</li>
+                <li>Saving your preferences to personalize your gameplay.</li>
+                <li>Ensuring the game functions as intended.</li>
+            </ul>
+            <p class="paragraph">We do not share, sell, or transmit this information to third parties.</p>
+
+            <hr>
+
+            <h3>3. Storage and Security</h3>
+
+            <p class="paragraph">All game progress and preferences are stored locally on your device using
+                <code>localStorage</code>. This data remains on your
+                device and is not transferred to our servers or any external systems.
+            </p>
+            <p class="paragraph">Please note that:</p>
+            <ul>
+                <li>You can clear your <code>localStorage</code> data at any time through your browser settings.
+                    Doing so will reset your game progress.</li>
+                <li><code>localStorage</code> is subject to your browser's storage limits (typically around 5MB per
+                    domain).</li>
+            </ul>
+
+            <hr>
+
+            <h3>4. Your Choices</h3>
+
+            <p class="paragraph">You have control over your data:</p>
+            <ul>
+                <li><strong>Clearing Data</strong>: You can delete your game progress at any time by clearing your
+                    browser's <code>localStorage</code>
+                    for our website.</li>
+                <li><strong>Disabling <code>localStorage</code></strong>: If you prefer not to use
+                    <code>localStorage</code>, you can disable it in
+                    your browser settings. However, this may prevent the game from saving your progress or
+                    preferences.</li>
+            </ul>
+
+            <hr>
+
+            <h3>5. Third-Party Services</h3>
+
+            <p class="paragraph">Our game does not use third-party services that collect or process your data.
+                However, if we add such services in the future
+                (e.g., analytics or ads), we will update this Privacy Policy to reflect those changes.</p>
+
+            <hr>
+
+            <h3>6. Changes to This Privacy Policy</h3>
+
+            <p class="paragraph">We may update this Privacy Policy from time to time. Any changes will be posted on
+                this page with an updated "Last Updated" date.
+                We encourage you to review this policy periodically to stay informed about how we handle your
+                information.</p>
+
+            <hr>
+
+            <h3>7. Contact Us</h3>
+
+            <p class="paragraph">If you have any questions or concerns about this Privacy Policy or how we handle
+                your data, please contact us through the game's Discord or
+                Reddit presence or by using contact information given by us when you were provided access to this
+                website.</p>
+
+            <hr>
+
+            <div class="inner-panel" style="border: none; width: 100%; padding: 0px; align-items: start;">
+                <div>By using WordGriddle, you agree to the terms outlined in this Privacy Policy.</div>
+
+                <div>Back to our <a href="/">puzzle list</a>!</div>
+            </div>
+        </div>
+    </div>
+
+    <dialog id="aboutBoxDialog">
+        <div class="icon">
+            <img src="/assets/icon-32-purple.png" width="32" height="32" alt="WordGriddle" class="top-left-icon">
+        </div>
+        <div id="aboutBoxText">
+        </div>
+        <button type="button" id="aboutBoxOkButton">OK</button>
+    </dialog>
 </body>
 
 </html>

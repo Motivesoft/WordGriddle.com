@@ -332,6 +332,31 @@ a:active {
     height: calc(100vh - 120px);
 }
 
+.left-aligned-panel {
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    background-color: var(--panel-background);
+
+    flex: 0 1 65%;
+    max-width: 65%;
+
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: start;
+    gap: 20px;
+    padding: 0px 20px 20px 20px;
+}
+
+.left-aligned-panel .paragraph {
+    padding: 0px 20px;
+}
+
+.left-aligned-panel ul {
+    margin: 0px;
+}
+
 .inner-panel {
     border: 1px solid var(--panel-border);
     border-radius: 8px;
@@ -349,7 +374,7 @@ a:active {
     padding: 0px 20px 20px 20px;
 }
 
-.borderless {
+.inner-panel .borderless {
     border: none;
 }
 
@@ -360,6 +385,10 @@ a:active {
 
 code {
     font-size: 16px;
+}
+
+hr {
+    width: 100%;
 }
 
 .note {
@@ -599,7 +628,8 @@ dialog button[type="button"] {
         align-content: center;
     }
 
-    .inner-panel {
+    .inner-panel,
+    .left-aligned-panel {
         max-width: 100%;
         flex: none;
     }
