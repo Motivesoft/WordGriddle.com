@@ -107,6 +107,7 @@ function openAboutBox() {
         </div>
         <p id="aboutBoxVersion"></p>
         <p id="copyrightStatement">Copyright &copy; Ian Brown, 2025. All rights reserved.</p>
+        <p id="moreInformation"><a href="/information.html">More Information</a></p>
         <p id="privacyPolicy"><a href="/privacy.html">Privacy Policy</a></p>
         <p id="termsOfUse"><a href="/terms.html">Terms of Use</a></p>
         `;
@@ -223,7 +224,11 @@ function getPuzzleStatus(puzzleName) {
 }
 
 function setPuzzleStatus(puzzleName, puzzleStatus) {
-    localStorage.setItem(getPuzzleStatusKey(puzzleName), puzzleStatus);
+    try {
+        localStorage.setItem(getPuzzleStatusKey(puzzleName), puzzleStatus);
+    } catch(error) {
+        console.error("Problem storing puzzle status", error);
+    }
 }
 
 function clearPuzzleStatus(puzzleName, puzzleTitle) {
