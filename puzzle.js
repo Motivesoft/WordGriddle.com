@@ -550,7 +550,11 @@ function attachEventListeners() {
         const selectedValue = this.value;
 
         // Save to localStorage
-        localStorage.setItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING, selectedValue);
+        try {
+            localStorage.setItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING, selectedValue);
+        } catch(error) {
+            console.error("Problem storing word ordering configuration", error);
+        }
 
         // Apply the change
         updateWordsFound();
@@ -565,7 +569,11 @@ function attachEventListeners() {
 
     // Handle state changes
     extraWordCheckbox.addEventListener('change', function () {
-        localStorage.setItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS, this.checked ? 'true' : 'false');
+        try {
+            localStorage.setItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS, this.checked ? 'true' : 'false');
+        } catch(error) {
+            console.error("Problem storing extra word configuration", error);
+        }
 
         updateExtraWordsFound();
     });
@@ -1153,7 +1161,11 @@ function updateProgress() {
         nonWordCount: currentPuzzle.foundNonWords
     });
 
-    localStorage.setItem(getProgressStorageKey(), storedValue);
+    try {
+        localStorage.setItem(getProgressStorageKey(), storedValue);
+    } catch(error) {
+        console.error("Problem storing puzzle progress", error);
+    }
 
     updatePuzzleStatus();
 }

@@ -13,10 +13,14 @@ const ScriptLocalStorageKeys = Object.freeze({
 // Function to store a choice of theme and and load it into the current session
 function setTheme(theme) {
     // Set the theme and store it for future - or reset it, if an undefined value is provided
-    if (theme) {
-        localStorage.setItem(ScriptLocalStorageKeys.THEME, theme);
-    } else {
-        localStorage.removeItem(ScriptLocalStorageKeys.THEME);
+    try {
+        if (theme) {
+            localStorage.setItem(ScriptLocalStorageKeys.THEME, theme);
+        } else {
+            localStorage.removeItem(ScriptLocalStorageKeys.THEME);
+        }
+    } catch (error) {
+        console.error("Problem storing theme", error);
     }
 
     loadTheme();
