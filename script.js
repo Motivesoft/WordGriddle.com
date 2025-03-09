@@ -108,6 +108,7 @@ function openAboutBox() {
         <p id="aboutBoxVersion"></p>
         <p id="copyrightStatement">Copyright &copy; Ian Brown, 2025. All rights reserved.</p>
         <p id="privacyPolicy"><a href="/privacy.html">Privacy Policy</a></p>
+        <p id="termsOfUse"><a href="/terms.html">Terms of Use</a></p>
         `;
 
     displayVersion('aboutBoxVersion');
