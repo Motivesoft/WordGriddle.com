@@ -353,6 +353,10 @@ a:active {
     padding: 0px 20px;
 }
 
+.left-aligned-panel ul {
+    margin: 0px;
+}
+
 .inner-panel {
     border: 1px solid var(--panel-border);
     border-radius: 8px;
