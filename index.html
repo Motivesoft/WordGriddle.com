@@ -80,15 +80,18 @@
         <div class="navbar-right">
             <button class="toolbar-button" id="aboutBoxButton">
                 <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
-                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
-                    stroke-linecap='round' stroke-linejoin='round'>
+                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
                     <path d='M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3M12 10L12 17M12 7L12 7' />
                 </svg>
             </button>
+            <button class="toolbar-button" id="settingsButton">
+                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' 
+                class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                <path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M6 4V14M6 18V20M12 4V6M12 10V20M18 4V14M18 18V20M6 14A2 2 0 0 1 6 18A2 2 0 0 1 6 14M12 6A2 2 0 0 1 12 10A2 2 0 0 1 12 6M18 14A2 2 0 0 1 18 18A2 2 0 0 1 18 14'/></svg>
+            </button>
             <button class="toolbar-button" id="themeToggleButton">
                 <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
-                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
-                    stroke-linecap='round' stroke-linejoin='round'>
+                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
                     <path
                         d='M3 12H4M12 3V4M21 12H20M12 21V20M5.63 5.63L6.343 6.343M18.364 18.364L17.65 17.65M18.364 5.6L17.65 6.343M5.6 18.364L6.343 17.65M12 8A4 4 0 0 1 12 16A4 4 0 0 1 12 8' />
                 </svg>
@@ -144,6 +147,22 @@
         <div id="aboutBoxText">
         </div>
         <button type="button" id="aboutBoxOkButton">OK</button>
+    </dialog>
+
+    <dialog id="confirmationDialog">
+        <form method="dialog">
+            <p id="dialogMessage">Are you sure?</p>
+            <button type="submit" value="yes">Yes</button>
+            <button type="button" id="noButton">No</button>
+        </form>
+    </dialog>
+
+    <dialog id="settingsDialog">
+        <h3>Settings</h3>
+        <div id="settingsControlArea">
+            <button type="button" id="resetStorage" style="margin: 20px; background-color: var(--icon-error-color);">Reset Storage</button>
+        </div>
+        <button type="button" id="settingsOkButton">OK</button>
     </dialog>
 </body>
 

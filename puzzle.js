@@ -11,7 +11,6 @@ const FoundMoveSortOrder = Object.freeze({
 const PuzzleLocalStorageKeys = Object.freeze({
     FOUND_WORD_ORDERING: "foundWordOrdering",
     SHOW_EXTRA_WORDS: "showExtraWords",
-    PROGRESS_STORAGE: "puzzle-%id.progress",
 });
 
 // State
@@ -550,7 +549,11 @@ function attachEventListeners() {
         const selectedValue = this.value;
 
         // Save to localStorage
-        localStorage.setItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING, selectedValue);
+        try {
+            localStorage.setItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING, selectedValue);
+        } catch(error) {
+            console.error("Problem storing word ordering configuration", error);
+        }
 
         // Apply the change
         updateWordsFound();
@@ -565,7 +568,11 @@ function attachEventListeners() {
 
     // Handle state changes
     extraWordCheckbox.addEventListener('change', function () {
-        localStorage.setItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS, this.checked ? 'true' : 'false');
+        try {
+            localStorage.setItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS, this.checked ? 'true' : 'false');
+        } catch(error) {
+            console.error("Problem storing extra word configuration", error);
+        }
 
         updateExtraWordsFound();
     });
@@ -1085,10 +1092,6 @@ function updatePuzzleProgressMessage() {
 
 // Progress storage
 
-function getProgressStorageKey() {
-    return PuzzleLocalStorageKeys.PROGRESS_STORAGE.replace("%id", currentPuzzle.puzzle.id);
-}
-
 function indexFromWord(wordList, searchWord) {
     // Return the index of 'searchWord' in 'wordList' where that is an [word,_] array
     for (let i = 0; i < wordList.length; i++) {
@@ -1153,7 +1156,11 @@ function updateProgress() {
         nonWordCount: currentPuzzle.foundNonWords
     });
 
-    localStorage.setItem(getProgressStorageKey(), storedValue);
+    try {
+        localStorage.setItem(getProgressStorageKey(currentPuzzle.puzzle.id), storedValue);
+    } catch(error) {
+        console.error("Problem storing puzzle progress", error);
+    }
 
     updatePuzzleStatus();
 }
@@ -1184,7 +1191,7 @@ function updatePuzzleStatus() {
 }
 
 function restoreProgress() {
-    const storedValue = localStorage.getItem(getProgressStorageKey());
+    const storedValue = localStorage.getItem(getProgressStorageKey(currentPuzzle.puzzle.id));
     if (storedValue) {
         try {
             const progressData = JSON.parse(storedValue);
@@ -1233,7 +1240,7 @@ async function resetProgress() {
 
     if (userConfirmed) {
         // Clear stored information
-        localStorage.removeItem(getProgressStorageKey());
+        localStorage.removeItem(getProgressStorageKey(currentPuzzle.puzzle.id));
 
         // Reset this back to being an unplayed puzzle as far as the list of puzzles is concerned
         clearPuzzleStatus(currentPuzzle.puzzleName);

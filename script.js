@@ -89,6 +89,94 @@ function openConfirmationDialog(message) {
     });
 }
 
+function openSettingsDialog() {
+    const dialog = document.getElementById('settingsDialog');
+    const settingsControlArea = document.getElementById('settingsControlArea');
+    const okButton = document.getElementById('settingsOkButton');
+
+    //NOTE: A 'cancel' button could be added to this if required
+
+    const resetStorageButton = document.getElementById('resetStorage');
+    if (resetStorageButton) {
+        resetStorageButton.addEventListener('click', async function () {
+            const userConfirmed = await openConfirmationDialog('This will delete ALL progress data for ALL puzzles.<br/><br/>Do you want to proceed?');
+            if (userConfirmed) {
+                const userAgreed = await openConfirmationDialog('This operation is irreversible.<br/><br/>Are you sure?');
+                if (userAgreed) {
+                    // For every puzzle we know, attempt to deleted any stored progress values
+                    deleteAllProgress();
+                }
+            }
+        });
+    }
+
+    // Show the dialog
+    dialog.showModal();
+
+    // Force focus onto the OK button
+    okButton.focus();
+
+    // Return a promise that resolves when the user clicks OK
+    return new Promise((resolve) => {
+        okButton.addEventListener('click', function () {
+            dialog.close();
+            resolve();
+        }, { once: true });
+    });
+}
+
+// Delete all progress information stored for all puzzles
+function deleteAllProgress() {
+    console.log(`Deleting all progress`);
+
+    fetch('/assets/server.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error status: ${response.status}`);
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            data.roles.forEach((role) => {
+                // # is a special name for the main repo
+                const repo = role.repo === '#' ? "puzzles" : role.repo;
+
+                // Read the catalog from repo and delete the progress for any puzzle therein
+                deleteProgress(repo);
+            });
+        })
+        .catch(async error => {
+            console.error(`Failed to load site-roles:`, error);
+        });
+}
+
+// Delete all progress information stored for all puzzles in a specific repo
+function deleteProgress(repo) {
+    console.log(`Deleting progress for ${repo}`);
+
+    fetch(`/assets/${repo}/catalog.json`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error status: ${response.status}`);
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            data.puzzles.forEach(puzzle => {
+                const puzzleStatusKey = getPuzzleStatusKey(puzzle.name);
+                localStorage.clear(puzzleStatusKey);
+
+                const puzzleProgressKey = getProgressStorageKey(puzzle.id);
+                localStorage.clear(puzzleProgressKey);
+            });
+        })
+        .catch(async error => {
+            console.error(`Failed to load ${repo} catalog:`, error);
+        });
+}
+
 function openAboutBox() {
     const dialog = document.getElementById('aboutBoxDialog');
     const aboutBoxText = document.getElementById('aboutBoxText');
@@ -107,6 +195,7 @@ function openAboutBox() {
         </div>
         <p id="aboutBoxVersion"></p>
         <p id="copyrightStatement">Copyright &copy; Ian Brown, 2025. All rights reserved.</p>
+        <p id="moreInformation"><a href="/information.html">More Information</a></p>
         <p id="privacyPolicy"><a href="/privacy.html">Privacy Policy</a></p>
         <p id="termsOfUse"><a href="/terms.html">Terms of Use</a></p>
         `;
@@ -135,6 +224,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (aboutBoxButton) {
         aboutBoxButton.addEventListener('click', async function () {
             await openAboutBox();
+        });
+    }
+
+    const settingsButton = document.getElementById('settingsButton');
+    if (settingsButton) {
+        settingsButton.addEventListener('click', async function () {
+            await openSettingsDialog();
+
+            // Refresh the current page to react to anything done in settings
+            location.reload();
         });
     }
 
@@ -207,7 +306,11 @@ const PuzzleSelectorIcons = new Map([
     //Full battery: ["4", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14M13 10V14M16 10V14'/></svg>`],
 ]);
 
-// Internal method
+// Internal methods
+function getProgressStorageKey(puzzleId) {
+    return `puzzle-${puzzleId}.progress`;
+}
+
 function getPuzzleStatusKey(puzzleName) {
     return `${puzzleName}.status`;
 }
@@ -223,7 +326,11 @@ function getPuzzleStatus(puzzleName) {
 }
 
 function setPuzzleStatus(puzzleName, puzzleStatus) {
-    localStorage.setItem(getPuzzleStatusKey(puzzleName), puzzleStatus);
+    try {
+        localStorage.setItem(getPuzzleStatusKey(puzzleName), puzzleStatus);
+    } catch (error) {
+        console.error("Problem storing puzzle status", error);
+    }
 }
 
 function clearPuzzleStatus(puzzleName, puzzleTitle) {
