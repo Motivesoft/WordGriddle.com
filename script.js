@@ -219,6 +219,8 @@ function openAboutBox() {
 
 // Listen on the page load completing to do any final setup steps
 document.addEventListener("DOMContentLoaded", async () => {
+    openDatabase();
+
     // About Box logic for a UI control
     const aboutBoxButton = document.getElementById('aboutBoxButton');
     if (aboutBoxButton) {
@@ -340,6 +342,8 @@ function clearPuzzleStatus(puzzleName, puzzleTitle) {
 
 function createPuzzleSelector(puzzle) {
     // Get the status (played, unplayed, ...)
+    // TODO get rid of the local store one of these
+    loadProgress(puzzle.id);
     const puzzleStatus = getPuzzleStatus(puzzle.name);
 
     // Build the button piece by piece
@@ -382,3 +386,269 @@ function createPuzzleSelector(puzzle) {
     // Return the button
     return puzzleSelector;
 }
+
+// IndexedDB stuff
+
+let db;
+
+// TODO rename this and wrap it in a Objects.freeze with others
+const storeName = 'progress';
+
+function openDatabase() {
+    console.log("openDatabase");
+
+    return new Promise((resolve, reject) => {
+        // TODO remove this delete
+        // TODO when we do this delete/recreate, db seems to be undefined for subsequent calls. investigate
+        //indexedDB.deleteDatabase("WordGriddle");
+
+        const request = indexedDB.open("WordGriddle", 1);
+
+        console.log("Database opened");
+
+        request.onupgradeneeded = (event) => {
+            console.log("on upgrade");
+
+            db = event.target.result;
+            
+            if (!db.objectStoreNames.contains(storeName)) {
+                db.createObjectStore(storeName, { keyPath: 'id' });
+            }
+
+            // TODO reinstate this when we know what we're doing
+            // if (!db.objectStoreNames.contains("status")) {
+            //     db.createObjectStore("status", { keyPath: 'id' });
+            // }
+
+            // TODO decide about this
+            // if (!db.objectStoreNames.contains("settings")) {
+            //     db.createObjectStore("settings", { keyPath: "puzzleId" });
+            // }
+        };
+
+        request.onsuccess = (event) => {
+            db = event.target.result;
+            resolve();
+        };
+
+        request.onerror = (event) => {
+            console.error("Error opening database:", event.target.error);
+            reject(event.target.error);
+        };
+    });
+}
+
+function loadProgressAll() {
+    console.debug(`loadProgressAll`);
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([storeName], "readonly");
+        const store = transaction.objectStore(storeName);
+
+        const request = store.getAll();
+
+        request.onsuccess = () => {
+            console.debug(`result: ${request.result}`);
+            resolve(request.result ? request.result.data : null);
+        };
+
+        request.onerror = (event) => {
+            console.error("Error loading progress:", event.target.error);
+            reject(event.target.error);
+        };
+    });
+}
+
+function loadProgressRange(lowerPuzzleId, upperPuzzleId) {
+    console.debug(`loadProgressRange ${lowerPuzzleId}-${upperPuzzleId}`);
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, "readonly");
+        const store = transaction.objectStore(storeName);
+
+        // Define the key range
+        const keyRange = IDBKeyRange.bound(lowerPuzzleId, upperPuzzleId);
+
+        // Use getAll() with the key range
+        const request = store.getAll(keyRange);
+
+        request.onsuccess = () => {
+            console.debug(`resolving with: ${request.result}`);
+            console.debug(` ie: ${request.result.data}`);
+            resolve(request.result ? request.result.data : null);
+        };
+
+        request.onerror = (event) => {
+            console.error("Error loading progress:", event.target.error);
+            reject(event.target.error);
+        };
+    });
+}
+
+function loadProgress(puzzleId) {
+    console.debug(`loadProgress ${puzzleId}`);
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([storeName], "readonly");
+        const store = transaction.objectStore(storeName);
+        const request = store.get(puzzleId);
+
+        request.onsuccess = (event) => {
+            console.debug(`1result: ${request.result}`);
+            console.debug(`2result: ${event.target.result}`);
+            console.debug(`3result: ${event.target.result.data}`);
+            resolve(request.result ? request.result.data : null);
+        };
+
+        request.onerror = (event) => {
+            console.error("Error loading progress:", event.target.error);
+            reject(event.target.error);
+        };
+    });
+}
+
+// Example usage when a puzzle is selected
+async function onPuzzleSelected(puzzleId) {
+    await openDatabase();
+    const progressData = await loadProgress(puzzleId);
+    if (progressData) {
+        console.log("Loaded progress:", progressData);
+        // Initialize the puzzle with the loaded data
+    } else {
+        console.log("No progress found for this puzzle.");
+        // Start a new puzzle
+    }
+}
+
+function saveProgress(puzzleId, data) {
+    console.log(`Save progress ${puzzleId} - '${data} - '${data.status}'`);
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([storeName], "readwrite");
+        const store = transaction.objectStore(storeName);
+        // const request = store.put({ puzzleId, ...data });
+        const request = store.put({ puzzleId, ...data });
+
+        console.debug(`Saving '${puzzleId}': '${data}'`);
+
+        request.onsuccess = () => {
+            resolve();
+            console.log("Progress saved successfully.");
+        };
+
+        request.onerror = (event) => {
+            console.error("Error saving progress:", event.target.error);
+            reject(event.target.error);
+        };
+    });
+}
+
+
+
+// TODO we probably don't need this as we save on state change
+// Example usage during gameplay
+// function onPuzzleUpdated(puzzleId, currentProgress) {
+//     saveProgress(puzzleId, currentProgress).catch((error) =>
+//         console.error("Failed to save progress:", error)
+//     );
+// }
+
+// TODO we probably don't need this as we save on state change
+// Set up periodic saving (e.g., every 30 seconds)
+// setInterval(() => {
+//     const puzzleId = "currentPuzzle"; // Replace with actual puzzle ID
+//     const currentProgress = { /* current game state */ };
+//     onPuzzleUpdated(puzzleId, currentProgress);
+// }, 30000);
+
+// TODO we probably don't need this as we save on state change
+// window.addEventListener("beforeunload", () => {
+//     const puzzleId = "currentPuzzle"; // Replace with actual puzzle ID
+//     const currentProgress = { /* current game state */ };
+//     saveProgress(puzzleId, currentProgress).catch((error) =>
+//         console.error("Failed to save progress before exit:", error)
+//     );
+// });
+
+
+
+
+const dbName = 'MyDatabase';
+//const storeName = 'MyObjectStore';
+
+indexedDB.deleteDatabase(dbName);
+const request = indexedDB.open(dbName, 1);
+
+request.onupgradeneeded = function(event) {
+    console.debug("Creating database");
+    const db = event.target.result;
+    if (!db.objectStoreNames.contains(storeName)) {
+        db.createObjectStore(storeName, { keyPath: 'id' });
+    }
+};
+
+request.onerror = function(event) {
+    console.error('Database error:', event.target.error);
+};
+
+request.onsuccess = function(event) {
+    const db = event.target.result;
+    console.log('Database opened successfully');
+};
+
+function addObject(db, id, jsonObject) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([storeName], 'readwrite');
+        const store = transaction.objectStore(storeName);
+        const request = store.put({ id, ...jsonObject });
+
+        request.onsuccess = function() {
+            console.log('Object added successfully');
+            resolve(); // Resolve the promise when the operation succeeds
+        };
+
+        request.onerror = function(event) {
+            console.error('Error adding object:', event.target.error);
+            reject(event.target.error); // Reject the promise if there's an error
+        };
+    });
+}
+
+function getObjectsInRange(db, lowerBound, upperBound) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([storeName], 'readonly');
+        const store = transaction.objectStore(storeName);
+        const range = IDBKeyRange.bound(lowerBound, upperBound);
+        const request = store.getAll(range);
+
+        request.onsuccess = function(event) {
+            resolve(event.target.result);
+        };
+
+        request.onerror = function(event) {
+            reject(event.target.error);
+        };
+    });
+}
+
+async function runOperations(db) {
+    try {
+        // Add an object
+        const jsonObject = { name: 'John Doe', age: 30 };
+        const customId = 123;
+        await addObject(db, customId, jsonObject); // Wait for addObject to complete
+
+        // Retrieve objects in a range
+        const objects = await getObjectsInRange(db, 100, 200); // Wait for getObjectsInRange to complete
+        console.log('Objects in range:', objects);
+        objects.forEach((object)=>{
+            console.log(`${object.name}, age: ${object.age}`);
+        });
+} catch (error) {
+        console.error('Error during operations:', error);
+    }
+}
+
+// Open the database and run the operations
+const dbRequest = indexedDB.open(dbName, 1);
+
+dbRequest.onsuccess = function(event) {
+    const db = event.target.result;
+    runOperations(db); // Start the operations
+};
