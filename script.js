@@ -340,11 +340,23 @@ function clearPuzzleStatus(puzzleName, puzzleTitle) {
     return localStorage.clear(getPuzzleStatusKey(puzzleName));
 }
 
-function createPuzzleSelector(puzzle) {
+async function createPuzzleSelector(puzzle) {
     // Get the status (played, unplayed, ...)
     // TODO get rid of the local store one of these
-    loadProgress(puzzle.id);
-    const puzzleStatus = getPuzzleStatus(puzzle.name);
+
+    // await dbPuzzleStatusConnection.getObject(puzzle.id)
+    //     .then((data) => {
+    //         console.debug(`Got status: ${data}`);
+    //         //console.debug(`Got status: ${data.status}`);
+
+    //     }).catch((error) => {
+    //         console.error("Failed to get status: ", error);
+    //     });
+
+    // const puzzleStatus = getPuzzleStatus(puzzle.name);
+    const storedValue = await dbPuzzleStatusConnection.getObject(puzzle.id);
+    const puzzleStatus = storedValue?.status || PuzzleStatus.NONE;
+    // const puzzleStatus = getPuzzleStatus(puzzle.name);
 
     // Build the button piece by piece
     const puzzleSelector = document.createElement('button');
@@ -386,104 +398,3 @@ function createPuzzleSelector(puzzle) {
     // Return the button
     return puzzleSelector;
 }
-
-// IndexedDB stuff
-
-const dbName = 'WordGriddle';
-const storeName = 'progress'; // TODO rename and put this into an Objects.freeze enum with others
-
-const request = indexedDB.open(dbName, 1);
-
-request.onupgradeneeded = function(event) {
-    console.debug("Creating database");
-    const db = event.target.result;
-    if (!db.objectStoreNames.contains(storeName)) {
-        db.createObjectStore(storeName, { keyPath: 'id' });
-    }
-};
-
-request.onerror = function(event) {
-    console.error('Database error:', event.target.error);
-};
-
-request.onsuccess = function(event) {
-    //const db = event.target.result;
-    console.log('Database opened successfully');
-};
-
-function storePuzzleStatus(db, id, puzzleStatus) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([storeName], 'readwrite');
-        const store = transaction.objectStore(storeName);
-        const request = store.put({ id, ...puzzleStatus });
-
-        request.onsuccess = function() {
-            console.log('Object added successfully');
-            resolve(); // Resolve the promise when the operation succeeds
-        };
-
-        request.onerror = function(event) {
-            console.error('Error adding object:', event.target.error);
-            reject(event.target.error); // Reject the promise if there's an error
-        };
-    });
-}
-
-function getPuzzleStatusInRange(db, lowerPuzzleId, upperPuzzleId) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([storeName], 'readonly');
-        const store = transaction.objectStore(storeName);
-        const range = IDBKeyRange.bound(lowerPuzzleId, upperPuzzleId);
-        const request = store.getAll(range);
-
-        request.onsuccess = function(event) {
-            resolve(event.target.result);
-        };
-
-        request.onerror = function(event) {
-            reject(event.target.error);
-        };
-    });
-}
-
-function getPuzzleStatusInRange(db, puzzleId) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([storeName], 'readonly');
-        const store = transaction.objectStore(storeName);
-        const request = store.get(puzzleId);
-
-        request.onsuccess = function(event) {
-            resolve(event.target.result);
-        };
-
-        request.onerror = function(event) {
-            reject(event.target.error);
-        };
-    });
-}
-
-async function runOperations(db) {
-    try {
-        // Add an object
-        const jsonObject = { name: 'John Doe', age: 30 };
-        const customId = 195;
-        await storePuzzleStatus(db, customId, jsonObject); // Wait for addObject to complete
-
-        // Retrieve objects in a range
-        const objects = await getPuzzleStatusInRange(db, 100, 200); // Wait for getObjectsInRange to complete
-        console.log('Objects in range:', objects);
-        objects.forEach((object)=>{
-            console.log(`${object.name}, age: ${object.age}`);
-        });
-} catch (error) {
-        console.error('Error during operations:', error);
-    }
-}
-
-// Open the database and run the operations
-const dbRequest = indexedDB.open(dbName, 1);
-
-dbRequest.onsuccess = function(event) {
-    const db = event.target.result;
-   // runOperations(db); // Start the operations
-};

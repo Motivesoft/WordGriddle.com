@@ -1187,6 +1187,23 @@ function updatePuzzleStatus() {
         }
     }
 
+    // TODO lost the localStorage one of these two
+    console.log("Saving Progress");
+    dbPuzzleStatusConnection.putObject(currentPuzzle.puzzle.id, {status: puzzleStatus} )
+        .then(() => {
+            console.log("Saved progress");
+        })
+        .catch((error) => {
+            // TODO do we need to do this?
+            console.error("Failed to save progress", error);
+        });
+    // loadProgress(currentPuzzle.puzzle.id)
+    //     .then((response) => {
+    //         console.debug(`got response: ${response}`);
+    //     })
+    //     .catch(() => {
+    //         console.debug(`got error`);
+    //     });
     setPuzzleStatus(currentPuzzle.puzzleName, puzzleStatus);
 }
 

@@ -47,46 +47,33 @@
                 .then(data => {
                     const puzzleListElement = document.getElementById('puzzle-list');
 
-                    // Work out the set of puzzles in the catalog
-                    let minPuzzleId = 999999;
-                    let maxPuzzleId = 0;
-                    data.puzzles.forEach(puzzle => {
-                        minPuzzleId = Math.min(minPuzzleId, puzzle.id);
-                        maxPuzzleId = Math.max(maxPuzzleId, puzzle.id);
-                    });
+                    data.puzzles.forEach(async puzzle => {
+                        const puzzleSelector = await createPuzzleSelector(puzzle);
 
-                    if (maxPuzzleId < minPuzzleId) {
-                        // No puzzles
-                        return;
-                    }
-
-                    dbPuzzleStatusConnection.getObjectsInRange(minPuzzleId, maxPuzzleId)
-                        .then(range => {
-                            console.log(`Range: ${range}`);
-                            range.forEach((item)=>{
-                                console.log(` Item: ${item}`);
-                                console.log(`   ID: ${item.id}`);
-                                console.log(`     : ${item.status}`);
-                            });
-
-                            data.puzzles.forEach(puzzle => {
-                                const puzzleSelector = createPuzzleSelector(puzzle);
-
-                                puzzleSelector.addEventListener('click', function () {
-                                    window.location.href = puzzleUrlLink
-                                        .replace("%name", encodeURIComponent(puzzle.name));
-                                });
-
-                                puzzleListElement.appendChild(puzzleSelector);
-                            });
-                        })
-                        .catch(async error => {
-                            console.error(`Failed to load stored progress: '${puzzleCatalog}'`, error);
-                            await openMessageBox(`Failed to load stored progress for '${puzzleRepo}'.`, MessageBoxType.ERROR);
-
-                            // TODO we need a route to proceed here - expecially if this is a likely outcome for any reason
-                            // Simply creating puzzle selector buttons with no awareness of progress info would be the best fallback
+                        puzzleSelector.addEventListener('click', function () {
+                            window.location.href = puzzleUrlLink
+                                .replace("%name", encodeURIComponent(puzzle.name));
                         });
+
+                        puzzleListElement.appendChild(puzzleSelector);
+                    });
+                    // dbPuzzleStatusConnection.getObjectsInRange(minPuzzleId, maxPuzzleId)
+                    //     .then(range => {
+                    //         console.log(`Range: ${range}`);
+                    //         range.forEach((item)=>{
+                    //             console.log(` Item: ${item}`);
+                    //             console.log(`   ID: ${item.id}`);
+                    //             console.log(`     : ${item.status}`);
+                    //         });
+
+                    //     })
+                    //     .catch(async error => {
+                    //         console.error(`Failed to load stored progress: '${puzzleCatalog}'`, error);
+                    //         await openMessageBox(`Failed to load stored progress for '${puzzleRepo}'.`, MessageBoxType.ERROR);
+
+                    //         // TODO we need a route to proceed here - expecially if this is a likely outcome for any reason
+                    //         // Simply creating puzzle selector buttons with no awareness of progress info would be the best fallback
+                    //     });
                 })
                 .catch(async error => {
                     console.error(`Failed to load puzzle list: '${puzzleCatalog}'`, error);
