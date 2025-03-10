@@ -115,6 +115,11 @@
       "id": 23,
       "size": 3,
       "name": "puzzle-23"
+    },
+    {
+      "id": 24,
+      "size": 4,
+      "name": "puzzle-24"
     }
   ]
 }

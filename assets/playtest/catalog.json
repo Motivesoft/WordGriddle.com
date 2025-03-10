@@ -2,11 +2,6 @@
   "prompt": "Choose a puzzle to test",
   "puzzles": [
     {
-      "id": 24,
-      "size": 4,
-      "name": "puzzle-24"
-    },
-    {
       "id": 25,
       "size": 4,
       "name": "puzzle-25"
