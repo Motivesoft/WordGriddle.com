@@ -1187,24 +1187,8 @@ function updatePuzzleStatus() {
         }
     }
 
-    // TODO lost the localStorage one of these two
-    console.log("Saving Progress");
-    dbPuzzleStatusConnection.putObject(currentPuzzle.puzzle.id, {status: puzzleStatus} )
-        .then(() => {
-            console.log("Saved progress");
-        })
-        .catch((error) => {
-            // TODO do we need to do this?
-            console.error("Failed to save progress", error);
-        });
-    // loadProgress(currentPuzzle.puzzle.id)
-    //     .then((response) => {
-    //         console.debug(`got response: ${response}`);
-    //     })
-    //     .catch(() => {
-    //         console.debug(`got error`);
-    //     });
-    setPuzzleStatus(currentPuzzle.puzzleName, puzzleStatus);
+    // Store our status for the benefit of the puzzle list page
+    setPuzzleStatus(currentPuzzle.puzzle.id, puzzleStatus);
 }
 
 function restoreProgress() {
@@ -1239,13 +1223,6 @@ function restoreProgress() {
 
             // Infer completed state
             currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
-
-            // For Alpha users: if we have stored progress but no stored progress status, calculate the status now
-            // This will have happened because early Alpha versions didn't have this status
-            // TODO remove this code once Alpha is over
-            if (!hasPuzzleStatus(currentPuzzle.puzzleName)) {
-                updatePuzzleStatus();
-            }
         } catch (error) {
             console.error("Failed to restore progress", error);
         }

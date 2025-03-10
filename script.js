@@ -165,7 +165,7 @@ function deleteProgress(repo) {
         })
         .then(data => {
             data.puzzles.forEach(puzzle => {
-                const puzzleStatusKey = getPuzzleStatusKey(puzzle.name);
+                const puzzleStatusKey = `${puzzle.name}.status`;
                 localStorage.clear(puzzleStatusKey);
 
                 const puzzleProgressKey = getProgressStorageKey(puzzle.id);
@@ -313,31 +313,20 @@ function getProgressStorageKey(puzzleId) {
     return `puzzle-${puzzleId}.progress`;
 }
 
-function getPuzzleStatusKey(puzzleName) {
-    return `${puzzleName}.status`;
-}
-
-function hasPuzzleStatus(puzzleName) {
-    const status = localStorage.getItem(getPuzzleStatusKey(puzzleName));
-    return !(status === null || status === undefined);
-}
-
-function getPuzzleStatus(puzzleName) {
-    const status = localStorage.getItem(getPuzzleStatusKey(puzzleName));
-    return status ? status : PuzzleStatus.NONE;
-}
-
-function setPuzzleStatus(puzzleName, puzzleStatus) {
-    try {
-        localStorage.setItem(getPuzzleStatusKey(puzzleName), puzzleStatus);
-    } catch (error) {
-        console.error("Problem storing puzzle status", error);
-    }
+function setPuzzleStatus(puzzleId, puzzleStatus) {
+    console.log("Saving Status");
+    dbPuzzleStatusConnection.putObject(puzzleId, { status: puzzleStatus })
+        .then(() => {
+            console.log("Saved status");
+        })
+        .catch((error) => {
+            // TODO do we need to do this?
+            console.error("Failed to save status", error);
+        });
 }
 
 function clearPuzzleStatus(puzzleId) {
     // We could set this to NONE, but I prefer reducing localStorage use where we can
-    // return localStorage.clear(getPuzzleStatusKey(puzzleName));
     dbPuzzleStatusConnection.deleteObject(puzzleId)
         .then(() => {
             console.debug("Deleted puzzle status");
@@ -348,12 +337,8 @@ function clearPuzzleStatus(puzzleId) {
 }
 
 async function createPuzzleSelector(puzzle, statusContainer) {
-    // Get the status (played, unplayed, ...)
-    // TODO get rid of the local store one of these
-
-    // const puzzleStatus = getPuzzleStatus(puzzle.name);
+    // Determine the status (played, unplayed, ...)
     const puzzleStatus = statusContainer?.status || PuzzleStatus.NONE;
-    // const puzzleStatus = getPuzzleStatus(puzzle.name);
 
     // Build the button piece by piece
     const puzzleSelector = document.createElement('button');
