@@ -19,8 +19,14 @@ class DBConnection {
             request.onupgradeneeded = (event) => {
                 console.debug("Creating database");
                 const db = event.target.result;
-                if (!db.objectStoreNames.contains(this.storeName)) {
-                    db.createObjectStore(this.storeName, { keyPath: 'id' });
+                // if (!db.objectStoreNames.contains(this.storeName)) {
+                //     db.createObjectStore(this.storeName, { keyPath: 'id' });
+                // }
+                if (!db.objectStoreNames.contains('PuzzleProgress')) {
+                    db.createObjectStore('PuzzleProgress', { keyPath: 'id' });
+                }
+                if (!db.objectStoreNames.contains('PuzzleStatus')) {
+                    db.createObjectStore('PuzzleStatus', { keyPath: 'id' });
                 }
             };
 
@@ -121,11 +127,14 @@ class DBConnection {
 
 
 // Singleton instance(s)
+const dbPuzzleProgressConnection = new DBConnection('Test', 'PuzzleProgress');
 const dbPuzzleStatusConnection = new DBConnection('Test', 'PuzzleStatus');
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        //indexedDB.deleteDatabase('Test');
+        // indexedDB.deleteDatabase('Test');
+
+        await dbPuzzleProgressConnection.open();
         await dbPuzzleStatusConnection.open();
         console.log('Database connection opened successfully.');
     } catch (error) {
@@ -134,6 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 window.addEventListener('unload', () => {
+    dbPuzzleProgressConnection.close();
     dbPuzzleStatusConnection.close();
     console.log('Database connection closed.');
 });

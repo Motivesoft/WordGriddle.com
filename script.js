@@ -151,7 +151,7 @@ function deleteAllProgress() {
         });
 }
 
-// Delete all progress information stored for all puzzles in a specific repo
+// Delete all "localStorage" progress information stored for all puzzles in a specific repo
 function deleteProgress(repo) {
     console.log(`Deleting progress for ${repo}`);
 
@@ -168,7 +168,7 @@ function deleteProgress(repo) {
                 const puzzleStatusKey = `${puzzle.name}.status`;
                 localStorage.clear(puzzleStatusKey);
 
-                const puzzleProgressKey = getProgressStorageKey(puzzle.id);
+                const puzzleProgressKey = `puzzle-${puzzle.id}.progress`;
                 localStorage.clear(puzzleProgressKey);
             });
         })

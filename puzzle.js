@@ -551,7 +551,7 @@ function attachEventListeners() {
         // Save to localStorage
         try {
             localStorage.setItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING, selectedValue);
-        } catch(error) {
+        } catch (error) {
             console.error("Problem storing word ordering configuration", error);
         }
 
@@ -570,7 +570,7 @@ function attachEventListeners() {
     extraWordCheckbox.addEventListener('change', function () {
         try {
             localStorage.setItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS, this.checked ? 'true' : 'false');
-        } catch(error) {
+        } catch (error) {
             console.error("Problem storing extra word configuration", error);
         }
 
@@ -818,7 +818,7 @@ function updateExtraWordsFound() {
 function updateClues() {
     // Show or hide clues controls
     const cluesCheckbox = getShowCluesElement();
-    
+
     document.getElementById('refresh-clues').style.display = cluesCheckbox.checked ? '' : 'none';
     document.getElementById('clue-panel-1').innerHTML = '';
 
@@ -849,7 +849,7 @@ function wordToClue(word) {
     if (!word || word.length === 0) {
         return '';
     }
-    
+
     for (let i = 0; i < word.length; i++) {
         if (word[i] === gapChar) {
             return;
@@ -863,7 +863,7 @@ function wordToClue(word) {
     let letterCountIncrements = [
         4, 5, 6, 9, 11, 15, 18, 21
     ];
-    
+
     for (let i = 0; i < letterCountIncrements.length; i++) {
         if (word.length >= letterCountIncrements[i]) {
             letterCount++;
@@ -873,7 +873,7 @@ function wordToClue(word) {
     let letterIndexArray = [];
     letterIndexArray.push(0);
     for (let i = 1; i < letterCount; i++) {
-        const index = 1 + Math.floor((word.length-1) * Math.random());
+        const index = 1 + Math.floor((word.length - 1) * Math.random());
         if (letterIndexArray.includes(index)) {
             i--;
             continue;
@@ -883,7 +883,7 @@ function wordToClue(word) {
     }
 
     let newWord = '';
-    for( let i = 0; i < word.length; i++) {
+    for (let i = 0; i < word.length; i++) {
         if (letterIndexArray.includes(i)) {
             newWord += word[i];
         } else {
@@ -1156,11 +1156,19 @@ function updateProgress() {
         nonWordCount: currentPuzzle.foundNonWords
     });
 
-    try {
-        localStorage.setItem(getProgressStorageKey(currentPuzzle.puzzle.id), storedValue);
-    } catch(error) {
-        console.error("Problem storing puzzle progress", error);
-    }
+    dbPuzzleProgressConnection.putObject(currentPuzzle.puzzle.id, storedValue)
+        .then(() => {
+            console.debug("Progress saved");
+        })
+        .catch((error) => {
+            console.error("Failed to save progress", error);
+        });
+
+    // try {
+    //     localStorage.setItem(getProgressStorageKey(currentPuzzle.puzzle.id), storedValue);
+    // } catch(error) {
+    //     console.error("Problem storing puzzle progress", error);
+    // }
 
     updatePuzzleStatus();
 }
@@ -1191,8 +1199,10 @@ function updatePuzzleStatus() {
     setPuzzleStatus(currentPuzzle.puzzle.id, puzzleStatus);
 }
 
-function restoreProgress() {
-    const storedValue = localStorage.getItem(getProgressStorageKey(currentPuzzle.puzzle.id));
+async function restoreProgress() {
+    const storedValue = await dbPuzzleProgressConnection.getObject(currentPuzzle.puzzle.id);
+    console.log(`Restore from '${storedValue}'`);
+    // const storedValue = localStorage.getItem(getProgressStorageKey(currentPuzzle.puzzle.id));
     if (storedValue) {
         try {
             const progressData = JSON.parse(storedValue);
@@ -1234,7 +1244,8 @@ async function resetProgress() {
 
     if (userConfirmed) {
         // Clear stored information
-        localStorage.removeItem(getProgressStorageKey(currentPuzzle.puzzle.id));
+        await dbPuzzleProgressConnection.deleteObject(currentPuzzle.puzzle.id);
+        // localStorage.removeItem(getProgressStorageKey(currentPuzzle.puzzle.id));
 
         // Reset this back to being an unplayed puzzle as far as the list of puzzles is concerned
         clearPuzzleStatus(currentPuzzle.puzzle.id);
