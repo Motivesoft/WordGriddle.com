@@ -15,6 +15,8 @@
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="style.css">
     <link rel="canonical" href="https://wordgriddle.com" />
+    <script src="logger.js"></script>
+    <script src="database.js"></script>
     <script src="theme.js"></script>
     <script src="script.js" defer></script>
     <script>
@@ -45,16 +47,46 @@
                 .then(data => {
                     const puzzleListElement = document.getElementById('puzzle-list');
 
+                    // Work out the set of puzzles in the catalog
+                    let minPuzzleId = 999999;
+                    let maxPuzzleId = 0;
                     data.puzzles.forEach(puzzle => {
-                        const puzzleSelector = createPuzzleSelector(puzzle);
-                        
-                        puzzleSelector.addEventListener('click', function () {
-                            window.location.href = puzzleUrlLink
-                                .replace("%name", encodeURIComponent(puzzle.name));
-                        });        
-
-                        puzzleListElement.appendChild(puzzleSelector);
+                        minPuzzleId = Math.min(minPuzzleId, puzzle.id);
+                        maxPuzzleId = Math.max(maxPuzzleId, puzzle.id);
                     });
+
+                    if (maxPuzzleId < minPuzzleId) {
+                        // No puzzles
+                        return;
+                    }
+
+                    dbPuzzleStatusConnection.getObjectsInRange(minPuzzleId, maxPuzzleId)
+                        .then(range => {
+                            console.log(`Range: ${range}`);
+                            range.forEach((item)=>{
+                                console.log(` Item: ${item}`);
+                                console.log(`   ID: ${item.id}`);
+                                console.log(`     : ${item.status}`);
+                            });
+
+                            data.puzzles.forEach(puzzle => {
+                                const puzzleSelector = createPuzzleSelector(puzzle);
+
+                                puzzleSelector.addEventListener('click', function () {
+                                    window.location.href = puzzleUrlLink
+                                        .replace("%name", encodeURIComponent(puzzle.name));
+                                });
+
+                                puzzleListElement.appendChild(puzzleSelector);
+                            });
+                        })
+                        .catch(async error => {
+                            console.error(`Failed to load stored progress: '${puzzleCatalog}'`, error);
+                            await openMessageBox(`Failed to load stored progress for '${puzzleRepo}'.`, MessageBoxType.ERROR);
+
+                            // TODO we need a route to proceed here - expecially if this is a likely outcome for any reason
+                            // Simply creating puzzle selector buttons with no awareness of progress info would be the best fallback
+                        });
                 })
                 .catch(async error => {
                     console.error(`Failed to load puzzle list: '${puzzleCatalog}'`, error);
@@ -80,18 +112,24 @@
         <div class="navbar-right">
             <button class="toolbar-button" id="aboutBoxButton">
                 <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
-                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
+                    stroke-linecap='round' stroke-linejoin='round'>
                     <path d='M12 3A9 9 0 0 1 12 21A9 9 0 0 1 12 3M12 10L12 17M12 7L12 7' />
                 </svg>
             </button>
             <button class="toolbar-button" id="settingsButton">
-                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' 
-                class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
-                <path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M6 4V14M6 18V20M12 4V6M12 10V20M18 4V14M18 18V20M6 14A2 2 0 0 1 6 18A2 2 0 0 1 6 14M12 6A2 2 0 0 1 12 10A2 2 0 0 1 12 6M18 14A2 2 0 0 1 18 18A2 2 0 0 1 18 14'/></svg>
+                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
+                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
+                    stroke-linecap='round' stroke-linejoin='round'>
+                    <path fill='none' stroke='none' d='M0 0h24v24H0z' />
+                    <path
+                        d='M6 4V14M6 18V20M12 4V6M12 10V20M18 4V14M18 18V20M6 14A2 2 0 0 1 6 18A2 2 0 0 1 6 14M12 6A2 2 0 0 1 12 10A2 2 0 0 1 12 6M18 14A2 2 0 0 1 18 18A2 2 0 0 1 18 14' />
+                </svg>
             </button>
             <button class="toolbar-button" id="themeToggleButton">
                 <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
-                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                    class="toolbar-button-icon" stroke='currentColor' fill='none' stroke-width='2'
+                    stroke-linecap='round' stroke-linejoin='round'>
                     <path
                         d='M3 12H4M12 3V4M21 12H20M12 21V20M5.63 5.63L6.343 6.343M18.364 18.364L17.65 17.65M18.364 5.6L17.65 6.343M5.6 18.364L6.343 17.65M12 8A4 4 0 0 1 12 16A4 4 0 0 1 12 8' />
                 </svg>
@@ -127,7 +165,8 @@
                 <p class="paragraph">This is an early version of our game. It should work just fine, but please forgive
                     anything that goes wrong.</p>
                 <p class="paragraph">Have fun, and please give us feedback and ideas for your own puzzles!</p>
-                <p class="paragraph note info">Hint: Use the button at the top-right of the screen to switch between light
+                <p class="paragraph note info">Hint: Use the button at the top-right of the screen to switch between
+                    light
                     and dark mode.</p>
                 <p class="paragraph note caution">Note: The game will save your progress as you play each puzzle, but in
                     this version, how long your results are
@@ -160,7 +199,8 @@
     <dialog id="settingsDialog">
         <h3>Settings</h3>
         <div id="settingsControlArea">
-            <button type="button" id="resetStorage" style="margin: 20px; background-color: var(--icon-error-color);">Reset Storage</button>
+            <button type="button" id="resetStorage"
+                style="margin: 20px; background-color: var(--icon-error-color);">Reset Storage</button>
         </div>
         <button type="button" id="settingsOkButton">OK</button>
     </dialog>
