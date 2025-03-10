@@ -68,7 +68,7 @@ class DBConnection {
     async deleteObject(id) {
         console.debug( "Delete object");
         const db = this.getDB();
-        const transaction = db.transaction([this.storeName], 'readonly');
+        const transaction = db.transaction([this.storeName], 'readwrite');
         const store = transaction.objectStore(this.storeName);
         const request = store.delete(id);
 
@@ -98,6 +98,19 @@ class DBConnection {
         const store = transaction.objectStore(this.storeName);
         const range = IDBKeyRange.bound(lowerBound, upperBound);
         const request = store.getAll(range);
+    
+        return new Promise((resolve, reject) => {
+            request.onsuccess = (event) => resolve(event.target.result);
+            request.onerror = (event) => reject(event.target.error);
+        });
+    }
+    
+    async getAllObjects() {
+        console.debug( "Get all objects");
+        const db = this.getDB();
+        const transaction = db.transaction([this.storeName], 'readonly');
+        const store = transaction.objectStore(this.storeName);
+        const request = store.getAll();
     
         return new Promise((resolve, reject) => {
             request.onsuccess = (event) => resolve(event.target.result);

@@ -335,27 +335,24 @@ function setPuzzleStatus(puzzleName, puzzleStatus) {
     }
 }
 
-function clearPuzzleStatus(puzzleName, puzzleTitle) {
+function clearPuzzleStatus(puzzleId) {
     // We could set this to NONE, but I prefer reducing localStorage use where we can
-    return localStorage.clear(getPuzzleStatusKey(puzzleName));
+    // return localStorage.clear(getPuzzleStatusKey(puzzleName));
+    dbPuzzleStatusConnection.deleteObject(puzzleId)
+        .then(() => {
+            console.debug("Deleted puzzle status");
+        })
+        .catch((error) => {
+            console.error("Failed to delete puzzle status", error);
+        });
 }
 
-async function createPuzzleSelector(puzzle) {
+async function createPuzzleSelector(puzzle, statusContainer) {
     // Get the status (played, unplayed, ...)
     // TODO get rid of the local store one of these
 
-    // await dbPuzzleStatusConnection.getObject(puzzle.id)
-    //     .then((data) => {
-    //         console.debug(`Got status: ${data}`);
-    //         //console.debug(`Got status: ${data.status}`);
-
-    //     }).catch((error) => {
-    //         console.error("Failed to get status: ", error);
-    //     });
-
     // const puzzleStatus = getPuzzleStatus(puzzle.name);
-    const storedValue = await dbPuzzleStatusConnection.getObject(puzzle.id);
-    const puzzleStatus = storedValue?.status || PuzzleStatus.NONE;
+    const puzzleStatus = statusContainer?.status || PuzzleStatus.NONE;
     // const puzzleStatus = getPuzzleStatus(puzzle.name);
 
     // Build the button piece by piece

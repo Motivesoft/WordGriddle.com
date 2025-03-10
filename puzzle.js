@@ -1260,7 +1260,7 @@ async function resetProgress() {
         localStorage.removeItem(getProgressStorageKey(currentPuzzle.puzzle.id));
 
         // Reset this back to being an unplayed puzzle as far as the list of puzzles is concerned
-        clearPuzzleStatus(currentPuzzle.puzzleName);
+        clearPuzzleStatus(currentPuzzle.puzzle.id);
 
         // Reload everything
         openPuzzle(currentPuzzle.puzzleName, currentPuzzle.puzzle);
