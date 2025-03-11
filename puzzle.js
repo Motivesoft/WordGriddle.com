@@ -1223,6 +1223,7 @@ function updatePuzzleStatus() {
 async function restoreProgress() {
     await dbGetPuzzleProgress(currentPuzzle.puzzle.id)
         .then(progressData => {
+            dumpObject("restoreProgress", currentPuzzle.puzzle.id, progressData);
             if (progressData) {
                 // keyWords
                 let wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);
