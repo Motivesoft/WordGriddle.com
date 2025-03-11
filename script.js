@@ -211,7 +211,7 @@ function deleteProgress(repo) {
             return response.json();
         })
         .then(data => {
-            data.puzzles.forEach(puzzle => {
+            data.puzzles.forEach((puzzle) => {
                 const puzzleStatusKey = `${puzzle.name}.status`;
                 localStorage.clear(puzzleStatusKey);
 

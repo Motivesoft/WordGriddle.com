@@ -1232,7 +1232,7 @@ async function restoreProgress() {
     
                         // Adjust the red/grey numbers for each restored word
                         decrementRedGrey(word);
-                    })
+                    });
                 }
     
                 // extraWords
@@ -1240,7 +1240,7 @@ async function restoreProgress() {
                 if (wordList) {
                     wordList.forEach((word) => {
                         currentPuzzle.foundExtraWords.add(word);
-                    })
+                    });
                 }
     
                 // nonWords - Retain our ability to calculate accuracy
