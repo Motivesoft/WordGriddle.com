@@ -158,37 +158,37 @@ const ObjectStores = Object.freeze({
 
 function dbGetPuzzleStatusInRange(lowerPuzzleId, upperPuzzleId) {
     console.debug(`Get puzzle status in range (${lowerPuzzleId},${upperPuzzleId})`);
+
     return dbConnection.getInRange(ObjectStores.PUZZLE_STATUS, lowerPuzzleId, upperPuzzleId);
 }
 
 function dbDeletePuzzleStatus(puzzleId) {
     console.debug(`Delete puzzle status for ${puzzleId}`);
+
     return dbConnection.delete(ObjectStores.PUZZLE_STATUS, puzzleId);
 }
 
 function dbStorePuzzleStatus(puzzleId, puzzleStatus) {
     console.debug(`Store puzzle status for ${puzzleId}: ${puzzleStatus}`);
-    
-    const storedValue = {id: puzzleId, ...puzzleStatus};
-    console.log(`Storing status: '${storedValue}'`);
-    console.log(` keys    : ${Object.keys(storedValue)}`);
-    console.log(` values  : ${Object.values(storedValue)}`);
-    console.log(` type    : ${typeof(storedValue)}`);
-    console.log(`      id : ${storedValue.id}`);
-    console.log(`  status : ${storedValue.status}`);
 
     return dbConnection.update(ObjectStores.PUZZLE_STATUS, {id: puzzleId, ...puzzleStatus});
 }
 
 function dbGetPuzzleProgress(puzzleId) {
+    console.debug(`Get puzzle progress for ${puzzleId}`);
+
     return dbConnection.get(ObjectStores.PUZZLE_PROGRESS, puzzleId);
 }
 
 function dbDeletePuzzleProgress(puzzleId) {
-    return dbConnection.put(ObjectStores.PUZZLE_PROGRESS, puzzleId);
+    console.debug(`Delete puzzle progress for ${puzzleId}`);
+
+    return dbConnection.delete(ObjectStores.PUZZLE_PROGRESS, puzzleId);
 }
 
 function dbStorePuzzleProgress(puzzleId, puzzleProgress) {
+    console.debug(`Store puzzle progress for ${puzzleId}: ${puzzleProgress}`);
+
     return dbConnection.put(ObjectStores.PUZZLE_PROGRESS, {id: puzzleId, ...puzzleProgress});
 }
 
