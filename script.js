@@ -307,32 +307,6 @@ const PuzzleSelectorIcons = new Map([
 ]);
 
 // Internal methods
-function getProgressStorageKey(puzzleId) {
-    return `puzzle-${puzzleId}.progress`;
-}
-
-function setPuzzleStatus(puzzleId, puzzleStatus) {
-    console.log("Saving Status");
-    dbStorePuzzleStatus(puzzleId, { status: puzzleStatus })
-        .then(() => {
-            console.log("Saved status");
-        })
-        .catch((error) => {
-            // TODO do we need to do this?
-            console.error("Failed to save status", error);
-        });
-}
-
-function clearPuzzleStatus(puzzleId) {
-    // We could set this to NONE, but I prefer reducing localStorage use where we can
-    dbDeletePuzzleStatus(puzzleId)
-        .then(() => {
-            console.debug("Deleted puzzle status");
-        })
-        .catch((error) => {
-            console.error("Failed to delete puzzle status", error);
-        });
-}
 
 async function createPuzzleSelector(puzzle, statusContainer) {
     // Determine the status (played, unplayed, ...)

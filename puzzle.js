@@ -1207,7 +1207,15 @@ function updatePuzzleStatus() {
     }
 
     // Store our status for the benefit of the puzzle list page
-    setPuzzleStatus(currentPuzzle.puzzle.id, puzzleStatus);
+    console.log("Saving status");
+    dbStorePuzzleStatus(currentPuzzle.puzzle.id, { status: puzzleStatus })
+        .then(() => {
+            console.log("Status saved");
+        })
+        .catch((error) => {
+            // TODO do we need to do this?
+            console.error("Failed to save status", error);
+        });
 }
 
 async function restoreProgress() {
@@ -1249,11 +1257,11 @@ async function resetProgress() {
     const userConfirmed = await openConfirmationDialog('This will delete all progress for this puzzle.<br/><br/>Do you want to proceed?');
 
     if (userConfirmed) {
-        // Clear stored information
+        // Clear stored progress information
         await dbDeletePuzzleProgress(currentPuzzle.puzzle.id);
 
         // Reset this back to being an unplayed puzzle as far as the list of puzzles is concerned
-        clearPuzzleStatus(currentPuzzle.puzzle.id);
+        await dbDeletePuzzleStatus(currentPuzzle.puzzle.id);
 
         // Reload everything
         openPuzzle(currentPuzzle.puzzleName, currentPuzzle.puzzle);
