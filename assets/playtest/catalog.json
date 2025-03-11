@@ -2,11 +2,6 @@
   "prompt": "Choose a puzzle to test",
   "puzzles": [
     {
-      "id": 25,
-      "size": 4,
-      "name": "puzzle-25"
-    },
-    {
       "id": 26,
       "size": 5,
       "name": "puzzle-26"
@@ -95,6 +90,71 @@
       "id": 43,
       "size": 3,
       "name": "puzzle-43"
+    },
+    {
+      "id": 44,
+      "size": 4,
+      "name": "puzzle-44"
+    },
+    {
+      "id": 45,
+      "size": 4,
+      "name": "puzzle-45"
+    },
+    {
+      "id": 46,
+      "size": 4,
+      "name": "puzzle-46"
+    },
+    {
+      "id": 47,
+      "size": 4,
+      "name": "puzzle-47"
+    },
+    {
+      "id": 48,
+      "size": 3,
+      "name": "puzzle-48"
+    },
+    {
+      "id": 49,
+      "size": 5,
+      "name": "puzzle-49"
+    },
+    {
+      "id": 51,
+      "size": 4,
+      "name": "puzzle-51"
+    },
+    {
+      "id": 56,
+      "size": 3,
+      "name": "puzzle-52"
+    },
+    {
+      "id": 53,
+      "size": 4,
+      "name": "puzzle-53"
+    },
+    {
+      "id": 54,
+      "size": 3,
+      "name": "puzzle-54"
+    },
+    {
+      "id": 55,
+      "size": 4,
+      "name": "puzzle-55"
+    },
+    {
+      "id": 56,
+      "size": 4,
+      "name": "puzzle-56"
+    },
+    {
+      "id": 57,
+      "size": 4,
+      "name": "puzzle-57"
     }
   ]
 }
