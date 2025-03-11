@@ -1200,9 +1200,8 @@ function updatePuzzleStatus() {
 }
 
 async function restoreProgress() {
-    const storedValue = await dbPuzzleProgressConnection.getObject(currentPuzzle.puzzle.id);
+    const storedValue = await dbGetPuzzleProgress(currentPuzzle.puzzle.id);
     console.log(`Restore from '${storedValue}'`);
-    // const storedValue = localStorage.getItem(getProgressStorageKey(currentPuzzle.puzzle.id));
     if (storedValue) {
         try {
             const progressData = JSON.parse(storedValue);
@@ -1244,8 +1243,7 @@ async function resetProgress() {
 
     if (userConfirmed) {
         // Clear stored information
-        await dbPuzzleProgressConnection.deleteObject(currentPuzzle.puzzle.id);
-        // localStorage.removeItem(getProgressStorageKey(currentPuzzle.puzzle.id));
+        await dbDeletePuzzleProgress(currentPuzzle.puzzle.id);
 
         // Reset this back to being an unplayed puzzle as far as the list of puzzles is concerned
         clearPuzzleStatus(currentPuzzle.puzzle.id);

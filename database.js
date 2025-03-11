@@ -165,7 +165,19 @@ function dbDeletePuzzleStatus(puzzleId) {
 }
 
 function dbStorePuzzleStatus(puzzleId, puzzleStatus) {
-    return dbConnection.put({id: puzzleId, ...puzzleStatus});
+    return dbConnection.put(ObjectStores.PUZZLE_STATUS, {id: puzzleId, ...puzzleStatus});
+}
+
+function dbGetPuzzleProgress(puzzleId) {
+    return dbConnection.get(ObjectStores.PUZZLE_PROGRESS, puzzleId);
+}
+
+function dbDeletePuzzleProgress(puzzleId) {
+    return dbConnection.put(ObjectStores.PUZZLE_PROGRESS, puzzleId);
+}
+
+function dbStorePuzzleStatus(puzzleId, puzzleProgress) {
+    return dbConnection.put(ObjectStores.PUZZLE_PROGRESS, {id: puzzleId, ...puzzleProgress});
 }
 
 // Create an instance of DBConnection
@@ -173,9 +185,6 @@ const dbConnection = new DBConnection(dbName, [ObjectStores.PUZZLE_STATUS, Objec
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // TODO delete when ready
-        // indexedDB.deleteDatabase('Test');
-
         await dbConnection.open();
         console.log('Database connection opened successfully.');
     } catch (error) {
