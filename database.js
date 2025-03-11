@@ -150,7 +150,7 @@ class DBConnection {
 }
 
 // Define the database and object stores
-const dbName = 'Test';
+const dbName = 'WordGriddle';
 
 const ObjectStores = Object.freeze({
     PUZZLE_STATUS: "PuzzleStatus",
