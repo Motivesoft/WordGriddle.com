@@ -63,7 +63,7 @@
                     // Get all known puzzle statuses for the set of puzzles in which we are interested
                     // We could do this piecemeal, puzzle by puzzle as required, but that is multiple database
                     // calls and this is just one, so take the slight hit in complexity/readability for performance
-                    const statusList = await dbPuzzleStatusConnection.getObjectsInRange(minPuzzleId, maxPuzzleId);
+                    const statusList = await dbGetPuzzleStatusInRange(minPuzzleId, maxPuzzleId);
 
                     data.puzzles.forEach(async puzzle => {
                         // See if we have any stored status for this specific puzzle
@@ -85,23 +85,6 @@
 
                         puzzleListElement.appendChild(puzzleSelector);
                     });
-                    // dbPuzzleStatusConnection.getObjectsInRange(minPuzzleId, maxPuzzleId)
-                    //     .then(range => {
-                    //         console.log(`Range: ${range}`);
-                    //         range.forEach((item)=>{
-                    //             console.log(` Item: ${item}`);
-                    //             console.log(`   ID: ${item.id}`);
-                    //             console.log(`     : ${item.status}`);
-                    //         });
-
-                    //     })
-                    //     .catch(async error => {
-                    //         console.error(`Failed to load stored progress: '${puzzleCatalog}'`, error);
-                    //         await openMessageBox(`Failed to load stored progress for '${puzzleRepo}'.`, MessageBoxType.ERROR);
-
-                    //         // TODO we need a route to proceed here - expecially if this is a likely outcome for any reason
-                    //         // Simply creating puzzle selector buttons with no awareness of progress info would be the best fallback
-                    //     });
                 })
                 .catch(async error => {
                     console.error(`Failed to load puzzle list: '${puzzleCatalog}'`, error);

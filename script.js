@@ -315,7 +315,7 @@ function getProgressStorageKey(puzzleId) {
 
 function setPuzzleStatus(puzzleId, puzzleStatus) {
     console.log("Saving Status");
-    dbPuzzleStatusConnection.putObject(puzzleId, { status: puzzleStatus })
+    dbStorePuzzleStatus(puzzleId, { status: puzzleStatus })
         .then(() => {
             console.log("Saved status");
         })
@@ -327,7 +327,7 @@ function setPuzzleStatus(puzzleId, puzzleStatus) {
 
 function clearPuzzleStatus(puzzleId) {
     // We could set this to NONE, but I prefer reducing localStorage use where we can
-    dbPuzzleStatusConnection.deleteObject(puzzleId)
+    dbDeletePuzzleStatus(puzzleId)
         .then(() => {
             console.debug("Deleted puzzle status");
         })

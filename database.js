@@ -56,6 +56,18 @@ class DBConnection {
         });
     }
 
+    // Put an object to a specific store
+    put(storeName, object) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readwrite');
+            const store = transaction.objectStore(storeName);
+            const request = store.put(object);
+
+            request.onsuccess = () => resolve();
+            request.onerror = (event) => reject(event.target.error);
+        });
+    }
+
     // Get an object by ID from a specific store
     get(storeName, id) {
         return new Promise((resolve, reject) => {
@@ -136,10 +148,28 @@ class DBConnection {
 
 // Define the database and object stores
 const dbName = 'Test';
-const storeNames = ['PuzzleStatus', 'PuzzleProgress'];
+
+const ObjectStores = Object.freeze({
+    PUZZLE_STATUS: "PuzzleStatus",
+    PUZZLE_PROGRESS: "PuzzleProgress",
+});
+
+// Specific database functions
+
+function dbGetPuzzleStatusInRange(lowerPuzzleId, upperPuzzleId) {
+    return dbConnection.getInRange(ObjectStores.PUZZLE_STATUS, lowerPuzzleId, upperPuzzleId);
+}
+
+function dbDeletePuzzleStatus(puzzleId) {
+    return dbConnection.delete(ObjectStores.PUZZLE_STATUS, puzzleId);
+}
+
+function dbStorePuzzleStatus(puzzleId, puzzleStatus) {
+    return dbConnection.put({id: puzzleId, ...puzzleStatus});
+}
 
 // Create an instance of DBConnection
-const dbConnection = new DBConnection(dbName, storeNames);
+const dbConnection = new DBConnection(dbName, [ObjectStores.PUZZLE_STATUS, ObjectStores.PUZZLE_PROGRESS]);
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
