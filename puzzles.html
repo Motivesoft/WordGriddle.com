@@ -16,6 +16,8 @@
             width: 100%;
         }
     </style>
+    <!-- <script src="logger.js"></script> -->
+    <script src="database.js"></script>
     <script src="theme.js"></script>
     <script src="script.js" defer></script>
 
@@ -36,13 +38,42 @@
 
                     return response.json();
                 })
-                .then(data => {
+                .then(async data => {
                     const puzzleListTitleElement = document.getElementById('puzzle-list-title-message');
                     puzzleListTitleElement.innerHTML = data.prompt;
 
                     const puzzleListElement = document.getElementById('puzzle-list');
+
+                    // Work out the range of the set of puzzles in the catalog
+                    let minPuzzleId = 999999;
+                    let maxPuzzleId = 0;
                     data.puzzles.forEach(puzzle => {
-                        const puzzleSelector = createPuzzleSelector(puzzle);
+                        minPuzzleId = Math.min(minPuzzleId, puzzle.id);
+                        maxPuzzleId = Math.max(maxPuzzleId, puzzle.id);
+                    });
+
+                    if (maxPuzzleId < minPuzzleId) {
+                        // No puzzles
+                        return;
+                    }
+                    
+                    // Get all known puzzle statuses for the set of puzzles in which we are interested
+                    // We could do this piecemeal, puzzle by puzzle as required, but that is multiple database
+                    // calls and this is just one, so take the slight hit in complexity/readability for performance
+                    const statusList = await dbGetPuzzleStatusInRange(minPuzzleId, maxPuzzleId);
+
+                    data.puzzles.forEach(puzzle => {
+                        // See if we have any stored status for this specific puzzle
+                        let status = null;
+                        if (statusList) {
+                            statusList.forEach((statusObject) => {
+                                if (statusObject.id == puzzle.id) {
+                                    status = statusObject;
+                                }
+                            });
+                        }
+
+                        const puzzleSelector = createPuzzleSelector(puzzle, status);
                         
                         puzzleSelector.addEventListener('click', function () {
                             window.location.href = repoUrlLink

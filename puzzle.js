@@ -1214,45 +1214,30 @@ async function restoreProgress() {
     await dbGetPuzzleProgress(currentPuzzle.puzzle.id)
         .then(progressData => {
             if (progressData) {
-                console.log(`Restore data:`);
-                const progressDataKeys = Object.keys(progressData);
-                const progressDataValues = Object.values(progressData);
-                console.log(`   keys: ${progressDataKeys}`);
-                console.log(` values: ${progressDataValues}`);
-                for(let i = 0; i < progressDataKeys.length; i++) {
-                    console.log(`  > ${progressDataKeys[i]}=${progressDataValues[i]}`);
+                // keyWords
+                let wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);
+                if (wordList) {
+                    wordList.forEach((word) => {
+                        currentPuzzle.foundKeyWords.add(word);
+    
+                        // Adjust the red/grey numbers for each restored word
+                        decrementRedGrey(word);
+                    })
                 }
-
-                try {
-                    // Unpack the keyWord, extraWord and nonWord values 
-        
-                    // keyWords
-                    let wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);
-                    if (wordList) {
-                        wordList.forEach((word) => {
-                            currentPuzzle.foundKeyWords.add(word);
-        
-                            // Adjust the red/grey numbers for each restored word
-                            decrementRedGrey(word);
-                        })
-                    }
-        
-                    // extraWords
-                    wordList = indexListToWordList(progressData.extraWords, currentPuzzle.puzzle.extraWords);
-                    if (wordList) {
-                        wordList.forEach((word) => {
-                            currentPuzzle.foundExtraWords.add(word);
-                        })
-                    }
-        
-                    // nonWords - Retain our ability to calculate accuracy
-                    currentPuzzle.foundNonWords = progressData.nonWordCount;
-        
-                    // Infer completed state
-                    currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
-                } catch (error) {
-                    console.error("Failed to restore progress", error);
+    
+                // extraWords
+                wordList = indexListToWordList(progressData.extraWords, currentPuzzle.puzzle.extraWords);
+                if (wordList) {
+                    wordList.forEach((word) => {
+                        currentPuzzle.foundExtraWords.add(word);
+                    })
                 }
+    
+                // nonWords - Retain our ability to calculate accuracy
+                currentPuzzle.foundNonWords = progressData.nonWordCount;
+    
+                // Infer completed state
+                currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
             }
         })
         .catch(error => {

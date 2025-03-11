@@ -15,7 +15,7 @@
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="style.css">
     <link rel="canonical" href="https://wordgriddle.com" />
-    <script src="logger.js"></script>
+    <!-- <script src="logger.js"></script> -->
     <script src="database.js"></script>
     <script src="theme.js"></script>
     <script src="script.js" defer></script>
@@ -45,8 +45,6 @@
                     return response.json();
                 })
                 .then(async data => {
-                    const puzzleListElement = document.getElementById('puzzle-list');
-
                     // Work out the range of the set of puzzles in the catalog
                     let minPuzzleId = 999999;
                     let maxPuzzleId = 0;
@@ -65,6 +63,8 @@
                     // calls and this is just one, so take the slight hit in complexity/readability for performance
                     const statusList = await dbGetPuzzleStatusInRange(minPuzzleId, maxPuzzleId);
 
+                    // Build the puzzle selector buttons
+                    const puzzleListElement = document.getElementById('puzzle-list');
                     data.puzzles.forEach(async puzzle => {
                         // See if we have any stored status for this specific puzzle
                         let status = null;

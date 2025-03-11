@@ -1,3 +1,6 @@
+// Import this script file before any other script that will want database access
+// Note: the database is only opened on the DOMContentLoaded event
+
 class DBConnection {
     constructor(dbName, storeNames, version = 1) {
         this.dbName = dbName;
