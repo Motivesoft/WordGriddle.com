@@ -103,7 +103,7 @@ function openSettingsDialog() {
             if (userConfirmed) {
                 // For every puzzle we know, attempt to copy progress and status information
                 // from localStorage to IndexedDB storage as a one-off exercise
-                migrateAllProgress();
+                await migrateAllProgress();
             }
         });
     }
@@ -149,7 +149,8 @@ async function migrateAllProgress() {
             const statusData = localStorage.getItem(`puzzle-${puzzleId}.status`);
             const progressData = localStorage.getItem(`puzzle-${puzzleId}.progress`);
 
-            console.log(`${puzzleId}: ${statusData} :  ${progressData}`);
+            console.log(`${puzzleId}: Status   data ${statusData}`);
+            console.log(`${puzzleId}: Progress data ${progressData}`);
 
             if (statusData) {
                 console.log(`  migrating status data for ${puzzleId}`);
@@ -157,14 +158,14 @@ async function migrateAllProgress() {
                 // This valid was a number held as a string originally. Make it a number now
                 const status = Number.parseInt(statusData);
                 console.log(`  ${status} (${typeof(status)})`);
-                dbStorePuzzleStatus(puzzleId, {status: status});
+                await dbStorePuzzleStatus(puzzleId, {status: status});
             }
 
             if (progressData) {
                 console.log(`  migrating progress data for ${puzzleId}`);
                 const progress = JSON.parse(progressData);
-                console.log(`  ${progress.keyWords.length}, ${progress.extraWords.length}, ${progress.nonWordCount}`);
-                dbStorePuzzleProgress(puzzleId, progress);
+                console.log(` Key: ${progress.keyWords.length}. Extra: ${progress.extraWords.length}. NonWords: ${progress.nonWordCount}`);
+                await dbStorePuzzleProgress(puzzleId, progress);
             }
         } catch (error) {
             console.error(`Problem migrating data for puzzle ${puzzleId}`, error);
@@ -200,6 +201,7 @@ function deleteAllProgress() {
             console.error(`Failed to load site-roles:`, error);
         });
 }
+
 // Delete all "localStorage" progress information stored for all puzzles in a specific repo
 function deleteProgress(repo) {
     console.log(`Deleting progress for ${repo}`);
