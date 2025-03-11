@@ -94,7 +94,19 @@ function openSettingsDialog() {
     const settingsControlArea = document.getElementById('settingsControlArea');
     const okButton = document.getElementById('settingsOkButton');
 
-    //NOTE: A 'cancel' button could be added to this if required
+    //NOTE: A 'cancel' button could be added to this if we stated adding settings that warranted it
+
+    const migrateStorageButton = document.getElementById('migrateStorage');
+    if (migrateStorageButton) {
+        migrateStorageButton.addEventListener('click', async function () {
+            const userConfirmed = await openConfirmationDialog('This will rebuild ALL progress data for ALL puzzles.<br/><br/>Do you want to proceed?');
+            if (userConfirmed) {
+                // For every puzzle we know, attempt to copy progress and status information
+                // from localStorage to IndexedDB storage as a one-off exercise
+                migrateAllProgress();
+            }
+        });
+    }
 
     const resetStorageButton = document.getElementById('resetStorage');
     if (resetStorageButton) {
@@ -125,9 +137,45 @@ function openSettingsDialog() {
     });
 }
 
+// Migrate all progress information stored for all puzzles
+async function migrateAllProgress() {
+    console.warn(`Migrating all progress`);
+
+    // This can be as hard-coded as we like as it is invented for a specific purpose 
+    for (let puzzleId = 1; puzzleId <= 24; puzzleId++) {
+        // Currently, there are 24 puzzles published to Alpha. We can therefore look just for those
+        try {
+            const statusData = localStorage.getItem(`puzzle-${puzzleId}.status`);
+            const progressData = localStorage.getItem(`puzzle-${puzzleId}.progress`);
+
+            console.log(`${puzzleId}: ${statusData} :  ${progressData}`);
+
+            if (statusData) {
+                console.log(`  migrating status data for ${puzzleId}`);
+
+                // This valid was a number held as a string originally. Make it a number now
+                const status = Number.parseInt(statusData);
+                console.log(`  ${status} (${typeof(status)})`);
+                dbStorePuzzleStatus(puzzleId, {status: status});
+            }
+
+            if (progressData) {
+                console.log(`  migrating progress data for ${puzzleId}`);
+                const progress = JSON.parse(progressData);
+                console.log(`  ${progress.keyWords.length}, ${progress.extraWords.length}, ${progress.nonWordCount}`);
+                dbStorePuzzleProgress(puzzleId, progress);
+            }
+
+            await openMessageBox("Progress information migrated without error", MessageBoxType.INFO);
+        } catch (error) {
+            console.error(`Problem migrating data for puzzle ${puzzleId}`, error);
+        }
+    }
+}
+
 // Delete all progress information stored for all puzzles
 function deleteAllProgress() {
-    console.log(`Deleting all progress`);
+    console.warn(`Deleting all progress`);
 
     fetch('/assets/server.json')
         .then(response => {
@@ -150,7 +198,6 @@ function deleteAllProgress() {
             console.error(`Failed to load site-roles:`, error);
         });
 }
-
 // Delete all "localStorage" progress information stored for all puzzles in a specific repo
 function deleteProgress(repo) {
     console.log(`Deleting progress for ${repo}`);
@@ -289,21 +336,19 @@ async function displayVersion(elementId) {
 // Common puzzle status stuff
 
 const PuzzleStatus = Object.freeze({
-    NONE: "0",
-    STARTED: "1",
-    MIDWAY: "2",
-    NEARLY: "3",
-    COMPLETED: "4"
+    NONE: 0,
+    STARTED: 1,
+    MIDWAY: 2,
+    NEARLY: 3,
+    COMPLETED: 4
 });
 
 const PuzzleSelectorIcons = new Map([
-    //Empty battery: ["0", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9'/></svg>`],
-    ["0", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M5 4V20L19 12z'/></svg>`],
-    ["1", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14'/></svg>`],
-    ["2", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14'/></svg>`],
-    ["3", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14M13 10V14'/></svg>`],
-    ["4", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M6 14L9 17L19 7'/></svg>`],
-    //Full battery: ["4", `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14M13 10V14M16 10V14'/></svg>`],
+    [PuzzleStatus.NONE, `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M5 4V20L19 12z'/></svg>`],
+    [PuzzleStatus.STARTED, `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14'/></svg>`],
+    [PuzzleStatus.MIDWAY, `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14'/></svg>`],
+    [PuzzleStatus.NEARLY, `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M4 9A2 2 0 0 1 6 7H17A2 2 0 0 1 19 9V10H20V14H19V15A2 2 0 0 1 17 17H6A2 2 0 0 1 4 15V9M7 10V14M10 10V14M13 10V14'/></svg>`],
+    [PuzzleStatus.COMPLETED, `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'><path fill='none' stroke='none' d='M0 0h24v24H0z'/><path d='M6 14L9 17L19 7'/></svg>`],
 ]);
 
 // Internal methods
@@ -327,10 +372,10 @@ async function createPuzzleSelector(puzzle, statusContainer) {
     puzzleSelectorSize.setAttribute('class', 'center-text');
     puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
 
-    // Icon for play status
+    // Icon for play status - with a fallback to be defensive
     const puzzleSelectorIcon = document.createElement('svg');
     puzzleSelectorIcon.setAttribute('class', 'right-icon');
-    puzzleSelectorIcon.innerHTML = PuzzleSelectorIcons.get(puzzleStatus);
+    puzzleSelectorIcon.innerHTML = PuzzleSelectorIcons.get(puzzleStatus) || PuzzleSelectorIcons.get(PuzzleStatus.NONE);
 
     // Colouring
     if (puzzleStatus === PuzzleStatus.NONE) {

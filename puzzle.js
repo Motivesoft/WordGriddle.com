@@ -1124,7 +1124,7 @@ function wordListToIndexList(wordList, foundWords) {
         } else {
             console.warn(`Could not determine index for word: ${foundWord}`);
         }
-    })
+    });
 
     return list;
 }
@@ -1132,10 +1132,12 @@ function wordListToIndexList(wordList, foundWords) {
 function indexListToWordList(indexList, wordList) {
     // Iterate over all items in the index list and reconstitute it into a words list
     let list = [];
-    indexList.forEach((index) => {
-        const [word, _] = wordList[index];
-        list.push(word);
-    })
+    if (indexList) {
+        indexList.forEach((index) => {
+            const [word, _] = wordList[index];
+            list.push(word);
+        });
+    }
 
     return list;
 }

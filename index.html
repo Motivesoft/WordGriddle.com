@@ -196,9 +196,11 @@
 
     <dialog id="settingsDialog">
         <h3>Settings</h3>
-        <div id="settingsControlArea">
+        <div id="settingsControlArea" style="margin-bottom: 20px;">
+            <button type="button" id="migrateStorage"
+                style="min-width: 140px; margin: 20px 20px 10px 20px; background-color: var(--icon-warning-color);">Migrate Storage</button>
             <button type="button" id="resetStorage"
-                style="margin: 20px; background-color: var(--icon-error-color);">Reset Storage</button>
+                style="min-width: 140px; margin: 10px 20px 20px 20px; background-color: var(--icon-error-color);">Reset Storage</button>
         </div>
         <button type="button" id="settingsOkButton">OK</button>
     </dialog>
