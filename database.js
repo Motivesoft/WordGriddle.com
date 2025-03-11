@@ -157,14 +157,17 @@ const ObjectStores = Object.freeze({
 // Specific database functions
 
 function dbGetPuzzleStatusInRange(lowerPuzzleId, upperPuzzleId) {
+    console.debug(`Get puzzle status in range (${lowerPuzzleId},${upperPuzzleId})`);
     return dbConnection.getInRange(ObjectStores.PUZZLE_STATUS, lowerPuzzleId, upperPuzzleId);
 }
 
 function dbDeletePuzzleStatus(puzzleId) {
+    console.debug(`Delete puzzle status for ${puzzleId}`);
     return dbConnection.delete(ObjectStores.PUZZLE_STATUS, puzzleId);
 }
 
 function dbStorePuzzleStatus(puzzleId, puzzleStatus) {
+    console.debug(`Store puzzle status for ${puzzleId}: ${puzzleStatus}`);
     return dbConnection.put(ObjectStores.PUZZLE_STATUS, {id: puzzleId, ...puzzleStatus});
 }
 
@@ -176,7 +179,7 @@ function dbDeletePuzzleProgress(puzzleId) {
     return dbConnection.put(ObjectStores.PUZZLE_PROGRESS, puzzleId);
 }
 
-function dbStorePuzzleStatus(puzzleId, puzzleProgress) {
+function dbStorePuzzleProgress(puzzleId, puzzleProgress) {
     return dbConnection.put(ObjectStores.PUZZLE_PROGRESS, {id: puzzleId, ...puzzleProgress});
 }
 

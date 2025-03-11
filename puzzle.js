@@ -1156,7 +1156,8 @@ function updateProgress() {
         nonWordCount: currentPuzzle.foundNonWords
     });
 
-    dbPuzzleProgressConnection.putObject(currentPuzzle.puzzle.id, storedValue)
+    console.debug("About to save progress");
+    dbStorePuzzleProgress(currentPuzzle.puzzle.id, storedValue)
         .then(() => {
             console.debug("Progress saved");
         })
@@ -1170,6 +1171,7 @@ function updateProgress() {
     //     console.error("Problem storing puzzle progress", error);
     // }
 
+    console.debug("About to save status");
     updatePuzzleStatus();
 }
 
