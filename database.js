@@ -1,4 +1,169 @@
 class DBConnection {
+    constructor(dbName, storeNames, version = 1) {
+        this.dbName = dbName;
+        this.storeNames = storeNames; // Array of object store names
+        this.version = version;
+        this.db = null;
+    }
+
+    // Open the database connection
+    open() {
+        return new Promise((resolve, reject) => {
+            if (this.db) {
+                resolve(this.db); // Return existing connection if already open
+                return;
+            }
+
+            const request = indexedDB.open(this.dbName, this.version);
+
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                this.storeNames.forEach((storeName) => {
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        db.createObjectStore(storeName, { keyPath: 'id' });
+                    }
+                });
+            };
+
+            request.onsuccess = (event) => {
+                this.db = event.target.result;
+                resolve(this.db);
+            };
+
+            request.onerror = (event) => {
+                reject(event.target.error);
+            };
+        });
+    }
+
+    // Close the database connection
+    close() {
+        if (this.db) {
+            this.db.close();
+            this.db = null;
+        }
+    }
+
+    // Add an object to a specific store
+    add(storeName, object) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readwrite');
+            const store = transaction.objectStore(storeName);
+            const request = store.add(object);
+
+            request.onsuccess = () => resolve();
+            request.onerror = (event) => reject(event.target.error);
+        });
+    }
+
+    // Get an object by ID from a specific store
+    get(storeName, id) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readonly');
+            const store = transaction.objectStore(storeName);
+            const request = store.get(id);
+
+            request.onsuccess = (event) => resolve(event.target.result);
+            request.onerror = (event) => reject(event.target.error);
+        });
+    }
+
+    // Update an object in a specific store
+    update(storeName, object) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readwrite');
+            const store = transaction.objectStore(storeName);
+            const request = store.put(object);
+
+            request.onsuccess = () => resolve();
+            request.onerror = (event) => reject(event.target.error);
+        });
+    }
+
+    // Delete an object by ID from a specific store
+    delete(storeName, id) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readwrite');
+            const store = transaction.objectStore(storeName);
+            const request = store.delete(id);
+
+            request.onsuccess = () => resolve();
+            request.onerror = (event) => reject(event.target.error);
+        });
+    }
+
+    // Get all objects from a specific store
+    getAll(storeName) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readonly');
+            const store = transaction.objectStore(storeName);
+            const request = store.getAll();
+
+            request.onsuccess = (event) => resolve(event.target.result);
+            request.onerror = (event) => reject(event.target.error);
+        });
+    }
+
+    // Get all objects from a specific store within a specific range
+    getInRange(storeName, lowerBound, upperBound) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readonly');
+            const store = transaction.objectStore(storeName);
+            const range = IDBKeyRange.bound(lowerBound, upperBound);
+            const request = store.getAll(range);
+
+            request.onsuccess = (event) => resolve(event.target.result);
+            request.onerror = (event) => reject(event.target.error);
+        });
+    }
+
+    // Perform a transaction across multiple stores
+    transaction(storeNames, mode = 'readonly', callback) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(storeNames, mode);
+            const stores = storeNames.reduce((acc, storeName) => {
+                acc[storeName] = transaction.objectStore(storeName);
+                return acc;
+            }, {});
+
+            transaction.oncomplete = () => resolve();
+            transaction.onerror = (event) => reject(event.target.error);
+
+            callback(stores, transaction);
+        });
+    }
+}
+
+// Define the database and object stores
+const dbName = 'Test';
+const storeNames = ['PuzzleStatus', 'PuzzleProgress'];
+
+// Create an instance of DBConnection
+const dbConnection = new DBConnection(dbName, storeNames);
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // TODO delete when ready
+        // indexedDB.deleteDatabase('Test');
+
+        await dbConnection.open();
+        console.log('Database connection opened successfully.');
+    } catch (error) {
+        console.error('Failed to open database:', error);
+    }
+});
+
+window.addEventListener('unload', () => {
+    dbConnection.close();
+    console.log('Database connection closed.');
+});
+
+
+
+
+/*
+
+class DBConnectionX {
     constructor(dbName, storeName) {
         this.dbName = dbName;
         this.storeName = storeName;
@@ -7,7 +172,7 @@ class DBConnection {
 
     // Open the database connection
     open() {
-        console.debug( "Opening database");
+        console.debug( `Opening database ${dbName}/${this.storeName}`);
         return new Promise((resolve, reject) => {
             if (this.db) {
                 resolve(this.db); // Return existing connection if already open
@@ -127,8 +292,8 @@ class DBConnection {
 
 
 // Singleton instance(s)
-const dbPuzzleProgressConnection = new DBConnection('Test', 'PuzzleProgress');
-const dbPuzzleStatusConnection = new DBConnection('Test', 'PuzzleStatus');
+const dbPuzzleProgressConnection = new DBConnectionX('Test', 'PuzzleProgress');
+const dbPuzzleStatusConnection = new DBConnectionX('Test', 'PuzzleStatus');
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -148,3 +313,4 @@ window.addEventListener('unload', () => {
     console.log('Database connection closed.');
 });
 
+*/
