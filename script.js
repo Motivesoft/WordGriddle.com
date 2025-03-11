@@ -142,6 +142,7 @@ async function migrateAllProgress() {
     console.warn(`Migrating all progress`);
 
     // This can be as hard-coded as we like as it is invented for a specific purpose 
+    let errorCount = 0;
     for (let puzzleId = 1; puzzleId <= 24; puzzleId++) {
         // Currently, there are 24 puzzles published to Alpha. We can therefore look just for those
         try {
@@ -165,12 +166,13 @@ async function migrateAllProgress() {
                 console.log(`  ${progress.keyWords.length}, ${progress.extraWords.length}, ${progress.nonWordCount}`);
                 dbStorePuzzleProgress(puzzleId, progress);
             }
-
-            await openMessageBox("Progress information migrated without error", MessageBoxType.INFO);
         } catch (error) {
             console.error(`Problem migrating data for puzzle ${puzzleId}`, error);
+            errorCount++;
         }
     }
+
+    await openMessageBox(`Progress migrated completed.<br/><br/>Error count: ${errorCount}`, MessageBoxType.INFO);
 }
 
 // Delete all progress information stored for all puzzles
