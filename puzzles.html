@@ -62,7 +62,7 @@
                     // calls and this is just one, so take the slight hit in complexity/readability for performance
                     const statusList = await dbGetPuzzleStatusInRange(minPuzzleId, maxPuzzleId);
 
-                    data.puzzles.forEach(puzzle => {
+                    data.puzzles.forEach(async puzzle => {
                         // See if we have any stored status for this specific puzzle
                         let status = null;
                         if (statusList) {
@@ -73,7 +73,7 @@
                             });
                         }
 
-                        const puzzleSelector = createPuzzleSelector(puzzle, status);
+                        const puzzleSelector = await createPuzzleSelector(puzzle, status);
                         
                         puzzleSelector.addEventListener('click', function () {
                             window.location.href = repoUrlLink
@@ -86,7 +86,7 @@
                 })
                 .catch(async error => {
                     console.error(`Failed to load puzzle list: '${repoCatalog}'`, error);
-                    await openMessageBox(`Failed to load puzzle list from '${puzzleRepo}'.`, MessageBoxType.ERROR);
+                    await openMessageBox(`Failed to load puzzle list from '${repository}'.`, MessageBoxType.ERROR);
 
                     // Go back to the home page
                     window.location.href = "/";
