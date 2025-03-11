@@ -149,7 +149,8 @@ async function migrateAllProgress() {
             const statusData = localStorage.getItem(`puzzle-${puzzleId}.status`);
             const progressData = localStorage.getItem(`puzzle-${puzzleId}.progress`);
 
-            console.log(`${puzzleId}: ${statusData} :  ${progressData}`);
+            console.log(`${puzzleId}: Status   data ${statusData}`);
+            console.log(`${puzzleId}: Progress data ${progressData}`);
 
             if (statusData) {
                 console.log(`  migrating status data for ${puzzleId}`);
@@ -163,7 +164,7 @@ async function migrateAllProgress() {
             if (progressData) {
                 console.log(`  migrating progress data for ${puzzleId}`);
                 const progress = JSON.parse(progressData);
-                console.log(`  ${progress.keyWords.length}, ${progress.extraWords.length}, ${progress.nonWordCount}`);
+                console.log(` Key: ${progress.keyWords.length}. Extra: ${progress.extraWords.length}. NonWords: ${progress.nonWordCount}`);
                 dbStorePuzzleProgress(puzzleId, progress);
             }
         } catch (error) {
