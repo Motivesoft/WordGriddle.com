@@ -151,7 +151,7 @@ class DBConnection {
 
 // Define the database and object stores
 const dbName = 'WordGriddle';
-
+const dbVersion = 1;
 const ObjectStores = Object.freeze({
     PUZZLE_STATUS: "PuzzleStatus",
     PUZZLE_PROGRESS: "PuzzleProgress",
@@ -210,7 +210,7 @@ function dumpObject(title, id, object) {
 }
 
 // Create an instance of DBConnection
-const dbConnection = new DBConnection(dbName, [ObjectStores.PUZZLE_STATUS, ObjectStores.PUZZLE_PROGRESS]);
+const dbConnection = new DBConnection(dbName, [ObjectStores.PUZZLE_STATUS, ObjectStores.PUZZLE_PROGRESS], dbVersion);
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
