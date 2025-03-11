@@ -219,8 +219,6 @@ function openAboutBox() {
 
 // Listen on the page load completing to do any final setup steps
 document.addEventListener("DOMContentLoaded", async () => {
-    openDatabase();
-
     // About Box logic for a UI control
     const aboutBoxButton = document.getElementById('aboutBoxButton');
     if (aboutBoxButton) {
