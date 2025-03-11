@@ -168,7 +168,16 @@ function dbDeletePuzzleStatus(puzzleId) {
 
 function dbStorePuzzleStatus(puzzleId, puzzleStatus) {
     console.debug(`Store puzzle status for ${puzzleId}: ${puzzleStatus}`);
-    return dbConnection.put(ObjectStores.PUZZLE_STATUS, {id: puzzleId, ...puzzleStatus});
+    
+    const storedValue = {id: puzzleId, ...puzzleStatus};
+    console.log(`Storing status: '${storedValue}'`);
+    console.log(` keys    : ${Object.keys(storedValue)}`);
+    console.log(` values  : ${Object.values(storedValue)}`);
+    console.log(` type    : ${typeof(storedValue)}`);
+    console.log(`      id : ${storedValue.id}`);
+    console.log(`  status : ${storedValue.status}`);
+
+    return dbConnection.update(ObjectStores.PUZZLE_STATUS, {id: puzzleId, ...puzzleStatus});
 }
 
 function dbGetPuzzleProgress(puzzleId) {

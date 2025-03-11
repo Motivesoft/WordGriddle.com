@@ -377,6 +377,7 @@ async function endDragGesture() {
 
                     // We've just found a word and completed the puzzle. Store the progress update
                     updateProgress();
+                    updatePuzzleStatus();
 
                     // Tidy up before showing the finished message
                     updatePuzzleProgressMessage();
@@ -388,6 +389,7 @@ async function endDragGesture() {
                 } else {
                     // Puzzle not yet finished, but a word found nonetheless. Update the progress
                     updateProgress();
+                    updatePuzzleStatus();
                 }
             }
         } else if (currentPuzzle.puzzle.extraWords?.some(([word, _]) => word === selectedWordLower)) {
@@ -399,6 +401,10 @@ async function endDragGesture() {
                 updateOutcomeDisplay(`Extra word found: ${selectedWordUpper}`);
                 updateExtraWordsFound();
                 updateProgress();
+
+                // No need saving puzzle status here - extra words don't contribute to that
+                // - small caveat here that this means a puzzle freshly opened and where the user
+                //   has only found extra words will not show as started - I think that's OK
             }
         } else {
             updateOutcomeDisplay(`Not a recognised word: ${selectedWordUpper}`);
@@ -409,6 +415,10 @@ async function endDragGesture() {
                 currentPuzzle.foundNonWords++;
 
                 updateProgress();
+
+                // No need saving puzzle status here - non-words don't contribute to that
+                // - small caveat here that this means a puzzle freshly opened and where the user
+                //   has only found non-words will not show as started - I think that's OK
             }
         }
 
@@ -1130,7 +1140,11 @@ function indexListToWordList(indexList, wordList) {
     return list;
 }
 
+// Update the user's progress through the puzzle in terms of words found etc.
+// This will be used to return the puzzle to its in-progress state when the user reopens it
 function updateProgress() {
+    console.debug("About to save progress");
+
     const keyWordIndexList = wordListToIndexList(currentPuzzle.puzzle.keyWords, currentPuzzle.foundKeyWords);
     const extraWordIndexList = wordListToIndexList(currentPuzzle.puzzle.extraWords, currentPuzzle.foundExtraWords);
 
@@ -1164,18 +1178,13 @@ function updateProgress() {
         .catch((error) => {
             console.error("Failed to save progress", error);
         });
-
-    // try {
-    //     localStorage.setItem(getProgressStorageKey(currentPuzzle.puzzle.id), storedValue);
-    // } catch(error) {
-    //     console.error("Problem storing puzzle progress", error);
-    // }
-
-    console.debug("About to save status");
-    updatePuzzleStatus();
 }
 
+// Store the overall progress status of the puzzle (none; varying degrees of partial; complete)
+// This is used in the main puzzle list page(s) to allow the user to see which puzzles they've started/finished etc.
 function updatePuzzleStatus() {
+    console.debug("About to save status");
+
     // Update the status value we'll use on the puzzles page to help users track the puzzles they're
     // working on
     let puzzleStatus = PuzzleStatus.COMPLETED;
@@ -1204,6 +1213,10 @@ function updatePuzzleStatus() {
 async function restoreProgress() {
     const storedValue = await dbGetPuzzleProgress(currentPuzzle.puzzle.id);
     console.log(`Restore from '${storedValue}'`);
+    console.log(` : ${Object.keys(storedValue)}`);
+    console.log(` : ${Object.values(storedValue)}`);
+    console.log(` : ${typeof(storedValue)}`);
+    console.log(` : ${storedValue.keyWords}`);
     if (storedValue) {
         try {
             const progressData = JSON.parse(storedValue);
