@@ -2,6 +2,7 @@
 
 // Enums
 const FoundMoveSortOrder = Object.freeze({
+    PRE_SORTED_WORD_LENGTH: "PRE_SORTED_WORD_LENGTH",   // Internal value only - don't offer to users
     FOUND_ORDER: "FOUND_ORDER",
     ALPHABETICAL: "ALPHABETICAL",
     WORD_LENGTH: "WORD_LENGTH"
@@ -110,6 +111,13 @@ async function openPuzzle(puzzleName, puzzle) {
     // Reset clues panel - clues off by default
     const cluesCheckbox = getShowCluesElement();
     cluesCheckbox.checked = false;
+
+    const additionalLetterCheckbox = getShowAdditionalLetterElement();
+    additionalLetterCheckbox.checked = false;
+    
+    // Hide this until appropriate
+    document.getElementById('more-hints').style.display = 'none';
+    document.getElementById('refresh-clues').style.display = 'none';
 
     // Update the other parts of the display
     updatePuzzleProgressMessage();
@@ -589,9 +597,16 @@ function attachEventListeners() {
 
     // Clues
     const cluesCheckbox = getShowCluesElement();
-
-    // Handle state changes
     cluesCheckbox.addEventListener('change', function () {
+        // Hide this until appropriate
+        const moreHintsElement = getMoreHintsElement();
+        moreHintsElement.style.display = cluesCheckbox.checked ? '' : 'none';
+
+        updateClues();
+    });
+
+    const additionalLetterCheckbox = getShowAdditionalLetterElement();
+    additionalLetterCheckbox.addEventListener('change', function () {
         updateClues();
     });
 
@@ -712,6 +727,14 @@ function getShowCluesElement() {
     return document.getElementById('show-clues');
 }
 
+function getShowAdditionalLetterElement() {
+    return document.getElementById('show-additional-letter');
+}
+
+function getMoreHintsElement() {
+    return document.getElementById('more-hints');
+}
+
 function getExtraWordsFoundElement() {
     return document.getElementById('extra-words-found');
 }
@@ -829,6 +852,8 @@ function updateClues() {
     // Show or hide clues controls
     const cluesCheckbox = getShowCluesElement();
 
+    // Don't show anything clue-related if not showing clues
+    document.getElementById('more-hints').style.display = cluesCheckbox.checked ? '' : 'none';
     document.getElementById('refresh-clues').style.display = cluesCheckbox.checked ? '' : 'none';
     document.getElementById('clue-panel-1').innerHTML = '';
 
@@ -841,18 +866,19 @@ function refreshClues() {
     let wordArray = [];
 
     // Produce a clue version of each word yet to be found
+    const additionalLetterCheckbox = getShowAdditionalLetterElement();
     currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
         if (!currentPuzzle.foundKeyWords.has(word)) {
-            wordArray.push(wordToClue(word));
+            wordArray.push(wordToClue(word, additionalLetterCheckbox.checked));
         }
     });
 
     // Array should already be sorted alphabetically within word length
-    document.getElementById('clue-panel-1').innerHTML = buildWordListHtml(wordArray, FoundMoveSortOrder.WORD_LENGTH);
+    document.getElementById('clue-panel-1').innerHTML = buildWordListHtml(wordArray, FoundMoveSortOrder.PRE_SORTED_WORD_LENGTH);
 }
 
-function wordToClue(word) {
-    const gapChar = '·';
+function wordToClue(word, showAdditionalLetter) {
+    const gapChar = '-';//'·';
 
     // Safety nets - don't run the code if a word is empty or has already
     // got gaps in it. 
@@ -869,7 +895,7 @@ function wordToClue(word) {
     /*
     1, 2, 3, 3, 3, 4, 4, 5 
     */
-    let letterCount = 0;
+    let letterCount = showAdditionalLetter ? 1 : 0;
     let letterCountIncrements = [
         4, 5, 6, 9, 11, 15, 18, 21
     ];
@@ -922,7 +948,7 @@ function buildWordListHtml(foundWords, foundWordOrdering = localStorage.getItem(
     switch (foundWordOrdering) {
         default:
         case FoundMoveSortOrder.FOUND_ORDER:
-            // The order in which the user discovered them
+            // Use the natural order - e.g. in which the user discovered them, or a pre-sorted list
             // Nothing to do here as the list will already be in this order
             break;
 
@@ -943,6 +969,12 @@ function buildWordListHtml(foundWords, foundWordOrdering = localStorage.getItem(
                 return a.length - b.length;
             });
 
+            lineBreakFunction = (word, prevWord) => word.length !== prevWord.length;
+            leaderFunction = (word) => `${word.length}-letter words:`;
+            break;
+
+        case FoundMoveSortOrder.PRE_SORTED_WORD_LENGTH:
+            // Same as Word Length, but without sorting the list as it is pre-sorted
             lineBreakFunction = (word, prevWord) => word.length !== prevWord.length;
             leaderFunction = (word) => `${word.length}-letter words:`;
             break;
@@ -1131,22 +1163,20 @@ function wordListToIndexList(wordList, foundWords) {
 
 function indexListToWordList(indexList, wordList) {
     // Iterate over all items in the index list and reconstitute it into a words list
-    console.debug(`indexList: ${indexList} - ${indexList.length}`);
-    console.debug(` wordList: ${wordList} - ${wordList.length}`);
     let list = [];
     if (indexList) {
         indexList.forEach((index) => {
-            console.debug(`${index}`);
             if (index < wordList.length) {
                 const [word, _] = wordList[index];
                 list.push(word);
             } else {
+                // This might happen if the puzzle has changed since being completed
+                // This should never happen, but we need to be defensive about the possibility
                 console.warn(`Could not find word for index: ${index}`);
             }
         });
     }
     
-    console.debug(`>${list}`);
     return list;
 }
 
@@ -1155,33 +1185,16 @@ function indexListToWordList(indexList, wordList) {
 function updateProgress() {
     console.debug("About to save progress");
 
-    const keyWordIndexList = wordListToIndexList(currentPuzzle.puzzle.keyWords, currentPuzzle.foundKeyWords);
-    const extraWordIndexList = wordListToIndexList(currentPuzzle.puzzle.extraWords, currentPuzzle.foundExtraWords);
+    // For our new storage format, we want to store all the words found as a textual list, and also store the 
+    // complete status
+    const progressData = {
+        foundKeyWords: currentPuzzle.foundKeyWords,
+        foundExtraWords: currentPuzzle.foundExtraWords,
+        nonWordCount: currentPuzzle.foundNonWords,
+        completed: currentPuzzle.completed,
+    }
 
-    // Instead of storing found words directly, we store the index number of the found words within the overall word
-    // lists (key word and extra word).
-    //
-    // This is intended to save a little space, where we are storing a 1-4 digit number for each word, rather than the
-    // word itself. Casual experimentation on a typical grid suggests about 50% space saving - or the ability to store
-    // twice as many before we encounter any space limitations.
-    //
-    // Worst case, the saving is less than that if the word length average is small, but it will never be as small as 
-    // storing the index values, so we can't lose here and the processing isn't that more complex and we can still retain
-    // found order.
-    //
-    // I did consider storing only a boolean if the puzzle got complete, but we might still want the found order for 
-    // post-puzzle discussions.
-    //
-    // Store all the progress data in a single JSON object
-
-    const progress = {
-        keyWords: keyWordIndexList,
-        extraWords: extraWordIndexList,
-        nonWordCount: currentPuzzle.foundNonWords
-    };
-
-    console.debug("Saving progress");
-    dbStorePuzzleProgress(currentPuzzle.puzzle.id, progress)
+    dbStorePuzzleProgress(currentPuzzle.puzzle.id, progressData)
         .then(() => {
             console.debug("Progress saved");
         })
@@ -1231,38 +1244,56 @@ function updatePuzzleStatus() {
 async function restoreProgress() {
     await dbGetPuzzleProgress(currentPuzzle.puzzle.id)
         .then(progressData => {
-            dumpObject("restoreProgress", currentPuzzle.puzzle.id, progressData);
             if (progressData) {
+                // We want to switch back to storing found words, not indexes of found words
+                // Firstly, we have to deal with the transition where progress data will have
+                // either a list of index values that relate to a puzzle's words, or an actual list of words
+                // If the progress object contains 'foundKeyWords', it is in the newer style
+                let wordList;
+                if ("foundKeyWords" in progressData) {
+                    console.debug("Restoring key words from new progress data format");
+                    wordList = progressData.foundKeyWords;
+                } else {
+                    console.debug("Restoring key words from legacy progress data format");
+                    wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);
+                }
+
                 // keyWords
-                let wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);
                 if (wordList) {
-                    console.log("K>",wordList.length);
                     wordList.forEach((word) => {
                         currentPuzzle.foundKeyWords.add(word);
                         
                         // Adjust the red/grey numbers for each restored word
                         decrementRedGrey(word);
                     });
-                } else {
-                    console.error(">no key wordList");
                 }
     
                 // extraWords
-                wordList = indexListToWordList(progressData.extraWords, currentPuzzle.puzzle.extraWords);
+                if ("foundExtraWords" in progressData) {
+                    console.debug("Restoring extra words from new progress data format");
+                    wordList = progressData.foundExtraWords;
+                } else {
+                    console.debug("Restoring extra words from legacy progress data format");
+                    wordList = indexListToWordList(progressData.extraWords, currentPuzzle.puzzle.extraWords);
+                }
+
                 if (wordList) {
-                    console.log("E>",wordList.length);
                     wordList.forEach((word) => {
                         currentPuzzle.foundExtraWords.add(word);
                     });
-                } else {
-                    console.error(">no extra wordList");
                 }
 
                 // nonWords - Retain our ability to calculate accuracy
                 currentPuzzle.foundNonWords = progressData.nonWordCount;
     
                 // Infer completed state
-                currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
+                if ("completed" in progressData) {
+                    console.debug("Getting completed state from new progress data format");
+                    currentPuzzle.completed = progressData.completed;
+                } else {
+                    console.debug("Inferring completed state from legacy progress data format");
+                    currentPuzzle.completed = (currentPuzzle.foundKeyWords.size >= currentPuzzle.puzzle.keyWords.length);
+                }
             }
         })
         .catch(error => {
