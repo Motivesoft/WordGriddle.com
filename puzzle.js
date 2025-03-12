@@ -1137,7 +1137,7 @@ function indexListToWordList(indexList, wordList) {
     if (indexList) {
         indexList.forEach((index) => {
             console.debug(`${index}`);
-            if (index <= wordList.length) {
+            if (index < wordList.length) {
                 const [word, _] = wordList[index];
                 list.push(word);
             } else {
