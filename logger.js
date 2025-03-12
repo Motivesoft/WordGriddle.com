@@ -53,11 +53,14 @@
         sendLogToServer('DEBUG', args.join(' '));
     };
 
-    // TODO confirm this works as expected
     window.onerror = function (message, source, lineno, colno, error) {
         console.error("Uncaught error:", message);
         console.error("Source:", source);
         console.error("Line:", lineno, "Column:", colno);
         console.error("Error object:", error);
     }
+
+    window.addEventListener('unhandledrejection', function (event) {
+        console.error('Unhandled promise rejection:', event.reason);
+    });
 })();
