@@ -2,6 +2,7 @@
 
 // Enums
 const FoundMoveSortOrder = Object.freeze({
+    PRE_SORTED: "PRE_SORTED",   // Internal value only - don't offer to users
     FOUND_ORDER: "FOUND_ORDER",
     ALPHABETICAL: "ALPHABETICAL",
     WORD_LENGTH: "WORD_LENGTH"
@@ -873,7 +874,7 @@ function refreshClues() {
     });
 
     // Array should already be sorted alphabetically within word length
-    document.getElementById('clue-panel-1').innerHTML = buildWordListHtml(wordArray, FoundMoveSortOrder.WORD_LENGTH);
+    document.getElementById('clue-panel-1').innerHTML = buildWordListHtml(wordArray, FoundMoveSortOrder.PRE_SORTED);
 }
 
 function wordToClue(word, showAdditionalLetter) {
@@ -946,8 +947,9 @@ function buildWordListHtml(foundWords, foundWordOrdering = localStorage.getItem(
     let leaderFunction;
     switch (foundWordOrdering) {
         default:
+        case FoundMoveSortOrder.PRE_SORTED:
         case FoundMoveSortOrder.FOUND_ORDER:
-            // The order in which the user discovered them
+            // Use the natural order - e.g. in which the user discovered them, or a pre-sorted list
             // Nothing to do here as the list will already be in this order
             break;
 
