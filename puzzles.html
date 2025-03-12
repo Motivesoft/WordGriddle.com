@@ -7,92 +7,11 @@
     <title>WordGriddle</title>
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .button-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            padding: 10px;
-            width: 100%;
-        }
-    </style>
     <script src="logger.js"></script>
     <script src="database.js"></script>
     <script src="theme.js"></script>
     <script src="script.js" defer></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const repository = decodeURIComponent(urlParams.get(`r`) || 'puzzles');
-
-            // Assume we're loading from the default repo - but allow a provided one
-            let repoCatalog = `/assets/${repository}/catalog.json`;
-            let repoUrlLink = `puzzle.html?p=%name&r=%repo`;
-
-            fetch(repoCatalog)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error status: ${response.status}`);
-                    }
-
-                    return response.json();
-                })
-                .then(async data => {
-                    const puzzleListTitleElement = document.getElementById('puzzle-list-title-message');
-                    puzzleListTitleElement.innerHTML = data.prompt;
-
-                    const puzzleListElement = document.getElementById('puzzle-list');
-
-                    // Work out the range of the set of puzzles in the catalog
-                    let minPuzzleId = 999999;
-                    let maxPuzzleId = 0;
-                    data.puzzles.forEach(puzzle => {
-                        minPuzzleId = Math.min(minPuzzleId, puzzle.id);
-                        maxPuzzleId = Math.max(maxPuzzleId, puzzle.id);
-                    });
-
-                    if (maxPuzzleId < minPuzzleId) {
-                        // No puzzles
-                        return;
-                    }
-                    
-                    // Get all known puzzle statuses for the set of puzzles in which we are interested
-                    // We could do this piecemeal, puzzle by puzzle as required, but that is multiple database
-                    // calls and this is just one, so take the slight hit in complexity/readability for performance
-                    const statusList = await dbGetPuzzleStatusInRange(minPuzzleId, maxPuzzleId);
-
-                    data.puzzles.forEach(async puzzle => {
-                        // See if we have any stored status for this specific puzzle
-                        let status = null;
-                        if (statusList) {
-                            statusList.forEach((statusObject) => {
-                                if (statusObject.id == puzzle.id) {
-                                    status = statusObject;
-                                }
-                            });
-                        }
-
-                        const puzzleSelector = await createPuzzleSelector(puzzle, status);
-                        
-                        puzzleSelector.addEventListener('click', function () {
-                            window.location.href = repoUrlLink
-                                .replace("%name", encodeURIComponent(puzzle.name))
-                                .replace("%repo", encodeURIComponent(repository));
-                        });        
-
-                        puzzleListElement.appendChild(puzzleSelector);
-                    });
-                })
-                .catch(async error => {
-                    console.error(`Failed to load puzzle list: '${repoCatalog}'`, error);
-                    await openMessageBox(`Failed to load puzzle list from '${repository}'.`, MessageBoxType.ERROR);
-
-                    // Go back to the home page
-                    window.location.href = "/";
-                });
-        });
-    </script>
+    <script src="catalog.js" defer></script>
 </head>
 
 <body>
