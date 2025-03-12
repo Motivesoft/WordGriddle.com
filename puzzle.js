@@ -114,7 +114,7 @@ async function openPuzzle(puzzleName, puzzle) {
 
     const additionalLetterCheckbox = getShowAdditionalLetterElement();
     additionalLetterCheckbox.checked = false;
-    
+
     // Hide this until appropriate
     document.getElementById('more-hints').style.display = 'none';
     document.getElementById('refresh-clues').style.display = 'none';
@@ -1079,19 +1079,24 @@ function updatePuzzleProgressMessage() {
     const progressMessageElement = document.getElementById('progress-message');
     const countsMessageElement = document.getElementById('counts-message');
 
-    if (currentPuzzle.puzzle) {
-        let progressTemplate;
-        if (currentPuzzle.foundKeyWords.size === 0) {
-            progressTemplate = `<p>You have found %foundWords of %totalWords words.</p>`;
-        } else {
-            progressTemplate = `<p>You have found %foundWords of %totalWords words with %accuracy% accuracy.</p>`;
-        }
+    let progressTemplate;
+    if (currentPuzzle.foundKeyWords.size === 0) {
+        progressTemplate = `<p>You have found %foundWords of %totalWords words.</p>`;
+    } else {
+        progressTemplate = `<p>You have found %foundWords of %totalWords words with %accuracy% accuracy.</p>`;
+    }
 
-        progressMessageElement.innerHTML = progressTemplate
-            .replace("%foundWords", currentPuzzle.foundKeyWords.size)
-            .replace("%totalWords", currentPuzzle.puzzle.keyWords.length)
-            .replace("%accuracy", getAccuracy());
+    progressMessageElement.innerHTML = progressTemplate
+        .replace("%foundWords", currentPuzzle.foundKeyWords.size)
+        .replace("%totalWords", currentPuzzle.puzzle.keyWords.length)
+        .replace("%accuracy", getAccuracy());
 
+    // Show words left to be found - unless we've completed the puzzle
+    if (currentPuzzle.completed) {
+        countsMessageElement.innerHTML = `<div class="no-words-message">No words remaining.</div>`;
+
+        showGridAsComplete();
+    } else {
         // Work out count of words at each word length
         const counts = new Map();
         let longestWordLength = 0;
@@ -1125,10 +1130,6 @@ function updatePuzzleProgressMessage() {
         countsTable += `</table>`;
 
         countsMessageElement.innerHTML = `${countsTable}`;
-    }
-
-    if (currentPuzzle.puzzle.keyWords.length === currentPuzzle.foundKeyWords.size) {
-        showGridAsComplete();
     }
 }
 
@@ -1176,7 +1177,7 @@ function indexListToWordList(indexList, wordList) {
             }
         });
     }
-    
+
     return list;
 }
 
@@ -1262,12 +1263,12 @@ async function restoreProgress() {
                 if (wordList) {
                     wordList.forEach((word) => {
                         currentPuzzle.foundKeyWords.add(word);
-                        
+
                         // Adjust the red/grey numbers for each restored word
                         decrementRedGrey(word);
                     });
                 }
-    
+
                 // extraWords
                 if ("foundExtraWords" in progressData) {
                     console.debug("Restoring extra words from new progress data format");
@@ -1285,7 +1286,7 @@ async function restoreProgress() {
 
                 // nonWords - Retain our ability to calculate accuracy
                 currentPuzzle.foundNonWords = progressData.nonWordCount;
-    
+
                 // Infer completed state
                 if ("completed" in progressData) {
                     console.debug("Getting completed state from new progress data format");
