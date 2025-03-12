@@ -142,8 +142,9 @@ async function migrateAllProgress() {
     console.warn(`Migrating all progress`);
 
     // This can be as hard-coded as we like as it is invented for a specific purpose 
+    // Examine up to 100 puzzles, even though that is more than enough
     let errorCount = 0;
-    for (let puzzleId = 1; puzzleId <= 60; puzzleId++) {
+    for (let puzzleId = 1; puzzleId <= 100; puzzleId++) {
         // Currently, there are 24 puzzles published to Alpha. We can therefore look just for those
         try {
             const statusData = localStorage.getItem(`puzzle-${puzzleId}.status`);
