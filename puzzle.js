@@ -391,6 +391,7 @@ async function endDragGesture() {
                     // Tidy up before showing the finished message
                     updatePuzzleProgressMessage();
                     clearTrail();
+                    clearSelectedGridItems();
 
                     explode("ticker-container");
 
@@ -433,10 +434,7 @@ async function endDragGesture() {
 
         // Clear any selection decorations
         clearTrail();
-
-        document.querySelectorAll('.grid-item').forEach(item => {
-            item.classList.remove('selected');
-        });
+        clearSelectedGridItems();
 
         // Update progress
         updatePuzzleProgressMessage();
@@ -537,8 +535,11 @@ function clearTrail() {
     currentPuzzle.currentTrail.length = 0;
 }
 
-// Event handlers
-
+function clearSelectedGridItems() {
+    document.querySelectorAll('.grid-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+}
 
 // Event handler logic
 
