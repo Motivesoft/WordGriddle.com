@@ -1161,11 +1161,12 @@ function indexListToWordList(indexList, wordList) {
     let list = [];
     if (indexList) {
         indexList.forEach((index) => {
-            console.debug(`${index}`);
             if (index < wordList.length) {
                 const [word, _] = wordList[index];
                 list.push(word);
             } else {
+                // This might happen if the puzzle has changed since being completed
+                // This should never happen, but we need to be defensive about the possibility
                 console.warn(`Could not find word for index: ${index}`);
             }
         });
@@ -1255,7 +1256,6 @@ function updatePuzzleStatus() {
 async function restoreProgress() {
     await dbGetPuzzleProgress(currentPuzzle.puzzle.id)
         .then(progressData => {
-            dumpObject("restoreProgress", currentPuzzle.puzzle.id, progressData);
             if (progressData) {
                 // keyWords
                 let wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);

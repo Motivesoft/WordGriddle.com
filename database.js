@@ -173,7 +173,6 @@ function dbDeletePuzzleStatus(puzzleId) {
 
 function dbStorePuzzleStatus(puzzleId, puzzleStatus) {
     console.debug(`Store puzzle status for ${puzzleId}`);
-    dumpObject(`Store puzzle status`, puzzleId, puzzleStatus);
 
     return dbConnection.update(ObjectStores.PUZZLE_STATUS, {id: puzzleId, ...puzzleStatus});
 }
@@ -192,11 +191,11 @@ function dbDeletePuzzleProgress(puzzleId) {
 
 function dbStorePuzzleProgress(puzzleId, puzzleProgress) {
     console.debug(`Store puzzle progress for ${puzzleId}`);
-    dumpObject(`Store puzzle progress`, puzzleId, puzzleProgress);
 
     return dbConnection.put(ObjectStores.PUZZLE_PROGRESS, {id: puzzleId, ...puzzleProgress});
 }
 
+// Debug aid
 function dumpObject(title, id, object) {
     console.debug(`${title} : ${id}`);
 
