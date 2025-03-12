@@ -1180,33 +1180,16 @@ function indexListToWordList(indexList, wordList) {
 function updateProgress() {
     console.debug("About to save progress");
 
-    const keyWordIndexList = wordListToIndexList(currentPuzzle.puzzle.keyWords, currentPuzzle.foundKeyWords);
-    const extraWordIndexList = wordListToIndexList(currentPuzzle.puzzle.extraWords, currentPuzzle.foundExtraWords);
+    // For our new storage format, we want to store all the words found as a textual list, and also store the 
+    // complete status
+    const progressData = {
+        foundKeyWords: currentPuzzle.foundKeyWords,
+        foundExtraWords: currentPuzzle.foundExtraWords,
+        nonWordCount: currentPuzzle.foundNonWords,
+        completed: currentPuzzle.completed,
+    }
 
-    // Instead of storing found words directly, we store the index number of the found words within the overall word
-    // lists (key word and extra word).
-    //
-    // This is intended to save a little space, where we are storing a 1-4 digit number for each word, rather than the
-    // word itself. Casual experimentation on a typical grid suggests about 50% space saving - or the ability to store
-    // twice as many before we encounter any space limitations.
-    //
-    // Worst case, the saving is less than that if the word length average is small, but it will never be as small as 
-    // storing the index values, so we can't lose here and the processing isn't that more complex and we can still retain
-    // found order.
-    //
-    // I did consider storing only a boolean if the puzzle got complete, but we might still want the found order for 
-    // post-puzzle discussions.
-    //
-    // Store all the progress data in a single JSON object
-
-    const progress = {
-        keyWords: keyWordIndexList,
-        extraWords: extraWordIndexList,
-        nonWordCount: currentPuzzle.foundNonWords
-    };
-
-    console.debug("Saving progress");
-    dbStorePuzzleProgress(currentPuzzle.puzzle.id, progress)
+    dbStorePuzzleProgress(currentPuzzle.puzzle.id, progressData)
         .then(() => {
             console.debug("Progress saved");
         })
@@ -1257,8 +1240,20 @@ async function restoreProgress() {
     await dbGetPuzzleProgress(currentPuzzle.puzzle.id)
         .then(progressData => {
             if (progressData) {
+                // We want to switch back to storing found words, not indexes of found words
+                // Firstly, we have to deal with the transition where progress data will have
+                // either a list of index values that relate to a puzzle's words, or an actual list of words
+                // If the progress object contains 'foundKeyWords', it is in the newer style
+                let wordList;
+                if ("foundKeyWords" in progressData) {
+                    console.debug("Restoring key words from new progress data format");
+                    wordList = progressData.foundKeyWords;
+                } else {
+                    console.debug("Restoring key words from legacy progress data format");
+                    wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);
+                }
+
                 // keyWords
-                let wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);
                 if (wordList) {
                     wordList.forEach((word) => {
                         currentPuzzle.foundKeyWords.add(word);
@@ -1269,7 +1264,14 @@ async function restoreProgress() {
                 }
     
                 // extraWords
-                wordList = indexListToWordList(progressData.extraWords, currentPuzzle.puzzle.extraWords);
+                if ("foundExtraWords" in progressData) {
+                    console.debug("Restoring extra words from new progress data format");
+                    wordList = progressData.foundExtraWords;
+                } else {
+                    console.debug("Restoring extra words from legacy progress data format");
+                    wordList = indexListToWordList(progressData.extraWords, currentPuzzle.puzzle.extraWords);
+                }
+
                 if (wordList) {
                     wordList.forEach((word) => {
                         currentPuzzle.foundExtraWords.add(word);
@@ -1280,7 +1282,13 @@ async function restoreProgress() {
                 currentPuzzle.foundNonWords = progressData.nonWordCount;
     
                 // Infer completed state
-                currentPuzzle.completed = (currentPuzzle.foundKeyWords.size >= currentPuzzle.puzzle.keyWords.length);
+                if ("completed" in progressData) {
+                    console.debug("Getting completed state from new progress data format");
+                    currentPuzzle.completed = progressData.completed;
+                } else {
+                    console.debug("Inferring completed state from legacy progress data format");
+                    currentPuzzle.completed = (currentPuzzle.foundKeyWords.size >= currentPuzzle.puzzle.keyWords.length);
+                }
             }
         })
         .catch(error => {
