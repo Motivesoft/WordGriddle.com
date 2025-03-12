@@ -1131,6 +1131,7 @@ function wordListToIndexList(wordList, foundWords) {
 
 function indexListToWordList(indexList, wordList) {
     // Iterate over all items in the index list and reconstitute it into a words list
+    console.debug(`indexListToWordList`);
     let list = [];
     if (indexList) {
         indexList.forEach((index) => {
@@ -1138,7 +1139,8 @@ function indexListToWordList(indexList, wordList) {
             list.push(word);
         });
     }
-
+    
+    console.debug(`>${list}`);
     return list;
 }
 
