@@ -1131,14 +1131,18 @@ function wordListToIndexList(wordList, foundWords) {
 
 function indexListToWordList(indexList, wordList) {
     // Iterate over all items in the index list and reconstitute it into a words list
-    console.debug(`indexListToWordList: ${indexList} ${indexList.length}`);
-    console.debug(`indexListToWordList: ${wordList} ${wordList.length}`);
+    console.debug(`indexList: ${indexList} - ${indexList.length}`);
+    console.debug(` wordList: ${wordList} - ${wordList.length}`);
     let list = [];
     if (indexList) {
         indexList.forEach((index) => {
             console.debug(`${index}`);
-            const [word, _] = wordList[index];
-            list.push(word);
+            if (index <= wordList.length) {
+                const [word, _] = wordList[index];
+                list.push(word);
+            } else {
+                console.warn(`Could not find word for index: ${index}`);
+            }
         });
     }
     
