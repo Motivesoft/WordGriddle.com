@@ -2,7 +2,7 @@
 
 // Enums
 const FoundMoveSortOrder = Object.freeze({
-    PRE_SORTED: "PRE_SORTED",   // Internal value only - don't offer to users
+    PRE_SORTED_WORD_LENGTH: "PRE_SORTED_WORD_LENGTH",   // Internal value only - don't offer to users
     FOUND_ORDER: "FOUND_ORDER",
     ALPHABETICAL: "ALPHABETICAL",
     WORD_LENGTH: "WORD_LENGTH"
@@ -874,7 +874,7 @@ function refreshClues() {
     });
 
     // Array should already be sorted alphabetically within word length
-    document.getElementById('clue-panel-1').innerHTML = buildWordListHtml(wordArray, FoundMoveSortOrder.PRE_SORTED);
+    document.getElementById('clue-panel-1').innerHTML = buildWordListHtml(wordArray, FoundMoveSortOrder.PRE_SORTED_WORD_LENGTH);
 }
 
 function wordToClue(word, showAdditionalLetter) {
@@ -947,7 +947,6 @@ function buildWordListHtml(foundWords, foundWordOrdering = localStorage.getItem(
     let leaderFunction;
     switch (foundWordOrdering) {
         default:
-        case FoundMoveSortOrder.PRE_SORTED:
         case FoundMoveSortOrder.FOUND_ORDER:
             // Use the natural order - e.g. in which the user discovered them, or a pre-sorted list
             // Nothing to do here as the list will already be in this order
@@ -970,6 +969,12 @@ function buildWordListHtml(foundWords, foundWordOrdering = localStorage.getItem(
                 return a.length - b.length;
             });
 
+            lineBreakFunction = (word, prevWord) => word.length !== prevWord.length;
+            leaderFunction = (word) => `${word.length}-letter words:`;
+            break;
+
+        case FoundMoveSortOrder.PRE_SORTED_WORD_LENGTH:
+            // Same as Word Length, but without sorting the list as it is pre-sorted
             lineBreakFunction = (word, prevWord) => word.length !== prevWord.length;
             leaderFunction = (word) => `${word.length}-letter words:`;
             break;
