@@ -11,6 +11,7 @@ const FoundMoveSortOrder = Object.freeze({
 // Constants for local storage keys
 const PuzzleLocalStorageKeys = Object.freeze({
     FOUND_WORD_ORDERING: "foundWordOrdering",
+    SHOW_KEY_WORDS: "showKeyWords",
     SHOW_EXTRA_WORDS: "showExtraWords",
 });
 
@@ -114,7 +115,7 @@ async function openPuzzle(puzzleName, puzzle) {
 
     const additionalLetterCheckbox = getShowAdditionalLetterElement();
     additionalLetterCheckbox.checked = false;
-    
+
     // Hide this until appropriate
     document.getElementById('more-hints').style.display = 'none';
     document.getElementById('refresh-clues').style.display = 'none';
@@ -390,6 +391,7 @@ async function endDragGesture() {
                     // Tidy up before showing the finished message
                     updatePuzzleProgressMessage();
                     clearTrail();
+                    clearSelectedGridItems();
 
                     explode("ticker-container");
 
@@ -415,7 +417,7 @@ async function endDragGesture() {
                 //   has only found extra words will not show as started - I think that's OK
             }
         } else {
-            updateOutcomeDisplay(`Not a recognised word: ${selectedWordUpper}`);
+            updateOutcomeDisplay(`Not in word list: ${selectedWordUpper}`);
 
             // Stop counting non-words when the puzzle is finished so that the accuracy stays fixed
             // to completing the main word search
@@ -432,10 +434,7 @@ async function endDragGesture() {
 
         // Clear any selection decorations
         clearTrail();
-
-        document.querySelectorAll('.grid-item').forEach(item => {
-            item.classList.remove('selected');
-        });
+        clearSelectedGridItems();
 
         // Update progress
         updatePuzzleProgressMessage();
@@ -536,8 +535,11 @@ function clearTrail() {
     currentPuzzle.currentTrail.length = 0;
 }
 
-// Event handlers
-
+function clearSelectedGridItems() {
+    document.querySelectorAll('.grid-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+}
 
 // Event handler logic
 
@@ -580,12 +582,27 @@ function attachEventListeners() {
 
     // Show extra words
 
-    // Load state from localStorage
-    const extraWordCheckbox = getShowExtraWordsElement();
-    extraWordCheckbox.checked = localStorage.getItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS) === 'true';
+    // Load state of checkboxes from localStorage
+    
+    const showKeyWordCheckbox = getShowWordsFoundElement();
+    showKeyWordCheckbox.checked = localStorage.getItem(PuzzleLocalStorageKeys.SHOW_KEY_WORDS) !== 'false';
 
     // Handle state changes
-    extraWordCheckbox.addEventListener('change', function () {
+    showKeyWordCheckbox.addEventListener('change', function () {
+        try {
+            localStorage.setItem(PuzzleLocalStorageKeys.SHOW_KEY_WORDS, this.checked ? 'true' : 'false');
+        } catch (error) {
+            console.error("Problem storing key word configuration", error);
+        }
+
+        updateWordsFound();
+    });
+
+    const showExtraWordCheckbox = getShowExtraWordsElement();
+    showExtraWordCheckbox.checked = localStorage.getItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS) === 'true';
+
+    // Handle state changes
+    showExtraWordCheckbox.addEventListener('change', function () {
         try {
             localStorage.setItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS, this.checked ? 'true' : 'false');
         } catch (error) {
@@ -719,6 +736,10 @@ function getWordsFoundElement() {
     return document.getElementById('words-found');
 }
 
+function getShowWordsFoundElement() {
+    return document.getElementById('show-key-words');
+}
+
 function getShowExtraWordsElement() {
     return document.getElementById('show-extra-words');
 }
@@ -807,7 +828,16 @@ function decrementRedGrey(foundWord) {
 }
 
 function updateWordsFound() {
+    const showWordsFoundElement = getShowWordsFoundElement();
     const wordsFoundElement = getWordsFoundElement();
+
+    if (!showWordsFoundElement.checked) {
+        wordsFoundElement.style.display = 'none';
+        return;
+    }
+    
+    wordsFoundElement.style.display = '';
+
     if (currentPuzzle.foundKeyWords.size == 0) {
         wordsFoundElement.innerHTML = `<p><div class="no-words-message">No words found</div></p>`;
         return;
@@ -931,15 +961,15 @@ function wordToClue(word, showAdditionalLetter) {
 }
 
 // Given a word collection, return it as a columnar list in HTML 
-function buildWordListHtml(foundWords, foundWordOrdering = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING)) {
+function buildWordListHtml(words, foundWordOrdering = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING)) {
     // Handle being given an empty list
-    if (!foundWords || foundWords.length === 0) {
+    if (!words || words.length === 0) {
         return '';
     }
 
     // Copy the array so we can sort the copy and leave the original untouched
     const wordList = [];
-    foundWords.forEach((word) => {
+    words.forEach((word) => {
         wordList.push(word);
     });
 
@@ -1079,19 +1109,24 @@ function updatePuzzleProgressMessage() {
     const progressMessageElement = document.getElementById('progress-message');
     const countsMessageElement = document.getElementById('counts-message');
 
-    if (currentPuzzle.puzzle) {
-        let progressTemplate;
-        if (currentPuzzle.foundKeyWords.size === 0) {
-            progressTemplate = `<p>You have found %foundWords of %totalWords words.</p>`;
-        } else {
-            progressTemplate = `<p>You have found %foundWords of %totalWords words with %accuracy% accuracy.</p>`;
-        }
+    let progressTemplate;
+    if (currentPuzzle.foundKeyWords.size === 0) {
+        progressTemplate = `<p>You have found %foundWords of %totalWords words.</p>`;
+    } else {
+        progressTemplate = `<p>You have found %foundWords of %totalWords words with %accuracy% accuracy.</p>`;
+    }
 
-        progressMessageElement.innerHTML = progressTemplate
-            .replace("%foundWords", currentPuzzle.foundKeyWords.size)
-            .replace("%totalWords", currentPuzzle.puzzle.keyWords.length)
-            .replace("%accuracy", getAccuracy());
+    progressMessageElement.innerHTML = progressTemplate
+        .replace("%foundWords", currentPuzzle.foundKeyWords.size)
+        .replace("%totalWords", currentPuzzle.puzzle.keyWords.length)
+        .replace("%accuracy", getAccuracy());
 
+    // Show words left to be found - unless we've completed the puzzle
+    if (currentPuzzle.completed) {
+        countsMessageElement.innerHTML = `<div class="no-words-message">No words remaining.</div>`;
+
+        showGridAsComplete();
+    } else {
         // Work out count of words at each word length
         const counts = new Map();
         let longestWordLength = 0;
@@ -1125,10 +1160,6 @@ function updatePuzzleProgressMessage() {
         countsTable += `</table>`;
 
         countsMessageElement.innerHTML = `${countsTable}`;
-    }
-
-    if (currentPuzzle.puzzle.keyWords.length === currentPuzzle.foundKeyWords.size) {
-        showGridAsComplete();
     }
 }
 
@@ -1176,7 +1207,7 @@ function indexListToWordList(indexList, wordList) {
             }
         });
     }
-    
+
     return list;
 }
 
@@ -1262,12 +1293,12 @@ async function restoreProgress() {
                 if (wordList) {
                     wordList.forEach((word) => {
                         currentPuzzle.foundKeyWords.add(word);
-                        
+
                         // Adjust the red/grey numbers for each restored word
                         decrementRedGrey(word);
                     });
                 }
-    
+
                 // extraWords
                 if ("foundExtraWords" in progressData) {
                     console.debug("Restoring extra words from new progress data format");
@@ -1285,7 +1316,7 @@ async function restoreProgress() {
 
                 // nonWords - Retain our ability to calculate accuracy
                 currentPuzzle.foundNonWords = progressData.nonWordCount;
-    
+
                 // Infer completed state
                 if ("completed" in progressData) {
                     console.debug("Getting completed state from new progress data format");

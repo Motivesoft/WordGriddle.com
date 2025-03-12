@@ -82,11 +82,12 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(80px, max-content));
     gap: 5px;
+    padding-bottom: 20px;
 }
 
 .found-word-list-leader {
     font-weight: bold;
-    padding-top: 15px;
+    padding-top: 0px;
 }
 
 /* Container for the main content */
@@ -215,6 +216,7 @@
 /* The user is currently clicking or dragging through this cell */
 .grid-item.selected {
     background-color: var(--grid-item-selected-background);
+    color: var(--text-color);
 }
 
 /* This cell is empty (e.g. as in a waffle grid)*/
@@ -229,11 +231,22 @@
     background-color: var(--grid-cell-completed-background);
     color: var(--grid-cell-completed-zerozero);
 }
+/* These cells can still be selected */
+.grid-item.zerozero.selected {
+    background-color: var(--grid-item-selected-background);
+    color: var(--text-color);
+}
 
 /* All key words have been found (i.e. does not include extra words) */
 .grid-item.completed {
     background-color: var(--grid-cell-completed-background);
     color: var(--grid-cell-completed-color);
+}
+
+/* These cells can still be selected */
+.grid-item.completed.selected {
+    background-color: var(--grid-item-selected-background);
+    color: var(--text-color);
 }
 
 .grid-item::before,
