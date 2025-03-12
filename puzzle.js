@@ -415,7 +415,7 @@ async function endDragGesture() {
                 //   has only found extra words will not show as started - I think that's OK
             }
         } else {
-            updateOutcomeDisplay(`Not a recognised word: ${selectedWordUpper}`);
+            updateOutcomeDisplay(`Not in word list: ${selectedWordUpper}`);
 
             // Stop counting non-words when the puzzle is finished so that the accuracy stays fixed
             // to completing the main word search
