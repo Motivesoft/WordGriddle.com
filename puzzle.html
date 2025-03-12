@@ -106,20 +106,22 @@
                 <div id="extra-words-found"></div>
                 </p>
                 <hr>
-                <label class="checkbox-container" style="height: 40px;">
-                    <input type="checkbox" id="show-clues">
-                    <span class="checkmark"></span>
-                    Show clues
+                <div style="display: flex; gap: 40px; align-items: center; height: 40px;">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="show-clues">
+                        <span class="checkmark"></span>
+                        Show clues
+                    </label>
                     <button type="button" class="toolbar-button" id="refresh-clues" onclick="refreshClues()"
-                        style="margin-left: 20px; color: var(--text-color); align-self: center; justify-self: center;">
+                        style="color: var(--text-color); display: inline-flex; align-items: center; justify-content: center;">
                         <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
                             stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round'
-                            stroke-linejoin='round'>
+                            stroke-linejoin='round' style="padding: 8px;">
                             <path fill='none' stroke='none' d='M0 0h24v24H0z' />
                             <path d='M4 4V9H9M4.5 9A8.1 8.1 0 0 1 20 11M15 15H20V20M19.5 15A8.1 8.1 0 0 1 4 13' />
                         </svg>
                     </button>
-                </label>
+                </div>
                 <div id="clue-panel-1"></div>
                 <hr>
                 <p id="author"></p>
