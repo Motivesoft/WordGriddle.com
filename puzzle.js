@@ -11,6 +11,7 @@ const FoundMoveSortOrder = Object.freeze({
 // Constants for local storage keys
 const PuzzleLocalStorageKeys = Object.freeze({
     FOUND_WORD_ORDERING: "foundWordOrdering",
+    SHOW_KEY_WORDS: "showKeyWords",
     SHOW_EXTRA_WORDS: "showExtraWords",
 });
 
@@ -580,12 +581,27 @@ function attachEventListeners() {
 
     // Show extra words
 
-    // Load state from localStorage
-    const extraWordCheckbox = getShowExtraWordsElement();
-    extraWordCheckbox.checked = localStorage.getItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS) === 'true';
+    // Load state of checkboxes from localStorage
+    
+    const showKeyWordCheckbox = getShowWordsFoundElement();
+    showKeyWordCheckbox.checked = localStorage.getItem(PuzzleLocalStorageKeys.SHOW_KEY_WORDS) !== 'false';
 
     // Handle state changes
-    extraWordCheckbox.addEventListener('change', function () {
+    showKeyWordCheckbox.addEventListener('change', function () {
+        try {
+            localStorage.setItem(PuzzleLocalStorageKeys.SHOW_KEY_WORDS, this.checked ? 'true' : 'false');
+        } catch (error) {
+            console.error("Problem storing key word configuration", error);
+        }
+
+        updateWordsFound();
+    });
+
+    const showExtraWordCheckbox = getShowExtraWordsElement();
+    showExtraWordCheckbox.checked = localStorage.getItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS) === 'true';
+
+    // Handle state changes
+    showExtraWordCheckbox.addEventListener('change', function () {
         try {
             localStorage.setItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS, this.checked ? 'true' : 'false');
         } catch (error) {
@@ -719,6 +735,10 @@ function getWordsFoundElement() {
     return document.getElementById('words-found');
 }
 
+function getShowWordsFoundElement() {
+    return document.getElementById('show-key-words');
+}
+
 function getShowExtraWordsElement() {
     return document.getElementById('show-extra-words');
 }
@@ -807,7 +827,16 @@ function decrementRedGrey(foundWord) {
 }
 
 function updateWordsFound() {
+    const showWordsFoundElement = getShowWordsFoundElement();
     const wordsFoundElement = getWordsFoundElement();
+
+    if (!showWordsFoundElement.checked) {
+        wordsFoundElement.style.display = 'none';
+        return;
+    }
+    
+    wordsFoundElement.style.display = '';
+
     if (currentPuzzle.foundKeyWords.size == 0) {
         wordsFoundElement.innerHTML = `<p><div class="no-words-message">No words found</div></p>`;
         return;
@@ -931,15 +960,15 @@ function wordToClue(word, showAdditionalLetter) {
 }
 
 // Given a word collection, return it as a columnar list in HTML 
-function buildWordListHtml(foundWords, foundWordOrdering = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING)) {
+function buildWordListHtml(words, foundWordOrdering = localStorage.getItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING)) {
     // Handle being given an empty list
-    if (!foundWords || foundWords.length === 0) {
+    if (!words || words.length === 0) {
         return '';
     }
 
     // Copy the array so we can sort the copy and leave the original untouched
     const wordList = [];
-    foundWords.forEach((word) => {
+    words.forEach((word) => {
         wordList.push(word);
     });
 

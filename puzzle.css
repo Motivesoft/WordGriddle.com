@@ -82,11 +82,12 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(80px, max-content));
     gap: 5px;
+    padding-bottom: 20px;
 }
 
 .found-word-list-leader {
     font-weight: bold;
-    padding-top: 15px;
+    padding-top: 0px;
 }
 
 /* Container for the main content */
