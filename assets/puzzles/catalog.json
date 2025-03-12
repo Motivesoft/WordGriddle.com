@@ -130,6 +130,11 @@
       "id": 26,
       "size": 5,
       "name": "puzzle-26"
+    },
+    {
+      "id": 27,
+      "size": 4,
+      "name": "puzzle-27"
     }
   ]
 }
