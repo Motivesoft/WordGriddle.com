@@ -106,11 +106,16 @@
                 <div id="extra-words-found"></div>
                 </p>
                 <hr>
-                <div style="display: flex; gap: 40px; align-items: center; height: 40px;">
+                <div style="display: flex; gap: 20px; align-items: center; height: 40px;">
                     <label class="checkbox-container">
                         <input type="checkbox" id="show-clues">
                         <span class="checkmark"></span>
                         Show clues
+                    </label>
+                    <label class="checkbox-container" id="more-hints">
+                        <input type="checkbox" id="show-additional-letter">
+                        <span class="checkmark"></span>
+                        Additional letter
                     </label>
                     <button type="button" class="toolbar-button" id="refresh-clues" onclick="refreshClues()"
                         style="color: var(--text-color); display: inline-flex; align-items: center; justify-content: center;">

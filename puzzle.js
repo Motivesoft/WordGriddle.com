@@ -111,6 +111,13 @@ async function openPuzzle(puzzleName, puzzle) {
     const cluesCheckbox = getShowCluesElement();
     cluesCheckbox.checked = false;
 
+    const additionalLetterCheckbox = getShowAdditionalLetterElement();
+    additionalLetterCheckbox.checked = false;
+    
+    // Hide this until appropriate
+    document.getElementById('more-hints').style.display = 'none';
+    document.getElementById('refresh-clues').style.display = 'none';
+
     // Update the other parts of the display
     updatePuzzleProgressMessage();
     updateSelectedLettersDisplay();
@@ -589,9 +596,16 @@ function attachEventListeners() {
 
     // Clues
     const cluesCheckbox = getShowCluesElement();
-
-    // Handle state changes
     cluesCheckbox.addEventListener('change', function () {
+        // Hide this until appropriate
+        const moreHintsElement = getMoreHintsElement();
+        moreHintsElement.style.display = cluesCheckbox.checked ? '' : 'none';
+
+        updateClues();
+    });
+
+    const additionalLetterCheckbox = getShowAdditionalLetterElement();
+    additionalLetterCheckbox.addEventListener('change', function () {
         updateClues();
     });
 
@@ -712,6 +726,14 @@ function getShowCluesElement() {
     return document.getElementById('show-clues');
 }
 
+function getShowAdditionalLetterElement() {
+    return document.getElementById('show-additional-letter');
+}
+
+function getMoreHintsElement() {
+    return document.getElementById('more-hints');
+}
+
 function getExtraWordsFoundElement() {
     return document.getElementById('extra-words-found');
 }
@@ -829,6 +851,8 @@ function updateClues() {
     // Show or hide clues controls
     const cluesCheckbox = getShowCluesElement();
 
+    // Don't show anything clue-related if not showing clues
+    document.getElementById('more-hints').style.display = cluesCheckbox.checked ? '' : 'none';
     document.getElementById('refresh-clues').style.display = cluesCheckbox.checked ? '' : 'none';
     document.getElementById('clue-panel-1').innerHTML = '';
 
@@ -841,9 +865,10 @@ function refreshClues() {
     let wordArray = [];
 
     // Produce a clue version of each word yet to be found
+    const additionalLetterCheckbox = getShowAdditionalLetterElement();
     currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
         if (!currentPuzzle.foundKeyWords.has(word)) {
-            wordArray.push(wordToClue(word));
+            wordArray.push(wordToClue(word, additionalLetterCheckbox.checked));
         }
     });
 
@@ -851,8 +876,8 @@ function refreshClues() {
     document.getElementById('clue-panel-1').innerHTML = buildWordListHtml(wordArray, FoundMoveSortOrder.WORD_LENGTH);
 }
 
-function wordToClue(word) {
-    const gapChar = '·';
+function wordToClue(word, showAdditionalLetter) {
+    const gapChar = '-';//'·';
 
     // Safety nets - don't run the code if a word is empty or has already
     // got gaps in it. 
@@ -869,7 +894,7 @@ function wordToClue(word) {
     /*
     1, 2, 3, 3, 3, 4, 4, 5 
     */
-    let letterCount = 0;
+    let letterCount = showAdditionalLetter ? 1 : 0;
     let letterCountIncrements = [
         4, 5, 6, 9, 11, 15, 18, 21
     ];
