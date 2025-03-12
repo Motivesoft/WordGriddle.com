@@ -1260,33 +1260,27 @@ async function restoreProgress() {
                 // keyWords
                 let wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);
                 if (wordList) {
-                    console.log("K>",wordList.length);
                     wordList.forEach((word) => {
                         currentPuzzle.foundKeyWords.add(word);
                         
                         // Adjust the red/grey numbers for each restored word
                         decrementRedGrey(word);
                     });
-                } else {
-                    console.error(">no key wordList");
                 }
     
                 // extraWords
                 wordList = indexListToWordList(progressData.extraWords, currentPuzzle.puzzle.extraWords);
                 if (wordList) {
-                    console.log("E>",wordList.length);
                     wordList.forEach((word) => {
                         currentPuzzle.foundExtraWords.add(word);
                     });
-                } else {
-                    console.error(">no extra wordList");
                 }
 
                 // nonWords - Retain our ability to calculate accuracy
                 currentPuzzle.foundNonWords = progressData.nonWordCount;
     
                 // Infer completed state
-                currentPuzzle.completed = (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length);
+                currentPuzzle.completed = (currentPuzzle.foundKeyWords.size >= currentPuzzle.puzzle.keyWords.length);
             }
         })
         .catch(error => {
