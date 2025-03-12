@@ -19,82 +19,7 @@
     <script src="database.js"></script>
     <script src="theme.js"></script>
     <script src="script.js" defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // As a URL shortening, look for a special request parameter
-            // e.g. https://wordgriddle.com/?p=puzzle-1
-            // If found, go straight to that puzzle - otherwise do the normal homepage thing
-            const urlParams = new URLSearchParams(window.location.search);
-            const puzzle = decodeURIComponent(urlParams.get(`p`) || '');
-            if (puzzle.length) {
-                window.location.replace(`puzzle.html?p=${puzzle}`);
-                return;
-            }
-
-            // Assume we're loading from the default repo as this is the main page
-            let repository = 'puzzles';
-            let puzzleCatalog = `/assets/puzzles/catalog.json`;
-            let puzzleUrlLink = `puzzle.html?p=%name`;
-
-            fetch(puzzleCatalog)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error status: ${response.status}`);
-                    }
-
-                    return response.json();
-                })
-                .then(async data => {
-                    // Work out the range of the set of puzzles in the catalog
-                    let minPuzzleId = 999999;
-                    let maxPuzzleId = 0;
-                    data.puzzles.forEach(puzzle => {
-                        minPuzzleId = Math.min(minPuzzleId, puzzle.id);
-                        maxPuzzleId = Math.max(maxPuzzleId, puzzle.id);
-                    });
-
-                    if (maxPuzzleId < minPuzzleId) {
-                        // No puzzles
-                        return;
-                    }
-                    
-                    // Get all known puzzle statuses for the set of puzzles in which we are interested
-                    // We could do this piecemeal, puzzle by puzzle as required, but that is multiple database
-                    // calls and this is just one, so take the slight hit in complexity/readability for performance
-                    const statusList = await dbGetPuzzleStatusInRange(minPuzzleId, maxPuzzleId);
-
-                    // Build the puzzle selector buttons
-                    const puzzleListElement = document.getElementById('puzzle-list');
-                    data.puzzles.forEach(async puzzle => {
-                        // See if we have any stored status for this specific puzzle
-                        let status = null;
-                        if (statusList) {
-                            statusList.forEach((statusObject) => {
-                                if (statusObject.id == puzzle.id) {
-                                    status = statusObject;
-                                }
-                            });
-                        }
-
-                        const puzzleSelector = await createPuzzleSelector(puzzle, status);
-
-                        puzzleSelector.addEventListener('click', function () {
-                            window.location.href = puzzleUrlLink
-                                .replace("%name", encodeURIComponent(puzzle.name));
-                        });
-
-                        puzzleListElement.appendChild(puzzleSelector);
-                    });
-                })
-                .catch(async error => {
-                    console.error(`Failed to load puzzle list: '${puzzleCatalog}'`, error);
-                    await openMessageBox(`Failed to load puzzle list.`, MessageBoxType.ERROR);
-
-                    // Go back to the home page
-                    window.location.href = "/";
-                });
-        });
-    </script>
+    <script src="catalog.js" defer></script>
 </head>
 
 <body>
@@ -154,7 +79,7 @@
 
             <div class="panel" style="width: 100%; height: fit-content;">
                 <div class="inner-panel">
-                    <h3>Choose a puzzle to play!</h3>
+                    <h3 id="puzzle-list-title-message">Choose a puzzle to play!</h3>
                     <div id="puzzle-list" class="button-container"></div>
                 </div>
             </div>
