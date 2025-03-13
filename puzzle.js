@@ -213,22 +213,18 @@ function scaleGrid() {
         maxDimension = 330;
         gap = 14 - size;
         fontSize = Math.min(40, Math.floor(160 / size));
-        console.debug(`Small portrait device: ${maxDimension} ${gap} ${fontSize}`);
     } else if (largePortrait.matches) {
         maxDimension = 360;
         gap = 14 - size;
         fontSize = Math.min(50, Math.floor(180 / size));
-        console.debug(`Large portrait device: ${maxDimension} ${gap} ${fontSize}`);
     } else if (smallLandscape.matches) {
         maxDimension = 224;
         gap = 10 - size;
         fontSize = Math.floor(114 / size);
-        console.debug(`Small landscape device: ${maxDimension} ${gap} ${fontSize}`);
     } else if (largeLandscape.matches) {
         maxDimension = 400;
         gap = 14 - size;
         fontSize = Math.floor(200 / size);
-        console.debug(`Large landscape device: ${maxDimension} ${gap} ${fontSize}`);
     } else {
         // Unknown scenario according to our rules - not much we can do but allow our default behaviour to do the right thing 
         return;
@@ -598,7 +594,7 @@ function attachEventListeners() {
         try {
             localStorage.setItem(PuzzleLocalStorageKeys.FOUND_WORD_ORDERING, selectedValue);
         } catch (error) {
-            console.error("Problem storing word ordering configuration", error);
+            console.error("Problem persisting word ordering configuration", error);
         }
 
         // Apply the change
@@ -618,7 +614,7 @@ function attachEventListeners() {
         try {
             localStorage.setItem(PuzzleLocalStorageKeys.SHOW_KEY_WORDS, this.checked ? 'true' : 'false');
         } catch (error) {
-            console.error("Problem storing key word configuration", error);
+            console.error("Problem persisting key word configuration", error);
         }
 
         updateWordsFound();
@@ -632,7 +628,7 @@ function attachEventListeners() {
         try {
             localStorage.setItem(PuzzleLocalStorageKeys.SHOW_EXTRA_WORDS, this.checked ? 'true' : 'false');
         } catch (error) {
-            console.error("Problem storing extra word configuration", error);
+            console.error("Problem persisting extra word configuration", error);
         }
 
         updateExtraWordsFound();
@@ -1203,6 +1199,7 @@ function indexFromWord(wordList, searchWord) {
     return -1;
 }
 
+// TODO this is a legacy method. Look to remove it
 function wordListToIndexList(wordList, foundWords) {
     // Make a list of the index value of each found word, retaining its found order
     let list = [];
@@ -1218,6 +1215,7 @@ function wordListToIndexList(wordList, foundWords) {
     return list;
 }
 
+// TODO this is a legacy method. Look to remove it
 function indexListToWordList(indexList, wordList) {
     // Iterate over all items in the index list and reconstitute it into a words list
     let list = [];
@@ -1240,8 +1238,6 @@ function indexListToWordList(indexList, wordList) {
 // Update the user's progress through the puzzle in terms of words found etc.
 // This will be used to return the puzzle to its in-progress state when the user reopens it
 function updateProgress() {
-    console.debug("About to save progress");
-
     // For our new storage format, we want to store all the words found as a textual list, and also store the 
     // complete status
     const progressData = {
@@ -1252,9 +1248,6 @@ function updateProgress() {
     }
 
     dbStorePuzzleProgress(currentPuzzle.puzzle.id, progressData)
-        .then(() => {
-            console.debug("Progress saved");
-        })
         .catch((error) => {
             console.error("Failed to save progress", error);
         });
@@ -1263,8 +1256,6 @@ function updateProgress() {
 // Store the overall progress status of the puzzle (none; varying degrees of partial; complete)
 // This is used in the main puzzle list page(s) to allow the user to see which puzzles they've started/finished etc.
 function updatePuzzleStatus() {
-    console.debug("About to save status");
-
     // Update the status value we'll use on the puzzles page to help users track the puzzles they're
     // working on
     let puzzleStatus = PuzzleStatus.COMPLETED;
@@ -1287,13 +1278,8 @@ function updatePuzzleStatus() {
     }
 
     // Store our status for the benefit of the puzzle list page
-    console.log("Saving status");
     dbStorePuzzleStatus(currentPuzzle.puzzle.id, { status: puzzleStatus })
-        .then(() => {
-            console.log("Status saved");
-        })
         .catch((error) => {
-            // TODO do we need to do this?
             console.error("Failed to save status", error);
         });
 }
@@ -1308,10 +1294,10 @@ async function restoreProgress() {
                 // If the progress object contains 'foundKeyWords', it is in the newer style
                 let wordList;
                 if ("foundKeyWords" in progressData) {
-                    console.debug("Restoring key words from new progress data format");
                     wordList = progressData.foundKeyWords;
                 } else {
-                    console.debug("Restoring key words from legacy progress data format");
+                    // Legacy storage 
+                    // TODO delete this when we're done with it
                     wordList = indexListToWordList(progressData.keyWords, currentPuzzle.puzzle.keyWords);
                 }
 
@@ -1327,10 +1313,10 @@ async function restoreProgress() {
 
                 // extraWords
                 if ("foundExtraWords" in progressData) {
-                    console.debug("Restoring extra words from new progress data format");
                     wordList = progressData.foundExtraWords;
                 } else {
-                    console.debug("Restoring extra words from legacy progress data format");
+                    // Legacy storage
+                    // TODO delete this when we're done with it
                     wordList = indexListToWordList(progressData.extraWords, currentPuzzle.puzzle.extraWords);
                 }
 
@@ -1345,10 +1331,10 @@ async function restoreProgress() {
 
                 // Infer completed state
                 if ("completed" in progressData) {
-                    console.debug("Getting completed state from new progress data format");
                     currentPuzzle.completed = progressData.completed;
                 } else {
-                    console.debug("Inferring completed state from legacy progress data format");
+                    // Legacy behaviour
+                    // TODO delete this when we're done with it
                     currentPuzzle.completed = (currentPuzzle.foundKeyWords.size >= currentPuzzle.puzzle.keyWords.length);
                 }
             }
@@ -1363,10 +1349,16 @@ async function resetProgress() {
 
     if (userConfirmed) {
         // Clear stored progress information
-        await dbDeletePuzzleProgress(currentPuzzle.puzzle.id);
+        await dbDeletePuzzleProgress(currentPuzzle.puzzle.id)
+            .catch(error => {
+                console.error("Failed to delete progress", error);
+            });
 
         // Reset this back to being an unplayed puzzle as far as the list of puzzles is concerned
-        await dbDeletePuzzleStatus(currentPuzzle.puzzle.id);
+        await dbDeletePuzzleStatus(currentPuzzle.puzzle.id)
+            .catch(error => {
+                console.error("Failed to delete status", error);
+            });
 
         // Reload everything
         openPuzzle(currentPuzzle.puzzleName, currentPuzzle.puzzle);

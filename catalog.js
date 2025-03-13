@@ -59,7 +59,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Get all known puzzle statuses for the set of puzzles in which we are interested
             // We could do this piecemeal, puzzle by puzzle as required, but that is multiple database
             // calls and this is just one, so take the slight hit in complexity/readability for performance
-            const statusList = await dbGetPuzzleStatusInRange(minPuzzleId, maxPuzzleId);
+            const statusList = await dbGetPuzzleStatusInRange(minPuzzleId, maxPuzzleId)
+                .catch(error => {
+                    console.error("Failed to get status", error);
+                });
 
             // Start to build puzzle buttons
             const puzzleListElement = document.getElementById('puzzle-list');

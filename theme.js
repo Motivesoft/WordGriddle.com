@@ -20,7 +20,7 @@ function setTheme(theme) {
             localStorage.removeItem(ScriptLocalStorageKeys.THEME);
         }
     } catch (error) {
-        console.error("Problem storing theme", error);
+        console.error("Problem persisting theme", error);
     }
 
     loadTheme();

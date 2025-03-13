@@ -238,7 +238,7 @@ const dbConnection = new DBConnection(dbName, [ObjectStores.PUZZLE_STATUS, Objec
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         await dbConnection.open();
-        console.log('Database connection opened successfully.');
+        console.info('Database connection opened successfully.');
     } catch (error) {
         console.error('Failed to open database:', error);
     }
@@ -246,5 +246,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 window.addEventListener('unload', () => {
     dbConnection.close();
-    console.log('Database connection closed.');
+    console.info('Database connection closed.');
 });
