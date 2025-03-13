@@ -256,13 +256,13 @@
 }
 
 .grid-item::before {
-    content: attr(red-counter);
+    content: attr(word-start-counter);
     left: 2px;
     color: var(--word-starts-color);
 }
 
 .grid-item::after {
-    content: attr(grey-counter);
+    content: attr(word-contains-counter);
     right: 2px;
     color: var(--word-contains-color);
 }
