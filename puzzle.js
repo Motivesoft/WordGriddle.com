@@ -100,9 +100,6 @@ async function openPuzzle(puzzleName, puzzle) {
     currentPuzzle.foundNonWords = 0;
     currentPuzzle.completed = false;
 
-    const progressCardElement = getProgressCardElement();
-    progressCardElement.innerHTML = `0/${currentPuzzle.puzzle.keyWords.length}`;
-
     // Initiate things using our 'currentPuzzle' state object
     initialiseGrid();
 
@@ -143,14 +140,20 @@ function initialiseGrid() {
     // Build the cells in the grid
     const letterArray = Array.from(currentPuzzle.puzzle.letters)
     letterArray.forEach((letter, index) => {
+        // Establish the coordinate identifier for the cell as it will appear in word list paths
+        const coord = `[${index}]`;
+
+        // Start to construct the HTML 'cell' element
         const cell = document.createElement('div');
         cell.className = 'grid-item';
         cell.textContent = letter;
         cell.dataset.letter = letter;
         cell.dataset.index = index;
-        cell.dataset.coord = `[${index}]`;
+        cell.dataset.coord = coord;
         cell.dataset.red = 0;
         cell.dataset.grey = 0;
+
+        // Note that 'dataset' is a string-based map and therefore numbers will have to be handled carefully
 
         // '.' is meaningful in terms of puzzle design, but don't show in the grid
         // Style the unusable parts of the grid so they look and interact as we need them to
@@ -158,18 +161,24 @@ function initialiseGrid() {
             cell.classList.add('hidden');
             cell.textContent = ' ';
         } else {
+            // Determine the red and grey counts for the cell by looking for 'coord' in each key word's "path"
+            let red = 0;
+            let grey = 0;
             currentPuzzle.puzzle.keyWords.forEach(([_, path]) => {
-                if (path.startsWith(cell.dataset.coord)) {
-                    cell.dataset.red++;
-                }
+                if (path.includes(coord)) {
+                    grey++;
 
-                if (path.includes(cell.dataset.coord)) {
-                    cell.dataset.grey++;
+                    if (path.startsWith(coord)) {
+                        red++;
+                    }
                 }
             });
 
-            if (cell.dataset.grey == 0) {
+            if (grey == 0) {
                 cell.classList.add('zerozero');
+            } else {
+                cell.dataset.red = red;
+                cell.dataset.grey = grey;
             }
         }
 
@@ -195,26 +204,26 @@ function scaleGrid() {
     const largePortrait = window.matchMedia("(orientation: portrait) and (min-width: 500px)");
 
     // Start with some defaults and then adjust them
-    let maxDimension = `360px`;
-    let gap = `10px`;
-    let fontSize = `24px`;
+    let maxDimension = 360;
+    let gap = 10;
+    let fontSize = 24;
 
     if (smallPortrait.matches) {
-        maxDimension = `322px`;
-        gap = `${size < 7 ? 11 : 4}px`;
-        fontSize = `${Math.min(40, 160 / size)}px`;
+        maxDimension = 322;
+        gap = size < 7 ? 11 : 4;
+        fontSize = Math.min(40, 160 / size);
     } else if (largePortrait.matches) {
-        maxDimension = `330px`;
-        gap = `${size < 7 ? 11 : 5}px`;
-        fontSize = `${170 / size}px`;
+        maxDimension = 330;
+        gap = size < 7 ? 11 : 5;
+        fontSize = 170 / size;
     } else if (smallLandscape.matches) {
-        maxDimension = `223px`;
-        gap = `${size < 7 ? 7 : 3}px`;
-        fontSize = `${114 / size}px`;
+        maxDimension = 223;
+        gap = size < 7 ? 7 : 3;
+        fontSize = 114 / size;
     } else if (largeLandscape.matches) {
-        maxDimension = `402px`;
-        gap = `${size < 7 ? 14 : 6}px`;
-        fontSize = `${210 / size}px`;
+        maxDimension = 402;
+        gap = size < 7 ? 14 : 6;
+                fontSize = 210 / size;
     } else {
         // Unknown scenario according to our rules - not much we can do but allow our default behaviour to do the right thing 
         return;
@@ -222,11 +231,11 @@ function scaleGrid() {
 
     // Apply the calculated size, font size and gap
     const gridElement = getGridElement();
-    gridElement.style.width = maxDimension;
-    gridElement.style.height = maxDimension;
+    gridElement.style.width = `${maxDimension}px`;
+    gridElement.style.height = `${maxDimension}px`;
 
-    document.documentElement.style.setProperty('--grid-cell-gap', gap);
-    document.documentElement.style.setProperty('--grid-cell-font-size', fontSize);
+    document.documentElement.style.setProperty('--grid-cell-gap', `${gap}px`);
+    document.documentElement.style.setProperty('--grid-cell-font-size', `${fontSize}px`);
 }
 
 // Trail stuff
@@ -242,7 +251,7 @@ function startDragGesture(e) {
         currentPuzzle.isDrawing = true;
         currentPuzzle.selectedLetters = [{
             letter: cell.dataset.letter,
-            index: parseInt(cell.dataset.index)
+            index: Number(cell.dataset.index)
         }];
 
         // Mark the cell as selected
@@ -281,53 +290,28 @@ function continueDragGesture(cell, clientX, clientY) {
         const xDistanceToCentre = Math.abs(cellCentreX - clientX);
         const yDistanceToCentre = Math.abs(cellCentreY - clientY);
 
-        // If we are within this distance of the centre, accept that we are selecting this cell
-        // Another way to put this is to use the middle 70% as the target area 
+        // If we are within a certain distance of the centre of the cell, accept that we are selecting it and not just
+        // in transit somewhere else. If we are just skirting the edge of the cell, don't treat it as a selection.
+        // Another way to put this is to use the middle 70% (+/-0.35 of cell size in pixels) as the target area 
         const proximityMeasure = 0.35;
         if (xDistanceToCentre > cellRect.width * proximityMeasure || yDistanceToCentre > cellRect.height * proximityMeasure) {
             return;
         }
 
-        // Where are we?
-        const cellIndex = parseInt(cell.dataset.index);
-        const cellCol = cellIndex % size;
-        const cellRow = (cellIndex - cellCol) / size;
+        // Get the cell's index (e.g. 0-8 on a 3x3 grid)
+        const cellIndex = Number(cell.dataset.index);
 
-        // Where have we come from?
-        const prevIndex = currentPuzzle.selectedLetters[currentPuzzle.selectedLetters.length - 1].index;
-        const prevCol = prevIndex % size;
-        const prevRow = (prevIndex - prevCol) / size;
+        // Work out if this is potentially a valid move, meaning we have not visited it already or it is a retreat
+        const cellAlreadySelected = cell.classList.contains('selected');
 
-        // What will help us work out if this is a valid move - valid being -1 and 1 respectively
-        const lastSelectedIndex = currentPuzzle.selectedLetters.findIndex(item => item.index === cellIndex);
-        const distance = Math.max(Math.abs(cellCol - prevCol), Math.abs(cellRow - prevRow));
-
-        // lastSelectedIndex = -1 iff cell is not part of the current selection
-        // distance = 1 if the origin and new cell are adjacent
-
-        // if a valid move, select the square
-        if (lastSelectedIndex === -1 && distance === 1) {
-            // Add new cell to selection
-            currentPuzzle.selectedLetters.push({
-                letter: cell.dataset.letter,
-                index: cellIndex
-            });
-
-            // Mark the cell as selected
-            cell.classList.add('selected');
-
-            // Record the movement
-            currentPuzzle.currentTrail.push(cell);
-
-            // Remember this step for backtracking
-            currentPuzzle.mostRecentCell = cell;
-        } else if (lastSelectedIndex !== -1) {
-            // Encountered an already selected cell. Is this a step backwards
+        // If a valid move (adjacent and unused), select the cell
+        // If a retreat - a step backwards - undo the previous step
+        if (cellAlreadySelected) {
+            // Is this a step backwards
             if (cellIndex === currentPuzzle.selectedLetters[currentPuzzle.selectedLetters.length - 2]?.index) {
                 const gridElement = getGridElement();
 
                 // Pop the last selected letter and deselect its cell
-
                 const prevIndex = currentPuzzle.selectedLetters[currentPuzzle.selectedLetters.length - 1].index;
                 const prevCell = gridElement.children[prevIndex];
                 prevCell.classList.remove('selected');
@@ -339,6 +323,37 @@ function continueDragGesture(cell, clientX, clientY) {
                 currentPuzzle.selectedLetters.pop();
 
                 // Reset where we are for further backtracking
+                currentPuzzle.mostRecentCell = cell;
+            }
+        } else {
+            // This may lead to the cell becoming selected. Check it would be a valid selection
+
+            // Where are we within the grid?
+            const cellCol = cellIndex % size;
+            const cellRow = (cellIndex - cellCol) / size;
+
+            // Where have we come from?
+            const prevIndex = currentPuzzle.selectedLetters[currentPuzzle.selectedLetters.length - 1].index;
+            const prevCol = prevIndex % size;
+            const prevRow = (prevIndex - prevCol) / size;
+
+            // What will help us work out if this is a valid move - valid being:
+            //   distance = 1, meaning this cell is adjacent to the previous cell in the selection
+            const distance = Math.max(Math.abs(cellCol - prevCol), Math.abs(cellRow - prevRow));
+            if (distance === 1) {
+                // Add new cell to selection
+                currentPuzzle.selectedLetters.push({
+                    letter: cell.dataset.letter,
+                    index: cellIndex
+                });
+
+                // Mark the cell as selected
+                cell.classList.add('selected');
+
+                // Record the movement
+                currentPuzzle.currentTrail.push(cell);
+
+                // Remember this step for backtracking
                 currentPuzzle.mostRecentCell = cell;
             }
         }
@@ -583,7 +598,7 @@ function attachEventListeners() {
     // Show extra words
 
     // Load state of checkboxes from localStorage
-    
+
     const showKeyWordCheckbox = getShowWordsFoundElement();
     showKeyWordCheckbox.checked = localStorage.getItem(PuzzleLocalStorageKeys.SHOW_KEY_WORDS) !== 'false';
 
@@ -793,35 +808,29 @@ function decrementRedGrey(foundWord) {
             for (let i = 0; i < gridElement.children.length; i++) {
                 const cell = gridElement.children[i];
 
-                if (path.startsWith(cell.dataset.coord)) {
-                    cell.dataset.red--;
+                if (cell.classList.contains('hidden')) {
+                    continue;
                 }
-
+        
+                let red = Number(cell.dataset.red);
+                let grey = Number(cell.dataset.grey);
+                
+                // Reduce red/grey numbers as appropriate
                 if (path.includes(cell.dataset.coord)) {
-                    cell.dataset.grey--;
+                    if (path.startsWith(cell.dataset.coord)) {
+                        red--;
+                        cell.dataset.red = red;
+                    }                        
 
-                    if (cell.dataset.grey == 0) {
-                        cell.classList.add('zerozero');
-                    }
+                    grey--; 
+                    cell.dataset.grey = grey;
                 }
 
-                var attr = '';
-                if (cell.dataset.red > 9) {
-                    attr = '+';
-                } else if (cell.dataset.red > 0) {
-                    attr = `${cell.dataset.red}`;
+                updateRedGreyInCell(cell, red, grey);
+
+                if (grey === 0) {
+                    cell.classList.add('zerozero');
                 }
-
-                cell.setAttribute('red-counter', attr);
-
-                var attr = '';
-                if (cell.dataset.grey > 9) {
-                    attr = '+';
-                } else if (cell.dataset.grey > 0) {
-                    attr = `${cell.dataset.grid}`;
-                }
-
-                cell.setAttribute('grey-counter', attr);
             }
         }
     });
@@ -830,25 +839,23 @@ function decrementRedGrey(foundWord) {
 function updateWordsFound() {
     const showWordsFoundElement = getShowWordsFoundElement();
     const wordsFoundElement = getWordsFoundElement();
-
-    if (!showWordsFoundElement.checked) {
-        wordsFoundElement.style.display = 'none';
-        return;
-    }
-    
-    wordsFoundElement.style.display = '';
-
-    if (currentPuzzle.foundKeyWords.size == 0) {
-        wordsFoundElement.innerHTML = `<p><div class="no-words-message">No words found</div></p>`;
-        return;
-    }
-
-    wordsFoundElement.innerHTML =
-        `<p><div class="no-words-message">${currentPuzzle.foundKeyWords.size} out of ${currentPuzzle.puzzle.keyWords.length} words found.</div></p>` +
-        buildWordListHtml(currentPuzzle.foundKeyWords);
-
     const progressCardElement = getProgressCardElement();
 
+    if (showWordsFoundElement.checked) {
+        wordsFoundElement.style.display = '';
+        
+        if (currentPuzzle.foundKeyWords.size > 0) {
+            wordsFoundElement.innerHTML =
+                `<p><div class="no-words-message">${currentPuzzle.foundKeyWords.size} out of ${currentPuzzle.puzzle.keyWords.length} words found.</div></p>` +
+                buildWordListHtml(currentPuzzle.foundKeyWords);
+        } else {
+            wordsFoundElement.innerHTML = `<p><div class="no-words-message">No words found</div></p>`;
+        }
+    } else {
+        wordsFoundElement.style.display = 'none';
+    }    
+
+    // Flash the current word count and target
     progressCardElement.classList.add('flash');
     progressCardElement.innerHTML = `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length}`;
 
@@ -856,7 +863,6 @@ function updateWordsFound() {
     setTimeout(() => {
         progressCardElement.classList.remove('flash');
     }, 300); // Match the duration of the CSS transition
-
 }
 
 function updateExtraWordsFound() {
@@ -1067,27 +1073,40 @@ function updateRedGreyDisplay() {
             continue;
         }
 
-        if (cell.dataset.grey == 0) {
+        const red = Number(cell.dataset.red);
+        const grey = Number(cell.dataset.grey);
+
+        updateRedGreyInCell(cell, red, grey);
+
+        if (grey === 0) {
             cell.classList.add('zerozero');
         }
+    }
+}
 
-        var attr = '';
-        if (cell.dataset.red > 9) {
+function updateRedGreyInCell(cell, red, grey) {
+    // Display the red number or '+' if 10 or more
+    {
+        let attr = '';
+        if (red > 9) {
             attr = '+';
-        } else if (cell.dataset.red > 0) {
-            attr = `${cell.dataset.red}`;
+        } else if (red > 0) {
+            attr = `${red}`;
         }
+    
+        cell.setAttribute('word-start-counter', attr);
+    }
 
-        cell.setAttribute('red-counter', attr);
-
-        var attr = '';
-        if (cell.dataset.grey > 9) {
+    // Display the grey number, or '+' if 10 or more
+    {
+        let attr = '';
+        if (grey > 9) {
             attr = '+';
-        } else if (cell.dataset.grey > 0) {
-            attr = `${cell.dataset.grey}`;
+        } else if (grey > 0) {
+            attr = `${grey}`;
         }
-
-        cell.setAttribute('grey-counter', attr);
+        
+        cell.setAttribute('word-contains-counter', attr);
     }
 }
 

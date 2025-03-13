@@ -71,7 +71,7 @@
             <div class="left-side">
                 <div class="h3-container">
                     <h3 class="main-content" id="puzzle-title"></h3>
-                    <span class="right-aligned" id="progress-card">0/0</span>
+                    <span class="right-aligned" id="progress-card"></span>
                 </div>
 
                 <!-- Messages -->
@@ -90,18 +90,21 @@
                 <h4>Words Remaining</h4>
                 <div id="counts-message"></div>
                 <hr>
-                <p><label class="checkbox-container">
-                    <input type="checkbox" id="show-key-words">
-                    <span class="checkmark"></span>
-                    Show words found
+                <div style="display: flex; gap: 30px; align-items: center; height: 40px;">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="show-key-words">
+                        <span class="checkmark"></span>
+                        Show words found
+                    </label>
                     <select class="combobox" id="found-order-selection">
                         <option value="FOUND_ORDER">Found Order</option>
                         <option value="ALPHABETICAL">Alphabetical</option>
                         <option value="WORD_LENGTH">Word Length</option>
                     </select>
-                </label>
+                </div>
                 <div id="words-found"></div>
-                <p><label class="checkbox-container">
+                <p>
+                    <label class="checkbox-container">
                         <input type="checkbox" id="show-extra-words">
                         <span class="checkmark"></span>
                         Show extra words
