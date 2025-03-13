@@ -1,7 +1,57 @@
 // Functions for allowing user access to a catalog of puzzles
 
-document.addEventListener('DOMContentLoaded', function () {
+// TODO delete this
+// document.addEventListener('DOMContentLoaded', function () {
+//     // Set up some test data
+//     const progressKey = "puzzle-%id.progress";
+//     const statusKey = "puzzle-%id.status";
+
+//     // Test all 5 status values
+//     for( let i = 0; i < 5; i++) {
+//         localStorage.setItem(statusKey.replace("%id",i+1),i);
+//     }
+
+//     localStorage.setItem(progressKey.replace("%id",2), JSON.stringify({
+//         keyWords: [1,2,3],
+//         extraWords: [4,5,6],
+//         nonWordCount: 3
+//     }));
+// });
+
+document.addEventListener('DOMContentLoaded', async function () {
     const DEFAULT_REPOSITORY = "puzzles";
+
+    // Import legacy data - only impacts the first 24 puzzles
+    const migrationCompleted = localStorage.getItem('migration-1-completed') === "true";
+    if (!migrationCompleted) {
+        localStorage.setItem('migration-1-completed', 'true');
+
+        for (let i = 1; i < 25; i++) {
+            const statusData = localStorage.getItem(`puzzle-${i}.status`);
+            if (statusData) {
+                await dbStorePuzzleStatus(i, {
+                    status: Number(statusData)
+                })
+                    .catch(error => {
+                        console.error("Failed to migrate status", error);
+                    });
+            }
+    
+            const progressData = localStorage.getItem(`puzzle-${i}.progress`);
+            if (progressData) {
+                const progress = JSON.parse(progressData);
+                await dbStorePuzzleProgress(i, {
+                    keyWords: progress.keyWords,
+                    extraWords: progress.extraWords,
+                    nonWordCount: progress.nonWordCount,
+                })
+                    .catch(error => {
+                        console.error("Failed to migrate progress", error);
+                    });
+            }
+        }
+
+    }
 
     // Check the URL parameters
     const urlParams = new URLSearchParams(window.location.search);
