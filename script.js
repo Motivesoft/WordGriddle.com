@@ -139,34 +139,33 @@ function openSettingsDialog() {
 
 // Migrate all progress information stored for all puzzles
 async function migrateAllProgress() {
-    console.warn(`Migrating all progress`);
+    console.info(`Migrating all progress`);
 
     // This can be as hard-coded as we like as it is invented for a specific purpose 
     // Examine up to 100 puzzles, even though that is more than enough
     let errorCount = 0;
     for (let puzzleId = 1; puzzleId <= 100; puzzleId++) {
-        // Currently, there are 24 puzzles published to Alpha. We can therefore look just for those
+        console.info(`Migrating data for puzzle ${puzzleId}`, error);
+
         try {
-            const statusData = localStorage.getItem(`puzzle-${puzzleId}.status`);
             const progressData = localStorage.getItem(`puzzle-${puzzleId}.progress`);
-
-            console.log(`${puzzleId}: Status   data ${statusData}`);
-            console.log(`${puzzleId}: Progress data ${progressData}`);
-
-            if (statusData) {
-                console.log(`  migrating status data for ${puzzleId}`);
-
-                // This valid was a number held as a string originally. Make it a number now
-                const status = Number.parseInt(statusData);
-                console.log(`  ${status} (${typeof(status)})`);
-                await dbStorePuzzleStatus(puzzleId, {status: status});
-            }
+            const statusData = localStorage.getItem(`puzzle-${puzzleId}.status`);
 
             if (progressData) {
-                console.log(`  migrating progress data for ${puzzleId}`);
                 const progress = JSON.parse(progressData);
-                console.log(` Key: ${progress.keyWords.length}. Extra: ${progress.extraWords.length}. NonWords: ${progress.nonWordCount}`);
-                await dbStorePuzzleProgress(puzzleId, progress);
+                await dbStorePuzzleProgress(puzzleId, progress)
+                    .catch(error => {
+                        console.error("Failed to store progress", error);
+                    });
+            }
+
+            if (statusData) {
+                // This valid was a number held as a string originally. Make it a number now
+                const status = Number.parseInt(statusData);
+                await dbStorePuzzleStatus(puzzleId, { status: status })
+                    .catch(error => {
+                        console.error("Failed to store status", error);
+                    });
             }
         } catch (error) {
             console.error(`Problem migrating data for puzzle ${puzzleId}`, error);
@@ -205,7 +204,7 @@ function deleteAllProgress() {
 
 // Delete all "localStorage" progress information stored for all puzzles in a specific repo
 function deleteProgress(repo) {
-    console.log(`Deleting progress for ${repo}`);
+    console.info(`Deleting legacy progress for ${repo}`);
 
     fetch(`/assets/${repo}/catalog.json`)
         .then(response => {
