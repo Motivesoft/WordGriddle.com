@@ -1,6 +1,40 @@
 // Functions for allowing user access to a catalog of puzzles
 
-document.addEventListener('DOMContentLoaded', function () {
+// Display a list of puzzles to allow the user to select one to open
+document.addEventListener('DOMContentLoaded', async function () {
+    // Import and migrate legacy data - only impacts the first 24 puzzles and we only want to try it once
+    // TODO get rid of this at the end of the Alpha
+    const migrationCompleted = localStorage.getItem('migration-1-completed') === "true";
+    if (!migrationCompleted) {
+        localStorage.setItem('migration-1-completed', 'true');
+
+        for (let i = 1; i < 25; i++) {
+            const statusData = localStorage.getItem(`puzzle-${i}.status`);
+            if (statusData) {
+                await dbStorePuzzleStatus(i, {
+                    status: Number(statusData)
+                })
+                    .catch(error => {
+                        console.error("Failed to migrate status", error);
+                    });
+            }
+    
+            const progressData = localStorage.getItem(`puzzle-${i}.progress`);
+            if (progressData) {
+                const progress = JSON.parse(progressData);
+                await dbStorePuzzleProgress(i, {
+                    keyWords: progress.keyWords,
+                    extraWords: progress.extraWords,
+                    nonWordCount: progress.nonWordCount,
+                })
+                    .catch(error => {
+                        console.error("Failed to migrate progress", error);
+                    });
+            }
+        }
+
+    }
+
     const DEFAULT_REPOSITORY = "puzzles";
 
     // Check the URL parameters
