@@ -9,6 +9,14 @@ class DBConnection {
         this.db = null;
     }
 
+    // Get the database instance (ensure it's open first)
+    async getDB() {
+        if (!this.db) {
+            await this.open(); // Wait for the connection to open
+        }
+        return this.db;
+    }
+
     // Open the database connection
     open() {
         return new Promise((resolve, reject) => {
@@ -48,9 +56,11 @@ class DBConnection {
     }
 
     // Add an object to a specific store
-    add(storeName, object) {
+    async add(storeName, object) {
+        const db = await this.getDB();
+
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([storeName], 'readwrite');
+            const transaction = db.transaction([storeName], 'readwrite');
             const store = transaction.objectStore(storeName);
             const request = store.add(object);
 
@@ -60,9 +70,11 @@ class DBConnection {
     }
 
     // Put an object to a specific store
-    put(storeName, object) {
+    async put(storeName, object) {
+        const db = await this.getDB();
+        
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([storeName], 'readwrite');
+            const transaction = db.transaction([storeName], 'readwrite');
             const store = transaction.objectStore(storeName);
             const request = store.put(object);
 
@@ -72,9 +84,11 @@ class DBConnection {
     }
 
     // Get an object by ID from a specific store
-    get(storeName, id) {
+    async get(storeName, id) {
+        const db = await this.getDB();
+        
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([storeName], 'readonly');
+            const transaction = db.transaction([storeName], 'readonly');
             const store = transaction.objectStore(storeName);
             const request = store.get(id);
 
@@ -84,9 +98,11 @@ class DBConnection {
     }
 
     // Update an object in a specific store
-    update(storeName, object) {
+    async update(storeName, object) {
+        const db = await this.getDB();
+        
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([storeName], 'readwrite');
+            const transaction = db.transaction([storeName], 'readwrite');
             const store = transaction.objectStore(storeName);
             const request = store.put(object);
 
@@ -96,9 +112,11 @@ class DBConnection {
     }
 
     // Delete an object by ID from a specific store
-    delete(storeName, id) {
+    async delete(storeName, id) {
+        const db = await this.getDB();
+        
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([storeName], 'readwrite');
+            const transaction = db.transaction([storeName], 'readwrite');
             const store = transaction.objectStore(storeName);
             const request = store.delete(id);
 
@@ -108,9 +126,11 @@ class DBConnection {
     }
 
     // Get all objects from a specific store
-    getAll(storeName) {
+    async getAll(storeName) {
+        const db = await this.getDB();
+        
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([storeName], 'readonly');
+            const transaction = db.transaction([storeName], 'readonly');
             const store = transaction.objectStore(storeName);
             const request = store.getAll();
 
@@ -120,9 +140,11 @@ class DBConnection {
     }
 
     // Get all objects from a specific store within a specific range
-    getInRange(storeName, lowerBound, upperBound) {
+    async getInRange(storeName, lowerBound, upperBound) {
+        const db = await this.getDB();
+        
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([storeName], 'readonly');
+            const transaction = db.transaction([storeName], 'readonly');
             const store = transaction.objectStore(storeName);
             const range = IDBKeyRange.bound(lowerBound, upperBound);
             const request = store.getAll(range);
@@ -133,9 +155,11 @@ class DBConnection {
     }
 
     // Perform a transaction across multiple stores
-    transaction(storeNames, mode = 'readonly', callback) {
+    async transaction(storeNames, mode = 'readonly', callback) {
+        const db = await this.getDB();
+        
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction(storeNames, mode);
+            const transaction = db.transaction(storeNames, mode);
             const stores = storeNames.reduce((acc, storeName) => {
                 acc[storeName] = transaction.objectStore(storeName);
                 return acc;
@@ -174,7 +198,7 @@ function dbDeletePuzzleStatus(puzzleId) {
 function dbStorePuzzleStatus(puzzleId, puzzleStatus) {
     console.debug(`Store puzzle status for ${puzzleId}`);
 
-    return dbConnection.update(ObjectStores.PUZZLE_STATUS, {id: puzzleId, ...puzzleStatus});
+    return dbConnection.update(ObjectStores.PUZZLE_STATUS, { id: puzzleId, ...puzzleStatus });
 }
 
 function dbGetPuzzleProgress(puzzleId) {
@@ -192,7 +216,7 @@ function dbDeletePuzzleProgress(puzzleId) {
 function dbStorePuzzleProgress(puzzleId, puzzleProgress) {
     console.debug(`Store puzzle progress for ${puzzleId}`);
 
-    return dbConnection.put(ObjectStores.PUZZLE_PROGRESS, {id: puzzleId, ...puzzleProgress});
+    return dbConnection.put(ObjectStores.PUZZLE_PROGRESS, { id: puzzleId, ...puzzleProgress });
 }
 
 // Debug aid
@@ -202,8 +226,8 @@ function dumpObject(title, id, object) {
     if (object) {
         const keys = Object.keys(object);
         const values = Object.values(object);
-        for( let i = 0; i < keys.length; i++) {
-            console.debug(`  ${keys[i]} : ${values[i]} (${typeof(values[i])})`);
+        for (let i = 0; i < keys.length; i++) {
+            console.debug(`  ${keys[i]} : ${values[i]} (${typeof (values[i])})`);
         }
     }
 }
