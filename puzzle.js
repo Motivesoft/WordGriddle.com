@@ -195,38 +195,41 @@ function scaleGrid() {
     const largePortrait = window.matchMedia("(orientation: portrait) and (min-width: 500px)");
 
     // Start with some defaults and then adjust them
-    let maxDimension = `360px`;
-    let gap = `10px`;
-    let fontSize = `24px`;
+    let maxDimension = 360;
+    let gap = 10;
+    let fontSize = 24;
 
     if (smallPortrait.matches) {
-        maxDimension = `322px`;
-        gap = `${size < 7 ? 11 : 4}px`;
-        fontSize = `${Math.min(40, 160 / size)}px`;
+        maxDimension = 322;
+        gap = size < 7 ? 11 : 4;
+        fontSize = Math.min(40, 160 / size);
     } else if (largePortrait.matches) {
-        maxDimension = `330px`;
-        gap = `${size < 7 ? 11 : 5}px`;
-        fontSize = `${170 / size}px`;
+        maxDimension = 330;
+        gap = size < 7 ? 11 : 5;
+        fontSize = 170 / size;
     } else if (smallLandscape.matches) {
-        maxDimension = `223px`;
-        gap = `${size < 7 ? 7 : 3}px`;
-        fontSize = `${114 / size}px`;
+        maxDimension = 223;
+        gap = size < 7 ? 7 : 3;
+        fontSize = 114 / size;
     } else if (largeLandscape.matches) {
-        maxDimension = `402px`;
-        gap = `${size < 7 ? 14 : 6}px`;
-        fontSize = `${210 / size}px`;
+        maxDimension = 402;
+        gap = size < 7 ? 14 : 6;
+        fontSize = 210 / size;
     } else {
         // Unknown scenario according to our rules - not much we can do but allow our default behaviour to do the right thing 
         return;
     }
 
+    // const cellSize = (maxDimension - ((size-1)*gap))/size; 
+    // console.debug(`${size}: ${gap} ${maxDimension} (${cellSize}) (${(maxDimension-(Math.floor(cellSize)*size))/(size-1)})`);
+
     // Apply the calculated size, font size and gap
     const gridElement = getGridElement();
-    gridElement.style.width = maxDimension;
-    gridElement.style.height = maxDimension;
+    gridElement.style.width = `${maxDimension}px`;
+    gridElement.style.height = `${maxDimension}px`;
 
-    document.documentElement.style.setProperty('--grid-cell-gap', gap);
-    document.documentElement.style.setProperty('--grid-cell-font-size', fontSize);
+    document.documentElement.style.setProperty('--grid-cell-gap', `${gap}px`);
+    document.documentElement.style.setProperty('--grid-cell-font-size', `${fontSize}px`);
 }
 
 // Trail stuff
