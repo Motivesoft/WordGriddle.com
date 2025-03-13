@@ -1,27 +1,9 @@
 // Functions for allowing user access to a catalog of puzzles
 
-// TODO delete this
-// document.addEventListener('DOMContentLoaded', function () {
-//     // Set up some test data
-//     const progressKey = "puzzle-%id.progress";
-//     const statusKey = "puzzle-%id.status";
-
-//     // Test all 5 status values
-//     for( let i = 0; i < 5; i++) {
-//         localStorage.setItem(statusKey.replace("%id",i+1),i);
-//     }
-
-//     localStorage.setItem(progressKey.replace("%id",2), JSON.stringify({
-//         keyWords: [1,2,3],
-//         extraWords: [4,5,6],
-//         nonWordCount: 3
-//     }));
-// });
-
+// Display a list of puzzles to allow the user to select one to open
 document.addEventListener('DOMContentLoaded', async function () {
-    const DEFAULT_REPOSITORY = "puzzles";
-
-    // Import legacy data - only impacts the first 24 puzzles
+    // Import and migrate legacy data - only impacts the first 24 puzzles and we only want to try it once
+    // TODO get rid of this at the end of the Alpha
     const migrationCompleted = localStorage.getItem('migration-1-completed') === "true";
     if (!migrationCompleted) {
         localStorage.setItem('migration-1-completed', 'true');
@@ -52,6 +34,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
     }
+
+    const DEFAULT_REPOSITORY = "puzzles";
 
     // Check the URL parameters
     const urlParams = new URLSearchParams(window.location.search);
