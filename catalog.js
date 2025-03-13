@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         puzzleLink = `puzzle.html?r=%repo&p=%name`;
     }
-    
+
     // Act as a URL shortener, look for a puzzle name coming in as a "p" request parameter and
     // open it (from either the default repo or one that was passed using "r"), for example:
     //   https://wordgriddle.com/?p=puzzle-1
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // No puzzles. Nothing to do
                 return;
             }
-            
+
             // Get all known puzzle statuses for the set of puzzles in which we are interested
             // We could do this piecemeal, puzzle by puzzle as required, but that is multiple database
             // calls and this is just one, so take the slight hit in complexity/readability for performance
@@ -79,12 +79,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 const puzzleSelector = await createPuzzleSelector(puzzle, status);
-                
+
                 puzzleSelector.addEventListener('click', function () {
                     window.location.href = puzzleLink
                         .replace("%name", encodeURIComponent(puzzle.name))
                         .replace("%repo", encodeURIComponent(repository));
-                });        
+                });
 
                 puzzleListElement.appendChild(puzzleSelector);
             });

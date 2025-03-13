@@ -814,18 +814,18 @@ function decrementRedGrey(foundWord) {
                 if (cell.classList.contains('hidden')) {
                     continue;
                 }
-        
+
                 let red = Number(cell.dataset.red);
                 let grey = Number(cell.dataset.grey);
-                
+
                 // Reduce red/grey numbers as appropriate
                 if (path.includes(cell.dataset.coord)) {
                     if (path.startsWith(cell.dataset.coord)) {
                         red--;
                         cell.dataset.red = red;
-                    }                        
+                    }
 
-                    grey--; 
+                    grey--;
                     cell.dataset.grey = grey;
                 }
 
@@ -1096,7 +1096,7 @@ function updateRedGreyInCell(cell, red, grey) {
         } else if (red > 0) {
             attr = `${red}`;
         }
-    
+
         cell.setAttribute('word-start-counter', attr);
     }
 
@@ -1108,7 +1108,7 @@ function updateRedGreyInCell(cell, red, grey) {
         } else if (grey > 0) {
             attr = `${grey}`;
         }
-        
+
         cell.setAttribute('word-contains-counter', attr);
     }
 }

@@ -72,7 +72,7 @@ class DBConnection {
     // Put an object to a specific store
     async put(storeName, object) {
         const db = await this.getDB();
-        
+
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([storeName], 'readwrite');
             const store = transaction.objectStore(storeName);
@@ -86,7 +86,7 @@ class DBConnection {
     // Get an object by ID from a specific store
     async get(storeName, id) {
         const db = await this.getDB();
-        
+
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([storeName], 'readonly');
             const store = transaction.objectStore(storeName);
@@ -100,7 +100,7 @@ class DBConnection {
     // Update an object in a specific store
     async update(storeName, object) {
         const db = await this.getDB();
-        
+
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([storeName], 'readwrite');
             const store = transaction.objectStore(storeName);
@@ -114,7 +114,7 @@ class DBConnection {
     // Delete an object by ID from a specific store
     async delete(storeName, id) {
         const db = await this.getDB();
-        
+
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([storeName], 'readwrite');
             const store = transaction.objectStore(storeName);
@@ -128,7 +128,7 @@ class DBConnection {
     // Get all objects from a specific store
     async getAll(storeName) {
         const db = await this.getDB();
-        
+
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([storeName], 'readonly');
             const store = transaction.objectStore(storeName);
@@ -142,7 +142,7 @@ class DBConnection {
     // Get all objects from a specific store within a specific range
     async getInRange(storeName, lowerBound, upperBound) {
         const db = await this.getDB();
-        
+
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([storeName], 'readonly');
             const store = transaction.objectStore(storeName);
@@ -157,7 +157,7 @@ class DBConnection {
     // Perform a transaction across multiple stores
     async transaction(storeNames, mode = 'readonly', callback) {
         const db = await this.getDB();
-        
+
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(storeNames, mode);
             const stores = storeNames.reduce((acc, storeName) => {

@@ -162,7 +162,7 @@ async function migrateAllProgress() {
             if (statusData) {
                 // This valid was a number held as a string originally. Make it a number now
                 const status = Number.parseInt(statusData);
-                await dbStorePuzzleStatus(puzzleId, {status: status})
+                await dbStorePuzzleStatus(puzzleId, { status: status })
                     .catch(error => {
                         console.error("Failed to store status", error);
                     });
