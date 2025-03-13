@@ -4,7 +4,8 @@
 :root {
     --grid-cell-gap: 6px;
     --grid-cell-font-size: 1.5em;
-    --grid-cell-font-weight: 500;
+    --grid-cell-font-family: sans-serif;
+    --grid-cell-font-weight: 600;
 }
 
 :root,
@@ -205,6 +206,7 @@
     text-align: center;
     background-color: var(--grid-item-background);
     color: var(--text-color);
+    font-family: var(--grid-cell-font-family);
     font-weight: var(--grid-cell-font-weight);
     cursor: pointer;
     transition: all 0.3s ease;
