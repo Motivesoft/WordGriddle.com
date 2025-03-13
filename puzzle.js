@@ -122,6 +122,7 @@ async function openPuzzle(puzzleName, puzzle) {
     updateSelectedLettersDisplay();
     updateRedGreyDisplay();
     updateWordsFound();
+    updateProgressFlashCard();
     updateClues();
     updateExtraWordsFound();
 }
@@ -394,9 +395,15 @@ async function endDragGesture() {
                 updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
                 updateRedGreyDisplay();
                 updateWordsFound();
+                updateProgressFlashCard();
                 updateClues();
 
-                if (currentPuzzle.foundKeyWords.size == currentPuzzle.puzzle.keyWords.length) {
+                // Have we finished the puzzle 
+                // NB use '>=' not '==' to cover the unlikely event that a puzzle was modified after someone
+                // recorded progress against it. There will be a more robust way to do this, but it probably
+                // comes at the performance cost of checking off every word
+                // One to think about if this becomes a scenario we need to care more about
+                if (currentPuzzle.foundKeyWords.size >= currentPuzzle.puzzle.keyWords.length) {
                     currentPuzzle.completed = true;
 
                     // We've just found a word and completed the puzzle. Store the progress update
@@ -630,10 +637,6 @@ function attachEventListeners() {
     // Clues
     const cluesCheckbox = getShowCluesElement();
     cluesCheckbox.addEventListener('change', function () {
-        // Hide this until appropriate
-        const moreHintsElement = getMoreHintsElement();
-        moreHintsElement.style.display = cluesCheckbox.checked ? '' : 'none';
-
         updateClues();
     });
 
@@ -839,11 +842,8 @@ function decrementRedGrey(foundWord) {
 function updateWordsFound() {
     const showWordsFoundElement = getShowWordsFoundElement();
     const wordsFoundElement = getWordsFoundElement();
-    const progressCardElement = getProgressCardElement();
 
     if (showWordsFoundElement.checked) {
-        wordsFoundElement.style.display = '';
-        
         if (currentPuzzle.foundKeyWords.size > 0) {
             wordsFoundElement.innerHTML =
                 `<p><div class="no-words-message">${currentPuzzle.foundKeyWords.size} out of ${currentPuzzle.puzzle.keyWords.length} words found.</div></p>` +
@@ -852,17 +852,20 @@ function updateWordsFound() {
             wordsFoundElement.innerHTML = `<p><div class="no-words-message">No words found</div></p>`;
         }
     } else {
-        wordsFoundElement.style.display = 'none';
-    }    
+        wordsFoundElement.innerHTML = '';
+    }
+}
 
-    // Flash the current word count and target
+// Flash the current word count and target
+function updateProgressFlashCard() {
+    const progressCardElement = getProgressCardElement();
     progressCardElement.classList.add('flash');
     progressCardElement.innerHTML = `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length}`;
 
     // Remove the animation class after the animation ends
     setTimeout(() => {
         progressCardElement.classList.remove('flash');
-    }, 300); // Match the duration of the CSS transition
+    }, 300);
 }
 
 function updateExtraWordsFound() {
