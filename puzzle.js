@@ -210,21 +210,25 @@ function scaleGrid() {
     let fontSize = 24;
 
     if (smallPortrait.matches) {
-        maxDimension = 322;
-        gap = size < 7 ? 11 : 4;
-        fontSize = Math.min(40, 160 / size);
-    } else if (largePortrait.matches) {
         maxDimension = 330;
-        gap = size < 7 ? 11 : 5;
-        fontSize = 170 / size;
+        gap = 14 - size;
+        fontSize = Math.min(40, Math.floor(160 / size));
+        console.debug(`Small portrait device: ${maxDimension} ${gap} ${fontSize}`);
+    } else if (largePortrait.matches) {
+        maxDimension = 360;
+        gap = 14 - size;
+        fontSize = Math.min(50, Math.floor(180 / size));
+        console.debug(`Large portrait device: ${maxDimension} ${gap} ${fontSize}`);
     } else if (smallLandscape.matches) {
-        maxDimension = 223;
-        gap = size < 7 ? 7 : 3;
-        fontSize = 114 / size;
+        maxDimension = 224;
+        gap = 10 - size;
+        fontSize = Math.floor(114 / size);
+        console.debug(`Small landscape device: ${maxDimension} ${gap} ${fontSize}`);
     } else if (largeLandscape.matches) {
-        maxDimension = 402;
-        gap = size < 7 ? 14 : 6;
-                fontSize = 210 / size;
+        maxDimension = 400;
+        gap = 14 - size;
+        fontSize = Math.floor(200 / size);
+        console.debug(`Large landscape device: ${maxDimension} ${gap} ${fontSize}`);
     } else {
         // Unknown scenario according to our rules - not much we can do but allow our default behaviour to do the right thing 
         return;
