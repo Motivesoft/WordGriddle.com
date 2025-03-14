@@ -238,10 +238,10 @@ function openAboutBox() {
         <h3>About WordGriddle</h3>
         <div class="aboutBoxSocialMediaLinks">
             <a href="https://discord.gg/vzdqBbnKX8" target="_blank" rel="noopener noreferrer">
-                <img src="assets/discord-mark-blue.svg" alt="WordGriddle Discord Server" class="aboutBoxSocialMediaIcon">
+                <img src="assets/svg/discord-mark-blue.svg" alt="WordGriddle Discord Server" class="aboutBoxSocialMediaIcon">
             </a>
             <a href="https://www.reddit.com/r/WordGriddle/" target="_blank" rel="noopener noreferrer">
-                <img src="assets/Reddit_Icon_2Color.svg" alt="WordGriddle channel on Reddit" class="aboutBoxSocialMediaIcon">
+                <img src="assets/svg/Reddit_Icon_2Color.svg" alt="WordGriddle channel on Reddit" class="aboutBoxSocialMediaIcon">
             </a>
         </div>
         <p id="aboutBoxVersion"></p>
