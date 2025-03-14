@@ -1,4 +1,4 @@
-![WordGriddle](./icon-64-purple.png)
+![WordGriddle](./wordgriddle-64x64.png)
 # WordGriddle
 Homepage for the upcoming WordGriddle game.
 

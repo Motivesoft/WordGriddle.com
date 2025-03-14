@@ -1,8 +1,6 @@
 User-agent: *
 Allow: /
 
-Disallow: /puzzles/
-Disallow: /puzzle.html
-Disallow: /puzzles.html
+Disallow: /assets/puzzles/
 
 Sitemap: https://wordgriddle.com/sitemap.xml
