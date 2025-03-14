@@ -135,6 +135,21 @@
       "id": 27,
       "size": 4,
       "name": "puzzle-27"
+    },
+    {
+      "id": 28,
+      "size": 6,
+      "name": "puzzle-28"
+    },
+    {
+      "id": 29,
+      "size": 4,
+      "name": "puzzle-29"
+    },
+    {
+      "id": 31,
+      "size": 4,
+      "name": "puzzle-31"
     }
   ]
 }
