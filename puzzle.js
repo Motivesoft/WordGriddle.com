@@ -222,9 +222,9 @@ function scaleGrid() {
         gap = 10 - size;
         fontSize = Math.floor(114 / size);
     } else if (largeLandscape.matches) {
-        maxDimension = 400;
-        gap = 14 - size;
-        fontSize = Math.floor(200 / size);
+        maxDimension = 402;
+        gap = 17 - size;
+        fontSize = Math.floor(210 / size);
     } else {
         // Unknown scenario according to our rules - not much we can do but allow our default behaviour to do the right thing 
         return;
