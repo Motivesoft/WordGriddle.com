@@ -377,7 +377,7 @@ async function endDragGesture() {
         // - too short
         // - a key word (that may or may not have already been found)
         // - an extra word (that may or may not have already been found)
-        // - not a word at all
+        // - not a word at all (including any word we choose not to allow)
         if (selectedWordUpper.length < 4) {
             if (selectedWordUpper.length > 1) {
                 updateOutcomeDisplay(`Word too short`);
@@ -386,13 +386,13 @@ async function endDragGesture() {
             }
         } else if (currentPuzzle.puzzle.keyWords?.some(([word, _]) => word === selectedWordLower)) {
             if (currentPuzzle.foundKeyWords.has(selectedWordLower)) {
-                updateOutcomeDisplay(`Key word already found: ${selectedWordUpper}`);
+                updateOutcomeDisplay(`Word already found: ${selectedWordUpper}`);
             } else {
                 currentPuzzle.foundKeyWords.add(selectedWordLower);
 
                 decrementRedGrey(selectedWordLower);
 
-                updateOutcomeDisplay(`Key word found: ${selectedWordUpper}`);
+                updateOutcomeDisplay(`Word found: ${selectedWordUpper}`);
                 updateRedGreyDisplay();
                 updateWordsFound();
                 updateProgressFlashCard();
@@ -417,7 +417,7 @@ async function endDragGesture() {
 
                     explode("ticker-container");
 
-                    await openMessageBox(`Congratulations! You have found all of the key words!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
+                    await openMessageBox(`<h3>Congratulations!</h3>You have found all of the words for this puzzle!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
                 } else {
                     // Puzzle not yet finished, but a word found nonetheless. Update the progress
                     updateProgress();
@@ -665,7 +665,7 @@ function shareProgress() {
     let shareText = '';
     shareText += `I have been playing WordGriddle!\n`;
     shareText += `Puzzle: '${currentPuzzle.puzzle.title}' - ${window.location.origin}/?p=${currentPuzzle.puzzleName}\n`;
-    shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} key words found, with ${getAccuracy()}% accuracy.\n`;
+    shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} words found, with ${getAccuracy()}% accuracy.\n`;
     shareText += `${currentPuzzle.foundExtraWords.size}/${currentPuzzle.puzzle.extraWords.length} extra words found.\n`;
     shareText += `${window.location.origin}`;
 
