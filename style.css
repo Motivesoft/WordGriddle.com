@@ -39,7 +39,7 @@
     --tab-background: #f1f1f1;
     --tab-border: #ccc;
     --text-color: #000000;
-    --font-family: "Roboto", "Arial", "Helvetica", "Verdana", sans-serif;
+    --font-family: Roboto, Arial, Helvetica, Verdana, sans-serif;
 }
 
 /* Define CSS variables for dark theme */
@@ -82,7 +82,7 @@
     --tab-background: #2c2c2c;
     --tab-border: #444;
     --text-color: #eee;
-    --font-family: "Roboto", "Arial", "Helvetica", "Verdana", sans-serif;
+    --font-family: Roboto, Arial, Helvetica, Verdana, sans-serif;
 }
 
 /* Apply global styles */
