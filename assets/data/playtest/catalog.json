@@ -63,7 +63,7 @@
     },
     {
       "id": 50,
-      "size": 4,
+      "size": 8,
       "name": "puzzle-50"
     },
     {
@@ -73,7 +73,7 @@
     },
     {
       "id": 52,
-      "size": 3,
+      "size": 6,
       "name": "puzzle-52"
     },
     {
@@ -103,7 +103,7 @@
     },
     {
       "id": 58,
-      "size": 4,
+      "size": 3,
       "name": "puzzle-58"
     },
     {
@@ -130,6 +130,11 @@
       "id": 63,
       "size": 4,
       "name": "puzzle-63"
+    },
+    {
+      "id": 64,
+      "size": 4,
+      "name": "puzzle-64"
     }
   ]
 }
