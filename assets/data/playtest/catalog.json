@@ -110,6 +110,11 @@
       "id": 64,
       "size": 4,
       "name": "puzzle-64"
+    },
+    {
+      "id": 65,
+      "size": 5,
+      "name": "puzzle-65"
     }
   ]
 }
