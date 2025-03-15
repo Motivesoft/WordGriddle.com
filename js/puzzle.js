@@ -61,6 +61,13 @@ document.addEventListener('DOMContentLoaded', async function () {
             .catch(async error => {
                 console.error("Failed to load puzzle", error);
                 await openMessageBox(`Failed to load puzzle '${puzzleName}'.`, MessageBoxType.ERROR);
+
+                // If we fail to load a puzzle, go back to the page we would have tried to launch it from
+                if (puzzleRepo === DEFAULT_REPOSITORY) {
+                    window.location.href = "/";
+                } else {
+                    window.location.href = `/puzzles.html?r=${encodeURIComponent(puzzleRepo)}`;
+                }
             });
     } else {
         await openMessageBox('This page needs to be launched by selecting a puzzle to play.', MessageBoxType.ERROR);
