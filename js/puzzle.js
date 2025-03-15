@@ -39,11 +39,11 @@ const currentPuzzle = {
 document.addEventListener('DOMContentLoaded', async function () {
     const urlParams = new URLSearchParams(window.location.search);
     const puzzleName = urlParams.get('p');
-    const puzzleRepo = urlParams.get(`r`) || `puzzles`;
+    const puzzleRepo = urlParams.get(`r`) || DEFAULT_REPOSITORY;
 
     // Assuming we have a file, load it and populate the page
     if (puzzleName) {
-        fetch(`/assets/${decodeURIComponent(puzzleRepo)}/${decodeURIComponent(puzzleName)}.json`)
+        fetch(`/assets/data/${decodeURIComponent(puzzleRepo)}/${decodeURIComponent(puzzleName)}.json`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error status: ${response.status}`);

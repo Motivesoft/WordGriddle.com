@@ -1,5 +1,8 @@
 // Scripting applicable to all pages
 
+// Default puzzle repository
+const DEFAULT_REPOSITORY = "published";
+
 // ** MESSAGE DISPlAY
 const MessageBoxType = Object.freeze({
     PLAIN: 0,
@@ -180,7 +183,7 @@ async function migrateAllProgress() {
 function deleteAllProgress() {
     console.warn(`Deleting all progress`);
 
-    fetch('/assets/server.json')
+    fetch('/assets/data/server.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error status: ${response.status}`);
@@ -190,8 +193,8 @@ function deleteAllProgress() {
         })
         .then(data => {
             data.roles.forEach((role) => {
-                // # is a special name for the main repo
-                const repo = role.repo === '#' ? "puzzles" : role.repo;
+                // # is a special name for the main puzzles repo, "published"
+                const repo = role.repo === '#' ? DEFAULT_REPOSITORY : role.repo;
 
                 // Read the catalog from repo and delete the progress for any puzzle therein
                 deleteProgress(repo);
@@ -206,7 +209,7 @@ function deleteAllProgress() {
 function deleteProgress(repo) {
     console.info(`Deleting legacy progress for ${repo}`);
 
-    fetch(`/assets/${repo}/catalog.json`)
+    fetch(`/assets/data/${repo}/catalog.json`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error status: ${response.status}`);
@@ -288,7 +291,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    fetch('/assets/server.json')
+    fetch('/assets/data/server.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error status: ${response.status}`);

@@ -35,8 +35,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     }
 
-    const DEFAULT_REPOSITORY = "puzzles";
-
     // Check the URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const repository = decodeURIComponent(urlParams.get(`r`) || DEFAULT_REPOSITORY);
@@ -64,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     // Read the catalog file and create a puzzle button for each puzzle therein
-    let catalogFile = `/assets/${repository}/catalog.json`;
+    let catalogFile = `/assets/data/${repository}/catalog.json`;
     fetch(catalogFile)
         .then(response => {
             if (!response.ok) {

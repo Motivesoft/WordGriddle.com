@@ -1,0 +1,190 @@
+{
+  "prompt": "Choose one of our puzzles to play!",
+  "puzzles": [
+    {
+      "id": 1,
+      "size": 3,
+      "name": "puzzle-1"
+    },
+    {
+      "id": 2,
+      "size": 4,
+      "name": "puzzle-2"
+    },
+    {
+      "id": 3,
+      "size": 7,
+      "name": "puzzle-3"
+    },
+    {
+      "id": 4,
+      "size": 3,
+      "name": "puzzle-4"
+    },
+    {
+      "id": 5,
+      "size": 3,
+      "name": "puzzle-5"
+    },
+    {
+      "id": 6,
+      "size": 4,
+      "name": "puzzle-6"
+    },
+    {
+      "id": 7,
+      "size": 4,
+      "name": "puzzle-7"
+    },
+    {
+      "id": 8,
+      "size": 4,
+      "name": "puzzle-8"
+    },
+    {
+      "id": 9,
+      "size": 4,
+      "name": "puzzle-9"
+    },
+    {
+      "id": 10,
+      "size": 6,
+      "name": "puzzle-10"
+    },
+    {
+      "id": 11,
+      "size": 4,
+      "name": "puzzle-11"
+    },
+    {
+      "id": 12,
+      "size": 4,
+      "name": "puzzle-12"
+    },
+    {
+      "id": 13,
+      "size": 4,
+      "name": "puzzle-13"
+    },
+    {
+      "id": 14,
+      "size": 5,
+      "name": "puzzle-14"
+    },
+    {
+      "id": 15,
+      "size": 8,
+      "name": "puzzle-15"
+    },
+    {
+      "id": 16,
+      "size": 5,
+      "name": "puzzle-16"
+    },
+    {
+      "id": 17,
+      "size": 3,
+      "name": "puzzle-17"
+    },
+    {
+      "id": 18,
+      "size": 3,
+      "name": "puzzle-18"
+    },
+    {
+      "id": 19,
+      "size": 3,
+      "name": "puzzle-19"
+    },
+    {
+      "id": 20,
+      "size": 4,
+      "name": "puzzle-20"
+    },
+    {
+      "id": 21,
+      "size": 4,
+      "name": "puzzle-21"
+    },
+    {
+      "id": 22,
+      "size": 4,
+      "name": "puzzle-22"
+    },
+    {
+      "id": 23,
+      "size": 3,
+      "name": "puzzle-23"
+    },
+    {
+      "id": 24,
+      "size": 4,
+      "name": "puzzle-24"
+    },
+    {
+      "id": 25,
+      "size": 4,
+      "name": "puzzle-25"
+    },
+    {
+      "id": 26,
+      "size": 5,
+      "name": "puzzle-26"
+    },
+    {
+      "id": 27,
+      "size": 4,
+      "name": "puzzle-27"
+    },
+    {
+      "id": 28,
+      "size": 6,
+      "name": "puzzle-28"
+    },
+    {
+      "id": 29,
+      "size": 4,
+      "name": "puzzle-29"
+    },
+    {
+      "id": 31,
+      "size": 4,
+      "name": "puzzle-31"
+    },
+    {
+      "id": 32,
+      "size": 4,
+      "name": "puzzle-32"
+    },
+    {
+      "id": 33,
+      "size": 4,
+      "name": "puzzle-33"
+    },
+    {
+      "id": 34,
+      "size": 3,
+      "name": "puzzle-34"
+    },
+    {
+      "id": 35,
+      "size": 3,
+      "name": "puzzle-35"
+    },
+    {
+      "id": 36,
+      "size": 3,
+      "name": "puzzle-36"
+    },
+    {
+      "id": 37,
+      "size": 3,
+      "name": "puzzle-37"
+    },
+    {
+      "id": 38,
+      "size": 3,
+      "name": "puzzle-38"
+    }
+  ]
+}
