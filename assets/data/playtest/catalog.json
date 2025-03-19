@@ -115,6 +115,31 @@
       "id": 65,
       "size": 5,
       "name": "puzzle-65"
+    },
+    {
+      "id": 66,
+      "size": 3,
+      "name": "puzzle-66"
+    },
+    {
+      "id": 67,
+      "size": 4,
+      "name": "puzzle-67"
+    },
+    {
+      "id": 68,
+      "size": 3,
+      "name": "puzzle-68"
+    },
+    {
+      "id": 69,
+      "size": 4,
+      "name": "puzzle-69"
+    },
+    {
+      "id": 70,
+      "size": 5,
+      "name": "puzzle-70"
     }
   ]
 }
