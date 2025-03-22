@@ -20,7 +20,7 @@
     --score-flash-color: #e03030;
     --trail-color: #800000;
     --trail-transparency: 0.2;
-    --word-starts-color: #e03030;
+    --word-starts-color: #6dac63;
     --word-contains-color: #666;
 }
 
@@ -35,7 +35,7 @@
     --score-flash-color: #e37a4d;
     --trail-color: #400000;
     --trail-transparency: 0.3;
-    --word-starts-color: #e03030;
+    --word-starts-color: #88b255;
     --word-contains-color: #666;
 }
 
@@ -253,19 +253,20 @@
 .grid-item::before,
 .grid-item::after {
     position: absolute;
-    bottom: 2px;
     font-size: 0.4em;
 }
 
 .grid-item::before {
     content: attr(word-start-counter);
     left: 2px;
+    top: 2px;
     color: var(--word-starts-color);
 }
 
 .grid-item::after {
     content: attr(word-contains-counter);
     right: 2px;
+    bottom: 2px;
     color: var(--word-contains-color);
 }
 
