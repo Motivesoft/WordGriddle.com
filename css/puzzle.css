@@ -35,7 +35,7 @@
     --score-flash-color: #e37a4d;
     --trail-color: #400000;
     --trail-transparency: 0.3;
-    --word-starts-color: #88b255;
+    --word-starts-color: #79a346;
     --word-contains-color: #666;
 }
 
@@ -190,8 +190,6 @@
     justify-content: center;
     aspect-ratio: 1 / 1;
 
-    background-color: var(--grid-cell-background);
-    border: 1px solid var(--grid-cell-border);
     font-size: var(--grid-cell-font-size);
 
     -webkit-user-select: none;
@@ -210,14 +208,38 @@
     font-weight: var(--grid-cell-font-weight);
     cursor: pointer;
     transition: all 0.3s ease;
-    border-radius: 10%;
+    border-radius: 5%;
     position: relative;
+
+    background-color: #f8d347;
+    /* Yellow tile color */
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    color: #2c3e50;
+    /* Dark text color */
+    /* Add a subtle 3D effect */
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    border-right-color: rgba(0, 0, 0, 0.2);
+
+    /* Add a slight bevel effect */
+    box-shadow:
+        inset 2px 2px 5px rgba(255, 255, 255, 0.5),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.1);
+
+    font-size: 32px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
 }
 
 /* The user is currently clicking or dragging through this cell */
 .grid-item.selected {
     background-color: var(--grid-item-selected-background);
     color: var(--text-color);
+
+    /* Jump when selected */
+    transform: translateY(-3px);
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
 }
 
 /* This cell is empty (e.g. as in a waffle grid)*/
@@ -232,6 +254,7 @@
     background-color: var(--grid-cell-completed-background);
     color: var(--grid-cell-completed-zerozero);
 }
+
 /* These cells can still be selected */
 .grid-item.zerozero.selected {
     background-color: var(--grid-item-selected-background);
