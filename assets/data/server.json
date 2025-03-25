@@ -3,10 +3,6 @@
         {
             "name": "Puzzle List",
             "repo": "#"
-        },
-        {
-            "name": "Test Puzzles",
-            "repo": "playtest"
         }
     ]
 }

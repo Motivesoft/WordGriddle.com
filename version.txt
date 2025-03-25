@@ -1,1 +1,1 @@
-1.6.0-development
+1.6.0-alpha2
