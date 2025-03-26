@@ -5,7 +5,7 @@
     --grid-cell-gap: 6px;
     --grid-cell-font-size: 1.5em;
     --grid-cell-font-family: sans-serif;
-    --grid-cell-font-weight: 500;
+    --grid-cell-font-weight: bold;
 }
 
 :root,
@@ -15,8 +15,9 @@
     --grid-cell-completed-background: #cccccc;
     --grid-cell-completed-color: #c55155;
     --grid-cell-completed-zerozero: #888;
-    --grid-item-background: #edeff1;
-    --grid-item-selected-background: #e9ba3a;
+    --grid-cell-selected-background: #e9ba3a;
+    --grid-cell-tile-background: #f8d347;
+    --grid-cell-tile-color: #2c3e50;
     --score-flash-color: #e03030;
     --trail-color: #800000;
     --trail-transparency: 0.2;
@@ -30,8 +31,9 @@
     --grid-cell-completed-background: #343434;
     --grid-cell-completed-color: #de643d;
     --grid-cell-completed-zerozero: #646464;
-    --grid-item-background: #edeff1;
-    --grid-item-selected-background: #e9ba3a;
+    --grid-cell-selected-background: #e9ba3a;
+    --grid-cell-tile-background: #f8d347;
+    --grid-cell-tile-color: #2c3e50;
     --score-flash-color: #e37a4d;
     --trail-color: #400000;
     --trail-transparency: 0.3;
@@ -202,7 +204,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-color: var(--grid-item-background);
+    background-color: var(--grid-cell-background);
     color: var(--text-color);
     font-family: var(--grid-cell-font-family);
     font-weight: var(--grid-cell-font-weight);
@@ -211,11 +213,13 @@
     border-radius: 5%;
     position: relative;
 
-    background-color: #f8d347;
-    /* Yellow tile color */
+    /* Colours for cell that has active contents */
+    background-color: var(--grid-cell-tile-background);
+    color: var(--grid-cell-tile-color);
+
+    /* Style the letter tile in its normal state with edges and shadows */
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    color: #2c3e50;
-    /* Dark text color */
+    
     /* Add a subtle 3D effect */
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-bottom-color: rgba(0, 0, 0, 0.2);
@@ -225,15 +229,11 @@
     box-shadow:
         inset 2px 2px 5px rgba(255, 255, 255, 0.5),
         inset -2px -2px 5px rgba(0, 0, 0, 0.1);
-
-    font-size: 32px;
-    font-weight: bold;
-    font-family: Arial, sans-serif;
 }
 
 /* The user is currently clicking or dragging through this cell */
 .grid-item.selected {
-    background-color: var(--grid-item-selected-background);
+    background-color: var(--grid-cell-selected-background);
     color: var(--text-color);
 
     /* Jump when selected */
@@ -245,7 +245,6 @@
 /* This cell is empty (e.g. as in a waffle grid)*/
 .grid-item.hidden {
     background-color: var(--panel-background);
-    border: none;
     cursor: default;
 }
 
@@ -257,7 +256,7 @@
 
 /* These cells can still be selected */
 .grid-item.zerozero.selected {
-    background-color: var(--grid-item-selected-background);
+    background-color: var(--grid-cell-selected-background);
     color: var(--text-color);
 }
 
@@ -269,8 +268,22 @@
 
 /* These cells can still be selected */
 .grid-item.completed.selected {
-    background-color: var(--grid-item-selected-background);
+    background-color: var(--grid-cell-selected-background);
     color: var(--text-color);
+}
+
+/* Tweak the appearance in dark mode */
+[data-theme="light"] {
+    .grid-item.zerozero, 
+    .grid-item.hidden,
+    .grid-item.completed {
+        border: none;
+    }
+
+    /* Make the hidden cell truly hidden */
+    /* .grid-item.hidden {
+        box-shadow: none;
+    } */
 }
 
 /* Tweak the appearance in dark mode */
@@ -279,6 +292,11 @@
     .grid-item.hidden,
     .grid-item.completed {
         box-shadow: none;
+    }
+
+    /* Make the hidden cell truly hidden */
+    .grid-item.hidden {
+        border: none;
     }
 }
 
@@ -290,6 +308,7 @@
 
 .grid-item::before {
     content: attr(word-start-counter);
+    font-family: sans-serif;
     left: 2px;
     top: 0px;
     color: var(--word-starts-color);

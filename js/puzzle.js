@@ -107,31 +107,43 @@ async function openPuzzle(puzzleName, puzzle) {
     currentPuzzle.foundNonWords = 0;
     currentPuzzle.completed = false;
 
-    // Initiate things using our 'currentPuzzle' state object
-    initialiseGrid();
+    // We're (re)building the entire grid here. Reduce any potential flicker by
+    // hiding the element until we've created, populated and restored any prior progress 
+    const gridElement = getGridElement();
+    const gridDisplay = gridElement.style.display; 
+    try {
+        gridElement.style.display = 'none';
 
-    // See if this progress has got some stored progress against it
-    await restoreProgress();
+        // Initiate things using our 'currentPuzzle' state object
+        initialiseGrid();
 
-    // Reset clues panel - clues off by default
-    const cluesCheckbox = getShowCluesElement();
-    cluesCheckbox.checked = false;
+        // See if this progress has got some stored progress against it
+        await restoreProgress();
 
-    const additionalLetterCheckbox = getShowAdditionalLetterElement();
-    additionalLetterCheckbox.checked = false;
+        // Reset clues panel - clues off by default
+        const cluesCheckbox = getShowCluesElement();
+        cluesCheckbox.checked = false;
 
-    // Hide this until appropriate
-    document.getElementById('more-hints').style.display = 'none';
-    document.getElementById('refresh-clues').style.display = 'none';
+        const additionalLetterCheckbox = getShowAdditionalLetterElement();
+        additionalLetterCheckbox.checked = false;
 
-    // Update the other parts of the display
-    updatePuzzleProgressMessage();
-    updateSelectedLettersDisplay();
-    updateRedGreyDisplay();
-    updateWordsFound();
-    updateProgressFlashCard();
-    updateClues();
-    updateExtraWordsFound();
+        // Hide this until appropriate
+        document.getElementById('more-hints').style.display = 'none';
+        document.getElementById('refresh-clues').style.display = 'none';
+
+        // Update the other parts of the display
+        updateRedGreyDisplay();
+        updatePuzzleProgressMessage();
+        updateSelectedLettersDisplay();
+        updateWordsFound();
+        updateExtraWordsFound();
+        updateProgressFlashCard();
+        updateClues();
+    }
+    finally {
+        // Restore the style
+        gridElement.style.display = gridDisplay;
+    }
 }
 
 function initialiseGrid() {
@@ -835,12 +847,6 @@ function decrementRedGrey(foundWord) {
                     grey--;
                     cell.dataset.grey = grey;
                 }
-
-                updateRedGreyInCell(cell, red, grey);
-
-                if (grey === 0) {
-                    cell.classList.add('zerozero');
-                }
             }
         }
     });
@@ -1086,37 +1092,36 @@ function updateRedGreyDisplay() {
         const red = Number(cell.dataset.red);
         const grey = Number(cell.dataset.grey);
 
-        updateRedGreyInCell(cell, red, grey);
+        // Display the red number or '+' if 10 or more
+        {
+            let attr = '';
+            if (red > 9) {
+                attr = '+';
+            } else if (red > 0) {
+                attr = `${red}`;
+            }
 
+            cell.setAttribute('word-start-counter', attr);
+        }
+
+        // Display the grey number, or '+' if 10 or more
+        {
+            let attr = '';
+            if (grey > 9) {
+                attr = '+';
+            } else if (grey > 0) {
+                attr = `${grey}`;
+            }
+
+            cell.setAttribute('word-contains-counter', attr);
+        }
+
+        // Style the cell accordingly if its numbers are down to zero
+        // This is a permanent state change as the game rules currently stand,
+        // so no need to make it reversable
         if (grey === 0) {
             cell.classList.add('zerozero');
         }
-    }
-}
-
-function updateRedGreyInCell(cell, red, grey) {
-    // Display the red number or '+' if 10 or more
-    {
-        let attr = '';
-        if (red > 9) {
-            attr = '+';
-        } else if (red > 0) {
-            attr = `${red}`;
-        }
-
-        cell.setAttribute('word-start-counter', attr);
-    }
-
-    // Display the grey number, or '+' if 10 or more
-    {
-        let attr = '';
-        if (grey > 9) {
-            attr = '+';
-        } else if (grey > 0) {
-            attr = `${grey}`;
-        }
-
-        cell.setAttribute('word-contains-counter', attr);
     }
 }
 
