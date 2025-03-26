@@ -184,38 +184,26 @@ const ObjectStores = Object.freeze({
 // Specific database functions
 
 function dbGetPuzzleStatusInRange(lowerPuzzleId, upperPuzzleId) {
-    console.debug(`Get puzzle status in range (${lowerPuzzleId},${upperPuzzleId})`);
-
     return dbConnection.getInRange(ObjectStores.PUZZLE_STATUS, lowerPuzzleId, upperPuzzleId);
 }
 
 function dbDeletePuzzleStatus(puzzleId) {
-    console.debug(`Delete puzzle status for ${puzzleId}`);
-
     return dbConnection.delete(ObjectStores.PUZZLE_STATUS, puzzleId);
 }
 
 function dbStorePuzzleStatus(puzzleId, puzzleStatus) {
-    console.debug(`Store puzzle status for ${puzzleId}`);
-
     return dbConnection.update(ObjectStores.PUZZLE_STATUS, { id: puzzleId, ...puzzleStatus });
 }
 
 function dbGetPuzzleProgress(puzzleId) {
-    console.debug(`Get puzzle progress for ${puzzleId}`);
-
     return dbConnection.get(ObjectStores.PUZZLE_PROGRESS, puzzleId);
 }
 
 function dbDeletePuzzleProgress(puzzleId) {
-    console.debug(`Delete puzzle progress for ${puzzleId}`);
-
     return dbConnection.delete(ObjectStores.PUZZLE_PROGRESS, puzzleId);
 }
 
 function dbStorePuzzleProgress(puzzleId, puzzleProgress) {
-    console.debug(`Store puzzle progress for ${puzzleId}`);
-
     return dbConnection.put(ObjectStores.PUZZLE_PROGRESS, { id: puzzleId, ...puzzleProgress });
 }
 
@@ -238,7 +226,6 @@ const dbConnection = new DBConnection(dbName, [ObjectStores.PUZZLE_STATUS, Objec
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         await dbConnection.open();
-        console.info('Database connection opened successfully.');
     } catch (error) {
         console.error('Failed to open database:', error);
     }
@@ -246,5 +233,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 window.addEventListener('unload', () => {
     dbConnection.close();
-    console.info('Database connection closed.');
 });

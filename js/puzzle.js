@@ -1215,6 +1215,7 @@ function wordListToIndexList(wordList, foundWords) {
         if (index > -1) {
             list.push(index);
         } else {
+            // Should never happen, log it and ignore it
             console.warn(`Could not determine index for word: ${foundWord}`);
         }
     });
@@ -1233,7 +1234,7 @@ function indexListToWordList(indexList, wordList) {
                 list.push(word);
             } else {
                 // This might happen if the puzzle has changed since being completed
-                // This should never happen, but we need to be defensive about the possibility
+                // This is not anticipated, but we need to be defensive about the possibility
                 console.warn(`Could not find word for index: ${index}`);
             }
         });
