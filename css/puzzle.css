@@ -1,5 +1,5 @@
 /* CSS specific to the puzzle page(s) */
-@import '/style.css';
+@import '/css/style.css';
 
 :root {
     --grid-cell-gap: 6px;
