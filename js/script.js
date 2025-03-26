@@ -142,14 +142,10 @@ function openSettingsDialog() {
 
 // Migrate all progress information stored for all puzzles
 async function migrateAllProgress() {
-    console.info(`Migrating all progress`);
-
     // This can be as hard-coded as we like as it is invented for a specific purpose 
     // Examine up to 100 puzzles, even though that is more than enough
     let errorCount = 0;
     for (let puzzleId = 1; puzzleId <= 100; puzzleId++) {
-        console.info(`Migrating data for puzzle ${puzzleId}`, error);
-
         try {
             const progressData = localStorage.getItem(`puzzle-${puzzleId}.progress`);
             const statusData = localStorage.getItem(`puzzle-${puzzleId}.status`);
@@ -181,8 +177,6 @@ async function migrateAllProgress() {
 
 // Delete all progress information stored for all puzzles
 function deleteAllProgress() {
-    console.warn(`Deleting all progress`);
-
     fetch('/assets/data/server.json')
         .then(response => {
             if (!response.ok) {
@@ -207,8 +201,6 @@ function deleteAllProgress() {
 
 // Delete all "localStorage" progress information stored for all puzzles in a specific repo
 function deleteProgress(repo) {
-    console.info(`Deleting legacy progress for ${repo}`);
-
     fetch(`/assets/data/${repo}/catalog.json`)
         .then(response => {
             if (!response.ok) {
@@ -241,10 +233,10 @@ function openAboutBox() {
         <h3>About WordGriddle</h3>
         <div class="aboutBoxSocialMediaLinks">
             <a href="https://discord.gg/vzdqBbnKX8" target="_blank" rel="noopener noreferrer">
-                <img src="assets/svg/discord-mark-blue.svg" alt="WordGriddle Discord Server" class="aboutBoxSocialMediaIcon">
+                <img src="/assets/svg/discord-mark-blue.svg" alt="WordGriddle Discord Server" class="aboutBoxSocialMediaIcon">
             </a>
             <a href="https://www.reddit.com/r/WordGriddle/" target="_blank" rel="noopener noreferrer">
-                <img src="assets/svg/Reddit_Icon_2Color.svg" alt="WordGriddle channel on Reddit" class="aboutBoxSocialMediaIcon">
+                <img src="/assets/svg/Reddit_Icon_2Color.svg" alt="WordGriddle channel on Reddit" class="aboutBoxSocialMediaIcon">
             </a>
         </div>
         <p id="aboutBoxVersion"></p>
