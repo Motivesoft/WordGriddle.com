@@ -281,9 +281,9 @@
     }
 
     /* Make the hidden cell truly hidden */
-    .grid-item.hidden {
+    /* .grid-item.hidden {
         box-shadow: none;
-    }
+    } */
 }
 
 /* Tweak the appearance in dark mode */
