@@ -231,6 +231,14 @@
     font-family: Arial, sans-serif;
 }
 
+/* Tweak the appearance in dark mode */
+[data-theme="dark"] {
+    .grid-item.zerozero, 
+    .grid-item.hidden {
+        box-shadow: none;
+    }
+}
+
 /* The user is currently clicking or dragging through this cell */
 .grid-item.selected {
     background-color: var(--grid-item-selected-background);
