@@ -16,6 +16,7 @@
     --grid-cell-completed-color: #c55155;
     --grid-cell-completed-zerozero: #888;
     --grid-cell-selected-background: #e9ba3a;
+    --grid-cell-selected-color: #000000;
     --grid-cell-tile-background: #f8d347;
     --grid-cell-tile-color: #2c3e50;
     --score-flash-color: #e03030;
@@ -32,6 +33,7 @@
     --grid-cell-completed-color: #de643d;
     --grid-cell-completed-zerozero: #646464;
     --grid-cell-selected-background: #e9ba3a;
+    --grid-cell-selected-color: #000000;
     --grid-cell-tile-background: #f8d347;
     --grid-cell-tile-color: #2c3e50;
     --score-flash-color: #e37a4d;
@@ -234,7 +236,7 @@
 /* The user is currently clicking or dragging through this cell */
 .grid-item.selected {
     background-color: var(--grid-cell-selected-background);
-    color: var(--text-color);
+    color: var(--grid-cell-selected-color);
 
     /* Jump when selected */
     transform: translateY(-3px);
@@ -257,7 +259,7 @@
 /* These cells can still be selected */
 .grid-item.zerozero.selected {
     background-color: var(--grid-cell-selected-background);
-    color: var(--text-color);
+    color: var(--grid-cell-selected-color);
 }
 
 /* All key words have been found (i.e. does not include extra words) */
