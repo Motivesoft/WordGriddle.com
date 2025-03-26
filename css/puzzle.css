@@ -291,14 +291,14 @@
 .grid-item::before {
     content: attr(word-start-counter);
     left: 2px;
-    top: 2px;
+    top: 0px;
     color: var(--word-starts-color);
 }
 
 .grid-item::after {
     content: attr(word-contains-counter);
     right: 2px;
-    bottom: 2px;
+    bottom: 0px;
     color: var(--word-contains-color);
 }
 
