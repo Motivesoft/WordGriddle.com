@@ -425,6 +425,21 @@
       "name": "puzzle-85",
       "id": 85,
       "difficulty": 3
+    },
+    {
+      "name": "puzzle-86",
+      "id": 86,
+      "difficulty": 3
+    },
+    {
+      "name": "puzzle-87",
+      "id": 87,
+      "difficulty": 2
+    },
+    {
+      "name": "puzzle-88",
+      "id": 88,
+      "difficulty": 4
     }
   ]
 }
