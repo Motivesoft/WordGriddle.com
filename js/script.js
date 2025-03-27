@@ -369,27 +369,43 @@ async function createPuzzleSelector(puzzle, statusContainer) {
     // Size
     const puzzleSelectorSize = document.createElement('span');
     puzzleSelectorSize.setAttribute('class', 'right-rating');
+
+    // Build the star rating string based on difficulty (using size as a fallback)
+    let difficulty;
+    if (puzzle.difficulty) {
+        difficulty = puzzle.difficulty;
+    } else {
+        difficulty = 
+            puzzle.size >= 6 ? 4 :
+            puzzle.size >= 5 ? 3 :
+            puzzle.size >= 4 ? 2 :
+            1;
+    }
+
     // puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
-    let starRating = `
-        <g transform="translate(66,0)" filter="url(#shadow)">
-            <use href="#star"/>
-        </g>
-    `; 
-    if (puzzle.size>3) {
+    let starRating = ``;
+    if (difficulty>0) {
+        starRating += `
+            <g transform="translate(66,0)" filter="url(#shadow)">
+                <use href="#star"/>
+            </g>
+        `; 
+    }
+    if (difficulty>1) {
         starRating += `
             <g transform="translate(44,0)" filter="url(#shadow)">
                 <use href="#star"/>
             </g>
         `;
     }
-    if (puzzle.size>4) {
+    if (difficulty>2) {
         starRating += `
             <g transform="translate(22,0)" filter="url(#shadow)">
                 <use href="#star"/>
             </g>
         `;
     }
-    if (puzzle.size>5) {
+    if (difficulty>3) {
         starRating += `
             <g transform="translate(0,0)" filter="url(#shadow)">
                 <use href="#star"/>
