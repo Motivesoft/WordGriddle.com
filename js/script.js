@@ -368,8 +368,64 @@ async function createPuzzleSelector(puzzle, statusContainer) {
 
     // Size
     const puzzleSelectorSize = document.createElement('span');
-    puzzleSelectorSize.setAttribute('class', 'center-text');
-    puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
+    puzzleSelectorSize.setAttribute('class', 'right-rating');
+    // puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
+    let x = `
+        <g transform="translate(96,1)" filter="url(#shadow)">
+            <use href="#star"/>
+        </g>
+    `; 
+    if (puzzle.size>3) {
+        x += `
+            <g transform="translate(64,1)" filter="url(#shadow)">
+                <use href="#star"/>
+            </g>
+        `;
+    }
+    if (puzzle.size>4) {
+        x += `
+            <g transform="translate(32,1)" filter="url(#shadow)">
+                <use href="#star"/>
+            </g>
+        `;
+    }
+    if (puzzle.size>5) {
+        x += `
+            <g transform="translate(0,1)" filter="url(#shadow)">
+                <use href="#star"/>
+            </g>
+        `;
+    }
+
+    const starDefs = `
+    <defs>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="1" result="blur"/>
+        <feOffset in="blur" dx="1" dy="1" result="offsetBlur"/>
+        <feFlood flood-color="#896004" result="color"/>
+        <feComposite in="color" in2="offsetBlur" operator="in"/>
+        <feComposite in="SourceGraphic"/>
+        </filter>
+        
+        <path id="star" 
+            d="M14 2L11 11L2 11L9 17L7 26L14 21L21 26L19 17L26 11L17 11z"
+            stroke="#E6BD4B"
+            stroke-width="4"
+            fill="#E6BD4B"
+            filter="url(#shadow)"
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+        />
+    </defs>
+    `;
+    const stars = `
+            <svg width="96" height="24" viewBox="0 0 128 32" xmlns="http://www.w3.org/2000/svg">
+            ${starDefs}
+            ${x}
+            </svg>
+    `;
+
+   puzzleSelectorSize.innerHTML = stars;
 
     // Icon for play status - with a fallback to be defensive
     const puzzleSelectorIcon = document.createElement('svg');
