@@ -364,7 +364,7 @@ async function createPuzzleSelector(puzzle, statusContainer) {
     // Title text
     const puzzleSelectorName = document.createElement('span');
     puzzleSelectorName.setAttribute('class', 'left-text');
-    puzzleSelectorName.textContent = `#${puzzle.id+1000}`;
+    puzzleSelectorName.textContent = `#${puzzle.id}`;
 
     // Size
     const puzzleSelectorSize = document.createElement('span');
