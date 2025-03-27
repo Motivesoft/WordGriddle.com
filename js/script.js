@@ -364,34 +364,34 @@ async function createPuzzleSelector(puzzle, statusContainer) {
     // Title text
     const puzzleSelectorName = document.createElement('span');
     puzzleSelectorName.setAttribute('class', 'left-text');
-    puzzleSelectorName.textContent = `#${puzzle.id}`;
+    puzzleSelectorName.textContent = `#${puzzle.id+1000}`;
 
     // Size
     const puzzleSelectorSize = document.createElement('span');
     puzzleSelectorSize.setAttribute('class', 'right-rating');
     // puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
-    let x = `
-        <g transform="translate(96,1)" filter="url(#shadow)">
+    let starRating = `
+        <g transform="translate(66,0)" filter="url(#shadow)">
             <use href="#star"/>
         </g>
     `; 
     if (puzzle.size>3) {
-        x += `
-            <g transform="translate(64,1)" filter="url(#shadow)">
+        starRating += `
+            <g transform="translate(44,0)" filter="url(#shadow)">
                 <use href="#star"/>
             </g>
         `;
     }
     if (puzzle.size>4) {
-        x += `
-            <g transform="translate(32,1)" filter="url(#shadow)">
+        starRating += `
+            <g transform="translate(22,0)" filter="url(#shadow)">
                 <use href="#star"/>
             </g>
         `;
     }
     if (puzzle.size>5) {
-        x += `
-            <g transform="translate(0,1)" filter="url(#shadow)">
+        starRating += `
+            <g transform="translate(0,0)" filter="url(#shadow)">
                 <use href="#star"/>
             </g>
         `;
@@ -408,7 +408,7 @@ async function createPuzzleSelector(puzzle, statusContainer) {
         </filter>
         
         <path id="star" 
-            d="M14 2L11 11L2 11L9 17L7 26L14 21L21 26L19 17L26 11L17 11z"
+            d="M12 5 L14 10 L19 10 L15 14 L17 19 L12 16 L7 19 L9 14 L5 10 L10 10 Z"
             stroke="#E6BD4B"
             stroke-width="4"
             fill="#E6BD4B"
@@ -419,9 +419,9 @@ async function createPuzzleSelector(puzzle, statusContainer) {
     </defs>
     `;
     const stars = `
-            <svg width="96" height="24" viewBox="0 0 128 32" xmlns="http://www.w3.org/2000/svg">
+            <svg width="90" height="24" viewBox="0 0 90 24" xmlns="http://www.w3.org/2000/svg">
             ${starDefs}
-            ${x}
+            ${starRating}
             </svg>
     `;
 
