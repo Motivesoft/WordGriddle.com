@@ -426,7 +426,7 @@ async function createPuzzleSelector(puzzle, statusContainer) {
         <path id="star" 
             d="M12 5 L14 10 L19 10 L15 14 L17 19 L12 16 L7 19 L9 14 L5 10 L10 10 Z"
             stroke="#E6BD4B"
-            stroke-width="4"
+            stroke-width="2"
             fill="#E6BD4B"
             filter="url(#shadow)"
             stroke-linecap="round" 
