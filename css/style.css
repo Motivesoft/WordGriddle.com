@@ -287,13 +287,18 @@ a:active {
 
 .puzzle-button .left-text {
     text-align: left;
-    width: min-content;
+    max-width: 50px;
+    /* width: min-content; */
     flex: 1;
 }
 
 .puzzle-button .center-text {
     transform: translateX(-50%);
     font-size: smaller;
+}
+
+.puzzle-button .right-rating {
+    transform: translateX(0px);
 }
 
 .puzzle-button .right-icon {
