@@ -280,21 +280,17 @@ a:active {
     align-items: center;
     justify-content: space-between;
     padding: 5px 10px;
-    font-size: 18px;
+    font-size: 16px;
     border: 1px solid var(--control-border);
     border-radius: 4px;
+    min-width: 192px;
 }
 
 .puzzle-button .left-text {
     text-align: left;
-    max-width: 50px;
+    min-width: 50px;
     /* width: min-content; */
     flex: 1;
-}
-
-.puzzle-button .center-text {
-    transform: translateX(-50%);
-    font-size: smaller;
 }
 
 .puzzle-button .right-rating {
