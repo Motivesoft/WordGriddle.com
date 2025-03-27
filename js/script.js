@@ -375,37 +375,37 @@ async function createPuzzleSelector(puzzle, statusContainer) {
     if (puzzle.difficulty) {
         difficulty = puzzle.difficulty;
     } else {
-        difficulty = 
+        difficulty =
             puzzle.size >= 6 ? 4 :
-            puzzle.size >= 5 ? 3 :
-            puzzle.size >= 4 ? 2 :
-            1;
+                puzzle.size >= 5 ? 3 :
+                    puzzle.size >= 4 ? 2 :
+                        1;
     }
 
     // puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
     let starRating = ``;
-    if (difficulty>0) {
+    if (difficulty > 0) {
         starRating += `
-            <g transform="translate(66,0)" filter="url(#shadow)">
-                <use href="#star"/>
-            </g>
-        `; 
-    }
-    if (difficulty>1) {
-        starRating += `
-            <g transform="translate(44,0)" filter="url(#shadow)">
+            <g transform="translate(60,0)" filter="url(#shadow)">
                 <use href="#star"/>
             </g>
         `;
     }
-    if (difficulty>2) {
+    if (difficulty > 1) {
         starRating += `
-            <g transform="translate(22,0)" filter="url(#shadow)">
+            <g transform="translate(40,0)" filter="url(#shadow)">
                 <use href="#star"/>
             </g>
         `;
     }
-    if (difficulty>3) {
+    if (difficulty > 2) {
+        starRating += `
+            <g transform="translate(20,0)" filter="url(#shadow)">
+                <use href="#star"/>
+            </g>
+        `;
+    }
+    if (difficulty > 3) {
         starRating += `
             <g transform="translate(0,0)" filter="url(#shadow)">
                 <use href="#star"/>
@@ -414,34 +414,30 @@ async function createPuzzleSelector(puzzle, statusContainer) {
     }
 
     const starDefs = `
-    <defs>
-        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="1" result="blur"/>
-        <feOffset in="blur" dx="1" dy="1" result="offsetBlur"/>
-        <feFlood flood-color="#896004" result="color"/>
-        <feComposite in="color" in2="offsetBlur" operator="in"/>
-        <feComposite in="SourceGraphic"/>
-        </filter>
-        
-        <path id="star" 
-            d="M12 5 L14 10 L19 10 L15 14 L17 19 L12 16 L7 19 L9 14 L5 10 L10 10 Z"
-            stroke="#E6BD4B"
-            stroke-width="2"
-            fill="#E6BD4B"
-            filter="url(#shadow)"
-            stroke-linecap="round" 
-            stroke-linejoin="round"
-        />
-    </defs>
-    `;
-    const stars = `
-            <svg width="90" height="24" viewBox="0 0 90 24" xmlns="http://www.w3.org/2000/svg">
-            ${starDefs}
-            ${starRating}
-            </svg>
+        <defs>
+            <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="1" dy="1" stdDeviation="0.75" flood-color="#896004" flood-opacity="0.7"/>
+
+            <path id="star" 
+                d="M12 5 L14 10 L19 10 L15 14 L17 19 L12 16 L7 19 L9 14 L5 10 L10 10 Z"
+                stroke="#E6BD4B"
+                stroke-width="2"
+                fill="#E6BD4B"
+                filter="url(#shadow)"
+                stroke-linecap="round" 
+                stroke-linejoin="round"
+            />
+        </defs>
     `;
 
-   puzzleSelectorSize.innerHTML = stars;
+    const stars = `
+        <svg width="84" height="24" xmlns="http://www.w3.org/2000/svg">
+            ${starDefs}
+            ${starRating}
+        </svg>
+    `;
+
+    puzzleSelectorSize.innerHTML = stars;
 
     // Icon for play status - with a fallback to be defensive
     const puzzleSelectorIcon = document.createElement('svg');
