@@ -394,15 +394,18 @@ async function endDragGesture() {
 
         // Check for the selected word being either:
         // - too short
+        // - too long - bigger than our dictionary so we don't know if its a word, so no penalty applied
         // - a key word (that may or may not have already been found)
         // - an extra word (that may or may not have already been found)
         // - not a word at all (including any word we choose not to allow)
         if (selectedWordUpper.length < 4) {
             if (selectedWordUpper.length > 1) {
-                updateOutcomeDisplay(`Word too short`);
+                updateOutcomeDisplay(`Word too short!`, true);
             } else {
                 updateOutcomeDisplay();
             }
+        } else if (selectedWordUpper.length > 15) {
+            updateOutcomeDisplay(`Word too long! 15 letter maximum`, true);
         } else if (currentPuzzle.puzzle.keyWords?.some(([word, _]) => word === selectedWordLower)) {
             if (currentPuzzle.foundKeyWords.has(selectedWordLower)) {
                 updateOutcomeDisplay(`Word already found: ${selectedWordUpper}`);
@@ -805,15 +808,26 @@ function updateSelectedLettersDisplay() {
     }
 }
 
-function updateOutcomeDisplay(message) {
-    updateOutcomeMessage(message || '');
+function updateOutcomeDisplay(message, flare = false) {
+    const container = document.getElementById('outcome-message');
+  
+    if (flare) {
+        // Just make the element draw attention to itself a little
+        container.classList.add('flare');
+    
+        setTimeout(() => {
+            container.classList.remove('flare');
+        }, 300);
+    }
+  
+    updateOutcomeMessage(message);
 }
 
 // Function to update the content
-function updateOutcomeMessage(message, isStyled = false) {
+function updateOutcomeMessage(message = '', isStyled = false) {
     const container = document.getElementById("outcome-message");
 
-    container.textContent = message || '';
+    container.textContent = message;
 
     // Apply or remove the styledText class
     if (isStyled) {
