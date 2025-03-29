@@ -13,7 +13,7 @@
     --grid-cell-background: #f4f4f4;
     --grid-cell-border: #ccc;
     --grid-cell-completed-background: #cccccc;
-    --grid-cell-completed-color: #c55155;
+    --grid-cell-completed-color: #46a87a;
     --grid-cell-completed-zerozero: #888;
     --grid-cell-selected-background: #e9ba3a;
     --grid-cell-selected-color: #000000;
@@ -30,7 +30,7 @@
     --grid-cell-background: #343434;
     --grid-cell-border: #646464;
     --grid-cell-completed-background: #343434;
-    --grid-cell-completed-color: #de643d;
+    --grid-cell-completed-color: #6bffb9;
     --grid-cell-completed-zerozero: #646464;
     --grid-cell-selected-background: #e9ba3a;
     --grid-cell-selected-color: #000000;
