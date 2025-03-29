@@ -1512,24 +1512,6 @@ async function explode(elementId, count = 25) {
     }
 }
 
-// Toast 
-
-function showToast(message, duration = 3000) {
-    const toast = document.getElementById('toast');
-    toast.textContent = message; // Set message
-    toast.classList.add('show'); // Show toast
-
-    // Hide after `duration` milliseconds (default: 3 seconds)
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, duration);
-}
-
-// Example usage:
-document.getElementById('showToast').addEventListener('click', () => {
-    showToast("This is a toast notification!");
-});
-
 // Get ready
 
 attachEventListeners();

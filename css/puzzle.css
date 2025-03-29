@@ -380,31 +380,6 @@ canvas {
     pointer-events: none;
 }
 
-/* Toast */
-
-.toast {
-    visibility: hidden;
-    /* Hidden by default */
-    min-width: 250px;
-    background-color: #333;
-    color: white;
-    text-align: center;
-    border-radius: 4px;
-    padding: 16px;
-    position: fixed;
-    z-index: 1000;
-    bottom: 30px; /* top: 30px */
-    right: 30px; /* left: 50%; */
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.3s, visibility 0.3s;
-}
-
-.toast.show {
-    visibility: visible;
-    opacity: 1;
-}
-
 /* Media queries */
 
 @media (max-width: 768px) and (orientation: landscape) {
