@@ -834,12 +834,7 @@ function updateOutcomeDisplay(message, flare = false) {
     const container = document.getElementById('outcome-message');
   
     if (flare) {
-        // Just make the element draw attention to itself a little
-        container.classList.add('flare');
-    
-        setTimeout(() => {
-            container.classList.remove('flare');
-        }, 300);
+        animate(container, 'flare');
     }
   
     updateOutcomeMessage(message);
@@ -908,12 +903,17 @@ function updateWordsFound() {
 // Flash the current word count and target
 function updateProgressFlashCard() {
     const progressCardElement = getProgressCardElement();
-    progressCardElement.classList.add('flash');
     progressCardElement.innerHTML = `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length}`;
+    animate(progressCardElement, 'flash');
+}
+
+// Flash the provided HTML element
+function animate(element, effect) {
+    element.classList.add(effect);
 
     // Remove the animation class after the animation ends
     setTimeout(() => {
-        progressCardElement.classList.remove('flash');
+        element.classList.remove(effect);
     }, 300);
 }
 
@@ -1156,6 +1156,9 @@ function updateRedGreyDisplay() {
         // This is a permanent state change as the game rules currently stand,
         // so no need to make it reversable
         if (grey === 0) {
+            if (!cell.classList.contains('zerozero')) {
+                animate(cell, 'flare');
+            }
             cell.classList.add('zerozero');
         }
     }
