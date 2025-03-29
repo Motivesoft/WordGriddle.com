@@ -140,6 +140,12 @@
     color: var(--score-flash-color);
 }
 
+/* Flash animation */
+.spin {
+    transition: transform 0.3s ease, color 0.3s ease;
+    transform: rotate(360deg);
+}
+
 /* Left and right side main panels */
 
 .left-side,
