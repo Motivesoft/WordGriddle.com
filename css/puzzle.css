@@ -235,7 +235,7 @@
 
     /* Style the letter tile in its normal state with edges and shadows */
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    
+
     /* Add a subtle 3D effect */
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-bottom-color: rgba(0, 0, 0, 0.2);
@@ -290,7 +290,8 @@
 
 /* Tweak the appearance in dark mode */
 [data-theme="light"] {
-    .grid-item.zerozero, 
+
+    .grid-item.zerozero,
     .grid-item.hidden,
     .grid-item.completed {
         border: none;
@@ -304,7 +305,8 @@
 
 /* Tweak the appearance in dark mode */
 [data-theme="dark"] {
-    .grid-item.zerozero, 
+
+    .grid-item.zerozero,
     .grid-item.hidden,
     .grid-item.completed {
         box-shadow: none;

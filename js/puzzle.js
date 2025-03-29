@@ -112,7 +112,7 @@ async function openPuzzle(puzzleName, puzzle) {
     // We're (re)building the entire grid here. Reduce any potential flicker by
     // hiding the element until we've created, populated and restored any prior progress 
     const gridElement = getGridElement();
-    const gridDisplay = gridElement.style.display; 
+    const gridDisplay = gridElement.style.display;
     try {
         gridElement.style.display = 'none';
 
@@ -833,11 +833,11 @@ function updateSelectedLettersDisplay() {
 
 function updateOutcomeDisplay(message, flare = false) {
     const container = document.getElementById('outcome-message');
-  
+
     if (flare) {
         animate(container, 'flare');
     }
-  
+
     updateOutcomeMessage(message);
 }
 
