@@ -143,8 +143,10 @@
 /* Flash animation */
 .spin {
     transition: transform 0.3s ease, color 0.3s ease;
-    transform: rotate(360deg);
-}
+    transform: rotate(180deg);
+    backface-visibility: hidden; /* Forces GPU acceleration */
+    perspective: 1000px;        /* Also helps GPU acceleration */
+  }
 
 /* Left and right side main panels */
 
