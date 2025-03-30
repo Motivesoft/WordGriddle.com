@@ -1091,6 +1091,17 @@ function buildWordListHtml(words, foundWordOrdering = localStorage.getItem(Puzzl
         html += `<div class="found-word-list">`;
         wordList.forEach((word) => {
             if (previousWord && lineBreakFunction && lineBreakFunction(word, previousWord)) {
+                // This is a grizzly hack to force a formatting choice onto groups of words that
+                // are fewer in number than the number of columns. By default, the spacing isn't
+                // to our liking, but if we stick enough placeholder divs at the end, it'll pack
+                // the words in how we would prefer to see them whilst not actually taking any more
+                // vertical space ('10' here is a bit arbitrary - it just needs to be enough to 
+                // make sure that the last actual word has at least enough things after it to take the
+                // layout onto to the next row)
+                for( let i = 0; i < 10; i++) {
+                    html += `<div></div>`;
+                }
+
                 // Close this group of words
                 html += `</div>`;
 
@@ -1109,7 +1120,7 @@ function buildWordListHtml(words, foundWordOrdering = localStorage.getItem(Puzzl
             // Remember it for the comparisons with the next word
             previousWord = word;
         });
-
+        
         // Close this final group of words
         html += `</div>`;
     }
