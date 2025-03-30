@@ -462,7 +462,13 @@ async function endDragGesture() {
                     explode("ticker-container");
                     animate(getGridElement(), 'spin');
 
-                    await openMessageBox(`<h3>Congratulations!</h3>You have found all of the words for this puzzle!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
+                    // Display a congratulations message, but leave it a second or two so the preceeding two effects
+                    // can be seen
+                    setTimeout(() => {
+                        openMessageBox(`<h3>Congratulations!</h3>You have found all of the words for this puzzle!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
+                    }, 2000);
+                
+                    // await openMessageBox(`<h3>Congratulations!</h3>You have found all of the words for this puzzle!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
                 } else {
                     // Puzzle not yet finished, but a word found nonetheless. Update the progress
                     updateProgress();
