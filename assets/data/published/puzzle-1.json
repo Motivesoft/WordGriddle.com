@@ -2,7 +2,7 @@
     "puzzle": {
         "id": 1,
         "title": "WordGriddle #1",
-        "locked": false,
+        "locked": true,
         "difficulty": 1,
         "author": 1,
         "size": 3,

@@ -2,51 +2,6 @@
   "prompt": "Choose a puzzle to test",
   "puzzles": [
     {
-      "name": "puzzle-1",
-      "id": 1,
-      "difficulty": 1
-    },
-    {
-      "name": "puzzle-2",
-      "id": 2,
-      "difficulty": 3
-    },
-    {
-      "name": "puzzle-3",
-      "id": 3,
-      "difficulty": 4
-    },
-    {
-      "name": "puzzle-4",
-      "id": 4,
-      "difficulty": 2
-    },
-    {
-      "name": "puzzle-5",
-      "id": 5,
-      "difficulty": 1
-    },
-    {
-      "name": "puzzle-6",
-      "id": 6,
-      "difficulty": 2
-    },
-    {
-      "name": "puzzle-7",
-      "id": 7,
-      "difficulty": 3
-    },
-    {
-      "name": "puzzle-8",
-      "id": 8,
-      "difficulty": 3
-    },
-    {
-      "name": "puzzle-9",
-      "id": 9,
-      "difficulty": 3
-    },
-    {
       "name": "puzzle-10",
       "id": 10,
       "difficulty": 4
