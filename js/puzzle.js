@@ -20,6 +20,9 @@ const currentPuzzle = {
     puzzleName: null,
     puzzle: null,
 
+    // Default, but can be adjusted
+    minimumWordLength: 4,
+
     // Transient state variables
     isDrawing: false,
     selectedLetters: [],
@@ -96,6 +99,16 @@ async function openPuzzle(puzzleName, puzzle) {
     } else if (puzzle.author === 2) {
         getAuthorElement().innerHTML = `Puzzle by Catherine`;
     }
+
+    // Expect the minimum word length to be 4, but allow for shorter
+    // in the puzzle itself (among the keywords)
+    currentPuzzle.minimumWordLength = 4;
+    puzzle.keyWords.forEach(([word,_]) => {
+        console.log(`${word} ${word.length}`);
+        if (word.length < currentPuzzle.minimumWordLength) {
+            currentPuzzle.minimumWordLength = word.length;
+        }
+    });
 
     // Transient variables
     currentPuzzle.isDrawing = false;
@@ -420,7 +433,7 @@ async function endDragGesture() {
                 await openMessageBox(`<h3>Congratulations!</h3>You have found the hidden extra special word!`);
             }
         }
-        else if (selectedWordUpper.length < 4) {
+        else if (selectedWordUpper.length < currentPuzzle.minimumWordLength) {
             if (selectedWordUpper.length > 1) {
                 updateOutcomeDisplay(`Word too short!`, true);
             } else {
@@ -459,15 +472,18 @@ async function endDragGesture() {
                     clearTrail();
                     clearSelectedGridItems();
 
-                    explode("ticker-container");
                     animate(getGridElement(), 'spin');
 
-                    // Display a congratulations message, but leave it a second or two so the preceeding two effects
-                    // can be seen
                     setTimeout(() => {
-                        openMessageBox(`<h3>Congratulations!</h3>You have found all of the words for this puzzle!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
-                    }, 2000);
-                
+                        explode("ticker-container");
+
+                        // Display a congratulations message, but leave it a second or two so the preceeding two effects
+                        // can be seen
+                        setTimeout(() => {
+                            openMessageBox(`<h3>Congratulations!</h3>You have found all of the words for this puzzle!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
+                        }, 2000);
+                    }, 500);
+
                     // await openMessageBox(`<h3>Congratulations!</h3>You have found all of the words for this puzzle!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
                 } else {
                     // Puzzle not yet finished, but a word found nonetheless. Update the progress
@@ -1115,7 +1131,7 @@ function buildWordListHtml(words, foundWordOrdering = localStorage.getItem(Puzzl
             // Remember it for the comparisons with the next word
             previousWord = word;
         });
-        
+
         // Close this final group of words
         html += `</div>`;
     }
