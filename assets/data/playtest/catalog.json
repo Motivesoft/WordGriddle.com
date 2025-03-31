@@ -445,6 +445,16 @@
       "name": "puzzle-98",
       "id": 98,
       "difficulty": 3
+    },
+    {
+      "name": "puzzle-99",
+      "id": 99,
+      "difficulty": 1
+    },
+    {
+      "name": "puzzle-100",
+      "id": 100,
+      "difficulty": 3
     }
   ]
 }
