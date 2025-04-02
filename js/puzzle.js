@@ -1203,7 +1203,12 @@ function updatePuzzleProgressMessage() {
     const progressMessageElement = document.getElementById('progress-message');
     const countsMessageElement = document.getElementById('counts-message');
 
-    const progressTemplate = `<p>You have found %foundWords of %totalWords words.</p>`;
+    let progressTemplate;
+    if (currentPuzzle.foundKeyWords.size < currentPuzzle.puzzle.keyWords.length) {
+        progressTemplate = `<p>You have found %foundWords of %totalWords words.</p>`;
+    } else {
+        progressTemplate = `<p>You have found all %totalWords of the words in this puzzle!</p>`;
+    }
 
     progressMessageElement.innerHTML = progressTemplate
         .replace("%foundWords", currentPuzzle.foundKeyWords.size)
