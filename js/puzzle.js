@@ -480,11 +480,9 @@ async function endDragGesture() {
                         // Display a congratulations message, but leave it a second or two so the preceeding two effects
                         // can be seen
                         setTimeout(() => {
-                            openMessageBox(`<h3>Congratulations!</h3>You have found all of the words for this puzzle!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
+                            openMessageBox(`<h3>Congratulations!</h3>You have found all of the words for this puzzle!`);
                         }, 2000);
                     }, 500);
-
-                    // await openMessageBox(`<h3>Congratulations!</h3>You have found all of the words for this puzzle!<br/><br/>You achieved ${getAccuracy()}% accuracy`);
                 } else {
                     // Puzzle not yet finished, but a word found nonetheless. Update the progress
                     updateProgress();
@@ -732,7 +730,7 @@ function shareProgress() {
     let shareText = '';
     shareText += `I have been playing WordGriddle!\n`;
     shareText += `Puzzle: '${currentPuzzle.puzzle.title}' - ${window.location.origin}/?p=${currentPuzzle.puzzleName}\n`;
-    shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} words found, with ${getAccuracy()}% accuracy.\n`;
+    shareText += `${currentPuzzle.foundKeyWords.size}/${currentPuzzle.puzzle.keyWords.length} words found.\n`;
     shareText += `${currentPuzzle.foundExtraWords.size}/${currentPuzzle.puzzle.extraWords.length} extra words found.\n`;
     shareText += `${window.location.origin}`;
 
@@ -1205,12 +1203,7 @@ function updatePuzzleProgressMessage() {
     const progressMessageElement = document.getElementById('progress-message');
     const countsMessageElement = document.getElementById('counts-message');
 
-    let progressTemplate;
-    if (currentPuzzle.foundKeyWords.size === 0) {
-        progressTemplate = `<p>You have found %foundWords of %totalWords words.</p>`;
-    } else {
-        progressTemplate = `<p>You have found %foundWords of %totalWords words with %accuracy% accuracy.</p>`;
-    }
+    const progressTemplate = `<p>You have found %foundWords of %totalWords words.</p>`;
 
     progressMessageElement.innerHTML = progressTemplate
         .replace("%foundWords", currentPuzzle.foundKeyWords.size)
