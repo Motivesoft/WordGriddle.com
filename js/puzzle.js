@@ -95,9 +95,9 @@ async function openPuzzle(puzzleName, puzzle) {
     getPuzzleTitleElement().innerHTML = titleText;
 
     if (puzzle.author === 1) {
-        getAuthorElement().innerHTML = `Puzzle by Ian`;
+        getAuthorElement().innerHTML = `Puzzle by The Griddler!`;
     } else if (puzzle.author === 2) {
-        getAuthorElement().innerHTML = `Puzzle by Catherine`;
+        getAuthorElement().innerHTML = `Puzzle by Condaluna`;
     }
 
     // Expect the minimum word length to be 4, but allow for shorter
