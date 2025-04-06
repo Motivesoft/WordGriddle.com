@@ -95,7 +95,7 @@ async function openPuzzle(puzzleName, puzzle) {
     getPuzzleTitleElement().innerHTML = titleText;
 
     if (puzzle.author === 1) {
-        getAuthorElement().innerHTML = `Puzzle by The Griddler!`;
+        getAuthorElement().innerHTML = `Puzzle by TheGriddler`;
     } else if (puzzle.author === 2) {
         getAuthorElement().innerHTML = `Puzzle by Condaluna`;
     }
@@ -104,7 +104,6 @@ async function openPuzzle(puzzleName, puzzle) {
     // in the puzzle itself (among the keywords)
     currentPuzzle.minimumWordLength = 4;
     puzzle.keyWords.forEach(([word,_]) => {
-        console.log(`${word} ${word.length}`);
         if (word.length < currentPuzzle.minimumWordLength) {
             currentPuzzle.minimumWordLength = word.length;
         }
@@ -1216,7 +1215,39 @@ function updatePuzzleProgressMessage() {
         .replace("%accuracy", getAccuracy());
 
     // Show words left to be found - unless we've completed the puzzle
-    if (currentPuzzle.completed) {
+    // TODO do this switch (and others) based on a puzzle or config attribute to support WordGriddle classic and junior
+    if (1==1) {
+        // Display the word list
+        let wordsList = '';
+
+        // Display keywords and once found, extra words
+        if (!currentPuzzle.completed) {
+            wordsList += "Try and find these words:<br><br>";
+            wordsList += '<div class="word-container">';
+            currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
+                let wordClass="keyword";
+                if (currentPuzzle.foundKeyWords.has(word)) {
+                    wordClass += " found";
+                }
+                wordsList += `<div class="${wordClass}">${word}</div>`;
+            });
+            wordsList += "</div>";
+        } else {
+            wordsList += "Now try and find these additional words:<br><br>";
+            wordsList += '<div class="word-container">';
+            currentPuzzle.puzzle.extraWords.forEach(([word, _]) => {
+                let wordClass="keyword";
+                if (currentPuzzle.foundExtraWords.has(word)) {
+                    wordClass += " found";
+                }
+                wordsList += `<div class="${wordClass}">${word}</div>`;
+            });
+            wordsList += "</div>";
+        }
+
+        countsMessageElement.innerHTML = `${wordsList}`;
+    }
+    else if (currentPuzzle.completed) {
         countsMessageElement.innerHTML = `<div class="no-words-message">No words remaining.</div>`;
 
         showGridAsComplete();

@@ -366,6 +366,23 @@ canvas {
     padding-left: 16px;
 }
 
+/* Words to find*/
+
+.keyword {
+    font-weight: bold;
+}
+
+.keyword.found {
+    font-weight: normal;
+    text-decoration: line-through;
+}
+
+.word-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 10px; /* Spacing between items */
+}
+
 /* Ticker tape */
 
 #ticker-container {
