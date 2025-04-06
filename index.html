@@ -146,6 +146,33 @@
         </div>
         <button type="button" id="settingsOkButton">OK</button>
     </dialog>
+
+    <!-- 
+        Definition of a star for puzzle selectors.
+
+        Relies on the consumer to set stoke and fill colors as we can't define them here if we want to vary them in code.
+
+        Add this to the "<svg>" block in the code that will use this SVG definition:
+
+            style="stroke: #e6bd4b; fill: #ffa500;"
+
+        Note that for now, the drop shadow isn't using this mechanism for its 'flood-color' value, but it could
+        if we need it to.
+    -->
+    <svg>
+        <defs>
+            <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="1" dy="1" stdDeviation="0.75" flood-color="#896004" flood-opacity="0.7"/>
+
+            <path id="star" 
+                d="M12 5 L14 10 L19 10 L15 14 L17 19 L12 16 L7 19 L9 14 L5 10 L10 10 Z"
+                stroke-width="2"
+                filter="url(#shadow)"
+                stroke-linecap="round" 
+                stroke-linejoin="round"
+            />
+        </defs>
+    </svg>
 </body>
 
 </html>
