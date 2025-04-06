@@ -209,12 +209,9 @@ function initialiseGrid() {
                 }
             });
 
-            if (grey == 0) {
-                cell.classList.add('zerozero');
-            } else {
-                cell.dataset.red = red;
-                cell.dataset.grey = grey;
-            }
+            // Set the values into the cell, but don't react to them being zero. This will happen later.
+            cell.dataset.red = red;
+            cell.dataset.grey = grey;
         }
 
         // Add the cell to the grid

@@ -386,26 +386,33 @@ async function createPuzzleSelector(puzzle, statusContainer) {
     let starRating = ``;
     if (difficulty > 0) {
         starRating += `
-            <g transform="translate(54,0)" filter="url(#shadow)">
+            <g transform="translate(60,0)" filter="url(#shadow)">
                 <use href="#star"/>
             </g>
         `;
     }
     if (difficulty > 1) {
         starRating += `
-            <g transform="translate(36,0)" filter="url(#shadow)">
+            <g transform="translate(45,0)" filter="url(#shadow)">
                 <use href="#star"/>
             </g>
         `;
     }
     if (difficulty > 2) {
         starRating += `
-            <g transform="translate(18,0)" filter="url(#shadow)">
+            <g transform="translate(30,0)" filter="url(#shadow)">
                 <use href="#star"/>
             </g>
         `;
     }
     if (difficulty > 3) {
+        starRating += `
+            <g transform="translate(15,0)" filter="url(#shadow)">
+                <use href="#star"/>
+            </g>
+        `;
+    }
+    if (difficulty > 4) {
         starRating += `
             <g transform="translate(0,0)" filter="url(#shadow)">
                 <use href="#star"/>
@@ -431,7 +438,7 @@ async function createPuzzleSelector(puzzle, statusContainer) {
     `;
 
     const stars = `
-        <svg width="78" height="24" xmlns="http://www.w3.org/2000/svg">
+        <svg width="80" height="24" xmlns="http://www.w3.org/2000/svg">
             ${starDefs}
             ${starRating}
         </svg>
