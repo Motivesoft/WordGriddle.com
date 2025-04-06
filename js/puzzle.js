@@ -213,12 +213,9 @@ function initialiseGrid() {
                 }
             });
 
-            if (grey == 0) {
-                cell.classList.add('zerozero');
-            } else {
-                cell.dataset.red = red;
-                cell.dataset.grey = grey;
-            }
+            // Set the values, but don't change the element based on those values just yet
+            cell.dataset.red = red;
+            cell.dataset.grey = grey;
         }
 
         // Add the cell to the grid
