@@ -1,6 +1,7 @@
 {
     "puzzle": {
         "id": 2,
+        "game": 2,
         "title": "#2 Fruit",
         "locked": false,
         "difficulty": 0,

@@ -1,6 +1,7 @@
 {
     "puzzle": {
         "id": 1,
+        "game": 2,
         "title": "#1 Animals",
         "locked": false,
         "difficulty": 0,

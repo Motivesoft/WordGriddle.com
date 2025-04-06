@@ -1,7 +1,8 @@
 {
     "puzzle": {
         "id": 3,
-        "title": "WordGriddle #3",
+        "game": 2,
+        "title": "#3 Random Words",
         "locked": false,
         "difficulty": 0,
         "author": 2,
