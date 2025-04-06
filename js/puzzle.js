@@ -456,6 +456,9 @@ async function endDragGesture() {
                 updateProgressFlashCard();
                 updateClues();
 
+                // Small celebration
+                explode("ticker-container", 1);
+
                 // Have we finished the puzzle 
                 // NB use '>=' not '==' to cover the unlikely event that a puzzle was modified after someone
                 // recorded progress against it. There will be a more robust way to do this, but it probably
@@ -500,6 +503,10 @@ async function endDragGesture() {
                 updateExtraWordsFound();
                 updateProgress();
 
+                // Small celebration
+                explode("ticker-container", 1);
+
+                // TODO revisit this in relation to WordGriddle Junior
                 // No need saving puzzle status here - extra words don't contribute to that
                 // - small caveat here that this means a puzzle freshly opened and where the user
                 //   has only found extra words will not show as started - I think that's OK
