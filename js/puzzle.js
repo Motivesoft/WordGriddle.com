@@ -15,6 +15,11 @@ const PuzzleLocalStorageKeys = Object.freeze({
     SHOW_EXTRA_WORDS: "showExtraWords",
 });
 
+const WordGriddleGameConstants = Object.freeze({
+    WORDGRIDDLE: 1,
+    WORDGRIDDLE_JUNIOR: 2,
+});
+
 // State
 const currentPuzzle = {
     puzzleName: null,
@@ -1214,77 +1219,96 @@ function updatePuzzleProgressMessage() {
         .replace("%totalWords", currentPuzzle.puzzle.keyWords.length)
         .replace("%accuracy", getAccuracy());
 
-    // Show words left to be found - unless we've completed the puzzle
-    // TODO do this switch (and others) based on a puzzle or config attribute to support WordGriddle classic and junior
-    if (1==1) {
-        // Display the word list
-        let wordsList = '';
+    // Show details of what remains to be found - unless we've completed the puzzle
+    switch(currentPuzzle.puzzle.game) {
+        default:
+            // TODO This is some sort of error condition 
+            break;
 
-        // Display keywords and once found, extra words
-        if (!currentPuzzle.completed) {
-            wordsList += "Try and find these words:<br><br>";
-            wordsList += '<div class="word-container">';
-            currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
-                let wordClass="keyword";
-                if (currentPuzzle.foundKeyWords.has(word)) {
-                    wordClass += " found";
+        case WordGriddleGameConstants.WORDGRIDDLE:
+            if (currentPuzzle.completed) {
+                countsMessageElement.innerHTML = `<div class="no-words-message">No words remaining.</div>`;
+        
+                showGridAsComplete();
+            } else {
+                // Work out count of words at each word length
+                const counts = new Map();
+                let longestWordLength = 0;
+                currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
+                    // Make sure we've got an entry for this length of word
+                    if (!counts.has(word.length)) {
+                        counts.set(word.length, 0);
+                    }
+        
+                    // Increment the number of words of this length
+                    counts.set(word.length, counts.get(word.length) + 1);
+        
+                    longestWordLength = Math.max(longestWordLength, word.length);
+                });
+        
+                // Now take away the ones we've found
+                currentPuzzle.foundKeyWords.forEach((word) => {
+                    counts.set(word.length, counts.get(word.length) - 1);
+                });
+        
+                // Display the counts per word length - but don't display those with none left
+                let countsTable = `<table class="word-count-table">`;
+                for (let i = 1; i <= longestWordLength; i++) {
+                    if (counts.has(i) && counts.get(i) > 0) {
+                        countsTable += `<tr>`;
+                        countsTable += `  <td class="word-count-word">${i}-letter words:</td>`;
+                        countsTable += `  <td class="word-count-total">${counts.get(i)}</td>`;
+                        countsTable += `</tr>`;
+                    }
                 }
-                wordsList += `<div class="${wordClass}">${word}</div>`;
-            });
-            wordsList += "</div>";
-        } else {
-            wordsList += "Now try and find these additional words:<br><br>";
-            wordsList += '<div class="word-container">';
-            currentPuzzle.puzzle.extraWords.forEach(([word, _]) => {
-                let wordClass="keyword";
-                if (currentPuzzle.foundExtraWords.has(word)) {
-                    wordClass += " found";
-                }
-                wordsList += `<div class="${wordClass}">${word}</div>`;
-            });
-            wordsList += "</div>";
-        }
-
-        countsMessageElement.innerHTML = `${wordsList}`;
-    }
-    else if (currentPuzzle.completed) {
-        countsMessageElement.innerHTML = `<div class="no-words-message">No words remaining.</div>`;
-
-        showGridAsComplete();
-    } else {
-        // Work out count of words at each word length
-        const counts = new Map();
-        let longestWordLength = 0;
-        currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
-            // Make sure we've got an entry for this length of word
-            if (!counts.has(word.length)) {
-                counts.set(word.length, 0);
+                countsTable += `</table>`;
+        
+                countsMessageElement.innerHTML = `${countsTable}`;
             }
 
-            // Increment the number of words of this length
-            counts.set(word.length, counts.get(word.length) + 1);
+        case WordGriddleGameConstants.WORDGRIDDLE_JUNIOR:
+            // If all key and extra words found, show a suitable message, otherwise
+            // show the words left to find
+            if (currentPuzzle.completed && currentPuzzle.foundExtraWords.size == currentPuzzle.puzzle.extraWords.length ) {
+                countsMessageElement.innerHTML = `<div class="no-words-message">No more words to find!</div>`;
+        
+                showGridAsComplete();
+            } else {
+                // Display the word list
+                let wordsList = '';
 
-            longestWordLength = Math.max(longestWordLength, word.length);
-        });
+                // Display keywords and once found, extra words
+                if (!currentPuzzle.completed) {
+                    wordsList += "Try and find these words:<br><br>";
+                    wordsList += '<div class="word-container">';
+                    currentPuzzle.puzzle.keyWords.forEach(([word, _]) => {
+                        let wordClass="keyword";
+                        if (currentPuzzle.foundKeyWords.has(word)) {
+                            wordClass += " found";
+                        }
+                        wordsList += `<div class="${wordClass}">${word}</div>`;
+                    });
+                    wordsList += "</div>";
+                } else {
+                    wordsList += "Now try and find these additional words:<br><br>";
+                    wordsList += '<div class="word-container">';
+                    currentPuzzle.puzzle.extraWords.forEach(([word, _]) => {
+                        let wordClass="keyword";
+                        if (currentPuzzle.foundExtraWords.has(word)) {
+                            wordClass += " found";
+                        }
+                        wordsList += `<div class="${wordClass}">${word}</div>`;
+                    });
+                    wordsList += "</div>";
+                }
 
-        // Now take away the ones we've found
-        currentPuzzle.foundKeyWords.forEach((word) => {
-            counts.set(word.length, counts.get(word.length) - 1);
-        });
-
-        // Display the counts per word length - but don't display those with none left
-        let countsTable = `<table class="word-count-table">`;
-        for (let i = 1; i <= longestWordLength; i++) {
-            if (counts.has(i) && counts.get(i) > 0) {
-                countsTable += `<tr>`;
-                countsTable += `  <td class="word-count-word">${i}-letter words:</td>`;
-                countsTable += `  <td class="word-count-total">${counts.get(i)}</td>`;
-                countsTable += `</tr>`;
+                countsMessageElement.innerHTML = `${wordsList}`;
             }
-        }
-        countsTable += `</table>`;
 
-        countsMessageElement.innerHTML = `${countsTable}`;
+            break;
+            
+            case WordGriddleGameConstants.WORDGRIDDLE_JUNIOR:
+            break;
     }
 }
 
