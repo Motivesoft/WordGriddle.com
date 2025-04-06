@@ -230,7 +230,7 @@ function openAboutBox() {
 
     // Set the message
     aboutBoxText.innerHTML = `
-        <h3>About WordGriddle</h3>
+        <h3>About WordGriddle Junior</h3>
         <div class="aboutBoxSocialMediaLinks">
             <a href="https://discord.gg/vzdqBbnKX8" target="_blank" rel="noopener noreferrer">
                 <img src="/assets/svg/discord-mark-blue.svg" alt="WordGriddle Discord Server" class="aboutBoxSocialMediaIcon">
