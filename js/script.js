@@ -382,8 +382,9 @@ async function createPuzzleSelector(puzzle, statusContainer) {
                         1;
     }
 
-    // puzzleSelectorSize.textContent = `${puzzle.size}x${puzzle.size}`;
+    // Build a string of SVG elements to represent the difficulty rating
     let starRating = ``;
+    
     if (difficulty > 0) {
         starRating += `
             <g transform="translate(60,0)" filter="url(#shadow)">
@@ -420,26 +421,13 @@ async function createPuzzleSelector(puzzle, statusContainer) {
         `;
     }
 
-    const starDefs = `
-        <defs>
-            <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-                <feDropShadow dx="1" dy="1" stdDeviation="0.75" flood-color="#896004" flood-opacity="0.7"/>
-
-            <path id="star" 
-                d="M12 5 L14 10 L19 10 L15 14 L17 19 L12 16 L7 19 L9 14 L5 10 L10 10 Z"
-                stroke="#E6BD4B"
-                stroke-width="2"
-                fill="#E6BD4B"
-                filter="url(#shadow)"
-                stroke-linecap="round" 
-                stroke-linejoin="round"
-            />
-        </defs>
-    `;
+    // Use a different color scheme for the fiendish puzzles
+    const starColor = difficulty > 4 ?
+        'style="stroke: #ffa500; fill:rgb(236, 58, 58);"' :
+        'style="stroke: #e6bd4b; fill: #ffa500;"';
 
     const stars = `
-        <svg width="80" height="24" xmlns="http://www.w3.org/2000/svg">
-            ${starDefs}
+        <svg width="80" height="24" xmlns="http://www.w3.org/2000/svg" ${starColor}>
             ${starRating}
         </svg>
     `;
