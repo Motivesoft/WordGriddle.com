@@ -423,7 +423,7 @@ async function createPuzzleSelector(puzzle, statusContainer) {
 
     // Use a different color scheme for the fiendish puzzles
     const starColor = difficulty > 4 ?
-        'style="stroke: #ffa500; fill:rgb(236, 58, 58);"' :
+        'style="stroke: #ffa500; fill: #ec3a3a;"' :
         'style="stroke: #e6bd4b; fill: #ffa500;"';
 
     const stars = `
