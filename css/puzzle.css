@@ -43,6 +43,28 @@
     --word-contains-color: #666;
 }
 
+/* Define a wobble animation */
+@keyframes wobble {
+    0% { transform: translateX(0%); }
+    10% { transform: translateX(-25%) rotate(-2deg); }
+    20% { transform: translateX(25%) rotate(-2deg); }
+    30% { transform: translateX(-25%) rotate(2deg); }
+    40% { transform: translateX(25%) rotate(2deg); }
+    50% { transform: translateX(-25%) rotate(-2deg); }
+    60% { transform: translateX(25%) rotate(-2deg); }
+    70% { transform: translateX(-25%) rotate(2deg); }
+    80% { transform: translateX(25%) rotate(2deg); }
+    90% { transform: translateX(-25%) rotate(-2deg); }
+    100% { transform: translateX(0%); }
+}
+
+/* Add a wobble animation class */
+.wobble {
+    animation-name: wobble;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+
 /* Outcome message */
 
 #outcome-message {

@@ -512,7 +512,8 @@ async function endDragGesture() {
                 //   has only found extra words will not show as started - I think that's OK
             }
         } else {
-            updateOutcomeDisplay(`Not in word list: ${selectedWordUpper}`);
+            // Not in word list. Animate and remove from view
+            wobbleOutcomeDisplay();
 
             // Stop counting non-words when the puzzle is finished so that the accuracy stays fixed
             // to completing the main word search
@@ -857,6 +858,18 @@ function updateSelectedLettersDisplay() {
     } else {
         updateOutcomeMessage();
     }
+}
+
+// Cause the current element contents to wobble and then disappear
+function wobbleOutcomeDisplay() {
+    const container = document.getElementById('outcome-message');
+
+    container.classList.add('wobble');
+
+    setTimeout(() => {
+        container.classList.remove('wobble');
+        updateOutcomeMessage();
+    }, 1000);
 }
 
 function updateOutcomeDisplay(message, flare = false) {
