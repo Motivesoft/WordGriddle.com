@@ -501,8 +501,9 @@ async function endDragGesture() {
                 //   has only found extra words will not show as started - I think that's OK
             }
         } else {
-            updateOutcomeDisplay(`Not in word list: ${selectedWordUpper}`);
-
+            // Not in word list. Animate and remove from view
+            wobbleOutcomeDisplay();
+        
             // Stop counting non-words when the puzzle is finished so that the accuracy stays fixed
             // to completing the main word search
             if (!currentPuzzle.completed) {
@@ -848,6 +849,18 @@ function updateSelectedLettersDisplay() {
     }
 }
 
+// Cause the current element contents to wobble and then disappear
+function wobbleOutcomeDisplay() {
+    const container = document.getElementById('outcome-message');
+
+    container.classList.add('wobble');
+
+    setTimeout(() => {
+        container.classList.remove('wobble');
+        updateOutcomeMessage();
+    }, 1000);
+}
+
 function updateOutcomeDisplay(message, flare = false) {
     const container = document.getElementById('outcome-message');
 
@@ -858,7 +871,7 @@ function updateOutcomeDisplay(message, flare = false) {
     updateOutcomeMessage(message);
 }
 
-// Function to update the content
+// Function to update the content, or clear it if nothing is passed in
 function updateOutcomeMessage(message = '', isStyled = false) {
     const container = document.getElementById("outcome-message");
 
@@ -926,13 +939,13 @@ function updateProgressFlashCard() {
 }
 
 // Flash the provided HTML element
-function animate(element, effect) {
+function animate(element, effect, duration=300) {
     element.classList.add(effect);
 
     // Remove the animation class after the animation ends
     setTimeout(() => {
         element.classList.remove(effect);
-    }, 300);
+    }, duration);
 }
 
 function updateExtraWordsFound() {
