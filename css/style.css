@@ -31,9 +31,9 @@
     --panel-background: #e9ecef;
     --panel-border: #ccc;
     --product-container-color: #ffffff;
-    --puzzle-button-playing: #e37a4d;
+    --puzzle-button-playing: #f8d347;
     --puzzle-button-played: #c4c4cc;
-    --puzzle-button-unplayed: #7fa1cf;
+    --puzzle-button-unplayed: #d373f3;
     --puzzle-button-text: #333;
     --tab-active-background: #ffffff;
     --tab-background: #f1f1f1;
@@ -74,9 +74,9 @@
     --panel-background: #1e1e1e;
     --panel-border: #333;
     --product-container-color: #ffffff;
-    --puzzle-button-playing: #e37a4d;
+    --puzzle-button-playing: #f8d347;
     --puzzle-button-played: #c4c4cc;
-    --puzzle-button-unplayed: #7fa1cf;
+    --puzzle-button-unplayed: #c363e3;
     --puzzle-button-text: #333;
     --tab-active-background: #1e1e1e;
     --tab-background: #2c2c2c;
@@ -281,8 +281,22 @@ a:active {
     justify-content: space-between;
     padding: 5px;
     font-size: 16px;
-    border: 1px solid var(--control-border);
-    border-radius: 4px;
+    /* border: 1px solid var(--control-border);
+    border-radius: 4px; */
+
+    /* Style the letter tile in its normal state with edges and shadows */
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+
+    /* Add a subtle 3D effect */
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5%;
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    border-right-color: rgba(0, 0, 0, 0.2);
+
+    /* Add a slight bevel effect */
+    box-shadow:
+        inset 2px 2px 5px rgba(255, 255, 255, 0.5),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .puzzle-button .left-text {

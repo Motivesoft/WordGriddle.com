@@ -118,7 +118,7 @@
 }
 
 /* Container for the main content */
-.container {
+.game-container {
     display: flex;
     flex-direction: row;
     padding-top: 20px;
@@ -245,8 +245,6 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-color: var(--grid-cell-background);
-    color: var(--text-color);
     font-family: var(--grid-cell-font-family);
     font-weight: var(--grid-cell-font-weight);
     cursor: pointer;
@@ -408,7 +406,7 @@ canvas {
 /* Media queries */
 
 @media (max-width: 768px) and (orientation: landscape) {
-    .container {
+    .game-container {
         height: fit-content;
     }
 
@@ -422,7 +420,7 @@ canvas {
 }
 
 @media (max-width: 768px) and (orientation: portrait) {
-    .container {
+    .game-container {
         flex-direction: column;
     }
 
