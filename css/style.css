@@ -289,7 +289,7 @@ a:active {
 
     /* Add a subtle 3D effect */
     border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 5%;
+    border-radius: 5px;
     border-bottom-color: rgba(0, 0, 0, 0.2);
     border-right-color: rgba(0, 0, 0, 0.2);
 
